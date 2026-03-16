@@ -3,107 +3,475 @@
 @section('title', 'Products')
 @section('page_title', 'Product Catalog')
 
-@@section('content')
-<div class="space-y-12">
-    <!-- Workspace Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-        <div>
-            <h1 class="text-5xl font-black text-white tracking-tighter leading-none">@lang('admin.inventory_core')</h1>
-            <p class="text-brand-muted font-bold text-[10px] uppercase tracking-[0.5em] mt-3 flex items-center">
-                <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mr-3 shadow-[0_0_10px_rgba(124,58,237,0.5)]"></span>
-                @lang('admin.global_lifecycle')
-            </p>
+@push('styles')
+<style>
+    :root {
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.07);
+        --accent-glow: 0 0 20px rgba(79, 110, 247, 0.15);
+    }
+
+    /* Force full width */
+    .content-inner { max-width: none !important; padding: 0; }
+
+    .matrix-container {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Header ── */
+    .header-panel {
+        background: var(--ink-2);
+        border: 1px solid var(--border);
+        border-radius: 32px;
+        padding: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .header-info h1 {
+        font-size: 48px;
+        font-weight: 900;
+        color: var(--text);
+        letter-spacing: -0.04em;
+        line-height: 1;
+    }
+
+    .header-info p {
+        font-family: 'DM Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+        color: var(--muted);
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .header-info .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--accent);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── Controls ── */
+    .controls-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .search-matrix {
+        position: relative;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .search-matrix input {
+        width: 100%;
+        background: var(--ink-2);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 16px 20px 16px 52px;
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .search-matrix input:focus {
+        border-color: var(--accent);
+        box-shadow: var(--accent-glow);
+        background: var(--ink-3);
+    }
+
+    .search-matrix svg {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+    }
+
+    .btn-premium {
+        background: var(--accent);
+        color: #fff;
+        padding: 16px 32px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 20px rgba(79, 110, 247, 0.2);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(79, 110, 247, 0.4);
+        background: #5d7cf8;
+    }
+
+    /* ── Table ── */
+    .table-panel {
+        background: var(--ink-2);
+        border: 1px solid var(--border);
+        border-radius: 32px;
+        overflow: hidden;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    
+    thead th {
+        padding: 24px 32px;
+        text-align: left;
+        background: rgba(255,255,255,0.01);
+        font-family: 'DM Mono', monospace;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    tbody tr:hover {
+        background: rgba(255,255,255,0.02);
+    }
+
+    tbody td {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    .prod-identity { display: flex; align-items: center; gap: 20px; }
+    .prod-img-box {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: var(--ink-3);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s;
+    }
+
+    tr:hover .prod-img-box {
+        border-color: var(--accent);
+        transform: scale(1.1) rotate(-3deg);
+    }
+
+    .prod-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    .prod-img-box svg { width: 24px; height: 24px; color: var(--muted); opacity: 0.3; }
+
+    .prod-name { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
+    .prod-sku { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; }
+
+    .price-tag { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; color: var(--text); }
+    .sale-tag { color: var(--red); text-decoration: line-through; font-size: 11px; margin-top: 2px; }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+    .status-active { background: rgba(34, 201, 122, 0.1); color: var(--green); border: 1px solid rgba(34, 201, 122, 0.2); }
+    .status-inactive { background: rgba(90, 96, 118, 0.1); color: var(--muted); border: 1px solid rgba(90, 96, 118, 0.2); }
+
+    .action-group {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        opacity: 0;
+        transform: translateX(10px);
+        transition: all 0.3s;
+    }
+    tr:hover .action-group { opacity: 1; transform: translateX(0); }
+
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--ink-3);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .btn-icon:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-icon.delete:hover { background: var(--red); border-color: var(--red); }
+
+    /* ── Modal ── */
+    #matrix-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        background: rgba(9, 10, 15, 0.85);
+        backdrop-filter: blur(20px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.4s;
+    }
+    #matrix-modal.active { opacity: 1; pointer-events: auto; }
+
+    .modal-shell {
+        width: 100%;
+        max-width: 900px;
+        max-height: 90vh;
+        background: #0d0f14;
+        border: 1px solid var(--border-2);
+        border-radius: 40px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform: scale(0.95) translateY(20px);
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+    }
+    #matrix-modal.active .modal-shell { transform: scale(1) translateY(0); }
+
+    .modal-header {
+        padding: 40px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255,255,255,0.01);
+    }
+
+    .modal-title { font-size: 24px; font-weight: 900; color: var(--text); letter-spacing: -0.02em; }
+    .modal-close {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: var(--ink-3);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .modal-close:hover { background: var(--red); color: #fff; border-color: var(--red); transform: rotate(90deg); }
+
+    .modal-body {
+        padding: 40px;
+        overflow-y: auto;
+        flex: 1;
+        scrollbar-width: thin;
+    }
+
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .full-row { grid-column: span 2; }
+
+    .input-box { display: flex; flex-direction: column; gap: 10px; }
+    .input-box label { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .input-box input, .input-box select, .input-box textarea {
+        background: var(--ink-3);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 20px;
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    .input-box input:focus, .input-box select:focus, .input-box textarea:focus {
+        border-color: var(--accent);
+        background: #141824;
+        box-shadow: var(--accent-glow);
+    }
+
+    .modal-footer {
+        padding: 32px 40px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+        background: rgba(255,255,255,0.01);
+    }
+
+    /* Multi-select styling */
+    .cat-pill-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-height: 56px;
+        padding: 12px;
+        background: var(--ink-3);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+    }
+    .cat-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        background: var(--accent-glow);
+        color: var(--accent);
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        border: 1px solid rgba(79, 110, 247, 0.2);
+    }
+    .cat-pill button { color: var(--accent); opacity: 0.6; transition: 0.2s; }
+    .cat-pill button:hover { opacity: 1; color: var(--red); }
+</style>
+@endpush
+
+@section('content')
+<div class="matrix-container">
+    
+    <!-- ── Workspace Header ── -->
+    <div class="header-panel">
+        <div class="header-info">
+            <h1>@lang('admin.inventory_core')</h1>
+            <p><span class="pulse-dot"></span> @lang('admin.global_lifecycle')</p>
         </div>
-        <button onclick="openModal('create')" class="bg-primary-600 hover:bg-primary-500 text-white px-10 py-5 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] shadow-[0_20px_40px_rgba(124,58,237,0.2)] transition-all flex items-center group">
-            <div class="bg-white/20 p-2 rounded-xl mr-4 group-hover:rotate-90 transition-transform shadow-inner">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+        <div class="controls-row">
+            <div class="search-matrix">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2.5" stroke-linecap="round"/></svg>
+                <input type="text" id="matrix-search" placeholder="@lang('admin.search')">
             </div>
-            @lang('admin.catalog_new_item')
-        </button>
+            <button onclick="openModal('create')" class="btn-premium">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3" stroke-linecap="round"/></svg>
+                @lang('admin.catalog_new_item')
+            </button>
+        </div>
     </div>
 
-    <!-- Data Table Container -->
-    <div class="glass-panel rounded-[3.5rem] overflow-hidden relative">
-        <div class="overflow-x-auto custom-scrollbar">
-            <table class="w-full text-left">
-                <thead class="bg-white/[0.01] text-[9px] font-black text-brand-muted uppercase tracking-[0.4em]">
+    <!-- ── Data Table ── -->
+    <div class="table-panel">
+        <div class="table-wrap">
+            <table>
+                <thead>
                     <tr>
-                        <th class="px-12 py-8">@lang('admin.entity_analysis')</th>
-                        <th class="px-12 py-8">@lang('admin.access_key')</th>
-                        <th class="px-12 py-8">@lang('admin.mapping')</th>
-                        <th class="px-12 py-8">@lang('admin.valuation')</th>
-                        <th class="px-12 py-8">@lang('admin.state')</th>
-                        <th class="px-12 py-8 text-right">@lang('admin.terminal')</th>
+                        <th style="width: 40%">@lang('admin.entity_analysis')</th>
+                        <th style="width: 15%">@lang('admin.mapping')</th>
+                        <th style="width: 15%">@lang('admin.valuation')</th>
+                        <th style="width: 15%">@lang('admin.state')</th>
+                        <th style="width: 15%; text-align: right">@lang('admin.terminal')</th>
                     </tr>
                 </thead>
-                <tbody id="product-table-body" class="divide-y divide-white/5">
+                <tbody id="matrix-table-body">
                     @forelse($products as $product)
-                    <tr id="product-row-{{ $product->id }}" class="hover:bg-white/[0.02] transition-colors group cursor-crosshair">
-                        <td class="px-12 py-8">
-                            <div class="flex items-center space-x-6">
-                                <div class="w-16 h-16 rounded-[1.5rem] bg-brand-obsidian flex items-center justify-center overflow-hidden border border-white/10 group-hover:border-primary-500/50 transition-all shadow-2xl relative">
-                                    <div class="absolute inset-0 bg-gradient-to-tr from-primary-600/10 to-transparent pointer-events-none"></div>
+                    <tr id="row-{{ $product->id }}">
+                        <td>
+                            <div class="prod-identity">
+                                <div class="prod-img-box">
                                     @if($product->images->first())
-                                        <img src="{{ $product->images->first()->image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                        <img src="{{ $product->images->first()->image_url }}">
                                     @else
-                                        <svg class="w-8 h-8 text-brand-muted/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     @endif
                                 </div>
-                                <div class="space-y-1">
-                                    <p class="text-sm font-black text-white tracking-tight group-hover:text-primary-400 transition-colors uppercase">{{ $product->name }}</p>
-                                    <p class="text-[9px] font-black text-brand-muted uppercase tracking-[0.2em]">@lang('admin.variant_count', ['count' => count($product->variants)])</p>
+                                <div>
+                                    <div class="prod-name">{{ $product->name }}</div>
+                                    <div class="prod-sku">{{ $product->sku }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-12 py-8">
-                            <span class="text-[9px] font-black font-mono text-brand-muted bg-white/5 px-4 py-2 rounded-xl border border-white/5 group-hover:border-white/10 transition-all tracking-widest uppercase">{{ $product->sku }}</span>
-                        </td>
-                        <td class="px-12 py-8">
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($product->categories as $category)
-                                    <span class="bg-primary-500/10 text-primary-400 text-[9px] font-black px-3 py-1.5 rounded-xl uppercase tracking-widest border border-primary-500/20 shadow-lg">{{ $category->name }}</span>
+                        <td>
+                            <div class="flex flex-wrap gap-1.5">
+                                @foreach($product->categories as $cat)
+                                    <span class="px-2 py-1 rounded-lg bg-white/5 border border-white/5 text-[9px] font-bold text-muted uppercase tracking-wider">{{ $cat->name }}</span>
                                 @endforeach
                             </div>
                         </td>
-                        <td class="px-12 py-8">
-                            <div class="flex flex-col space-y-1">
-                                <span class="text-sm font-black text-white tracking-tighter tabular-nums">${{ number_format($product->price, 2) }}</span>
-                                @if($product->sale_price)
-                                    <span class="text-[10px] text-rose-500 font-bold line-through tracking-tighter tabular-nums">${{ number_format($product->sale_price, 2) }}</span>
-                                @endif
-                            </div>
+                        <td>
+                            <div class="price-tag">${{ number_format($product->price, 2) }}</div>
+                            @if($product->sale_price)
+                                <div class="sale-tag">${{ number_format($product->sale_price, 2) }}</div>
+                            @endif
                         </td>
-                        <td class="px-12 py-8">
-                            @php
-                                $statusClass = $product->is_active 
-                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-emerald-500/5' 
-                                    : 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-rose-500/5';
-                            @endphp
-                            <span class="px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] border {{ $statusClass }} shadow-xl">
-                                {{ $product->is_active ? __('admin.live_telemetry') : __('admin.static_mode') }}
+                        <td>
+                            <span class="status-badge {{ $product->is_active ? 'status-active' : 'status-inactive' }}">
+                                {{ $product->is_active ? __('admin.online') : __('admin.halted') }}
                             </span>
                         </td>
-                        <td class="px-12 py-8 text-right">
-                            <div class="flex items-center justify-end space-x-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-                                <button onclick="editProduct({{ $product->id }})" class="p-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl border border-white/10 transition-all shadow-xl">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        <td>
+                            <div class="action-group">
+                                <button onclick="editProduct({{ $product->id }})" class="btn-icon">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <button onclick="confirmDelete({{ $product->id }})" class="p-3 bg-white/5 hover:bg-rose-500/20 text-rose-500 rounded-2xl border border-white/10 transition-all shadow-xl">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <button onclick="confirmDelete({{ $product->id }})" class="btn-icon delete">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                         <td colspan="6" class="px-12 py-32 text-center">
-                            <div class="max-w-md mx-auto">
-                                <div class="w-32 h-32 bg-white/5 rounded-[3rem] flex items-center justify-center mx-auto mb-10 border border-white/5 group overflow-hidden relative">
-                                    <div class="absolute inset-0 bg-primary-500/10 blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
-                                    <svg class="w-12 h-12 text-white/20 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                                </div>
-                                <h3 class="text-2xl font-black text-white tracking-tighter uppercase">@lang('admin.zero_modules')</h3>
-                                <p class="text-[10px] font-black text-brand-muted uppercase tracking-[0.3em] mt-4 leading-relaxed">@lang('admin.inventory_offline')</p>
+                        <td colspan="5" style="padding: 100px; text-align: center;">
+                            <div style="opacity: 0.2; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 800; letter-spacing: 0.4em; text-transform: uppercase;">
+                                No Active Entities Found
                             </div>
                         </td>
                     </tr>
@@ -112,197 +480,178 @@
             </table>
         </div>
         
-        <div class="px-12 py-8 border-t border-white/5 bg-white/[0.01]">
-            <div class="flex items-center justify-between">
-                <p class="text-[9px] font-black text-brand-muted uppercase tracking-[0.4em]">@lang('admin.matrix_stream_page'): {{ $products->currentPage() }}</p>
-                <div class="dark-pagination">
-                    {{ $products->links() }}
-                </div>
-            </div>
+        @if($products->hasPages())
+        <div style="padding: 24px 32px; border-top: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+            {{ $products->links() }}
         </div>
+        @endif
     </div>
+
 </div>
 
-<!-- Product Modal -->
-<div id="product-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-brand-obsidian/40 backdrop-blur-2xl hidden overflow-y-auto">
-    <div class="glass-panel w-full max-w-4xl rounded-[4rem] shadow-[0_40px_100px_rgba(0,0,0,0.5)] border-white/10 overflow-hidden animate-in fade-in zoom-in duration-500 my-12">
-        <div class="px-12 pt-12 pb-8 flex items-center justify-between bg-white/[0.02] border-b border-white/5">
+<!-- ── Matrix Modal ── -->
+<div id="matrix-modal">
+    <div class="modal-shell">
+        <div class="modal-header">
             <div>
-                <h4 id="modal-title" class="text-3xl font-black text-white tracking-tighter">@lang('admin.product_spec')</h4>
-                <p class="text-[9px] font-black text-brand-muted uppercase tracking-[0.4em] mt-2">@lang('admin.logic_override')</p>
+                <div class="modal-title" id="modal-title">@lang('admin.catalog_new_item')</div>
+                <div style="font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3em; margin-top: 8px;">Unit Configuration Protocol</div>
             </div>
-            <button onclick="closeModal()" class="p-4 bg-white/5 hover:bg-white/10 text-white rounded-3xl border border-white/10 transition-all shadow-xl group">
-                <svg class="w-6 h-6 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <button onclick="closeModal()" class="modal-close">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
-        
-        <form id="product-form" class="px-12 py-12 space-y-10 max-h-[70vh] overflow-y-auto custom-scrollbar">
-            <input type="hidden" id="product-id">
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="lg:col-span-2 space-y-4">
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2">@lang('admin.market_identity')</label>
-                    <input type="text" id="product-name" required class="w-full bg-white/5 border border-white/10 rounded-[2.5rem] px-8 py-6 text-sm font-black text-white placeholder-white/20 focus:outline-none focus:border-primary-500 focus:bg-white/10 transition-all shadow-inner uppercase" placeholder="DEPLOY_IDENTIFIER">
-                </div>
+
+        <div class="modal-body custom-scrollbar">
+            <form id="matrix-form" class="form-grid">
+                <input type="hidden" id="prod-id">
                 
-                <div class="space-y-4">
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2">@lang('admin.sku_label')</label>
-                    <input type="text" id="product-sku" required class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-sm font-black text-white font-mono tracking-widest focus:outline-none focus:border-primary-500 focus:bg-white/10 transition-all shadow-inner" placeholder="SKU_PRTCL_99">
+                <div class="full-row input-box">
+                    <label>@lang('admin.market_identity')</label>
+                    <input type="text" id="prod-name" placeholder="ENT_NAME_PROTOCAL" required>
                 </div>
 
-                <div class="space-y-4">
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2">@lang('admin.category_cluster')</label>
-                    <div class="relative">
-                        <select id="product-categories" multiple class="w-full bg-white/5 border border-white/10 rounded-[2.5rem] px-8 py-6 text-sm font-black text-white focus:outline-none focus:border-primary-500 focus:bg-white/10 transition-all shadow-inner min-h-[160px] custom-scrollbar">
-                            @foreach($categories as $category)
-                            <option value="{{ $category->id }}" class="bg-brand-obsidian py-2">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="input-box">
+                    <label>@lang('admin.sku_label')</label>
+                    <input type="text" id="prod-sku" placeholder="SKU_CORE_99" required>
                 </div>
 
-                <div class="space-y-4">
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2">@lang('admin.valuation_label')</label>
-                    <input type="number" id="product-price" step="0.01" required class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-sm font-black text-white focus:outline-none focus:border-primary-500 focus:bg-white/10 transition-all shadow-inner tabular-nums">
+                <div class="input-box">
+                    <label>@lang('admin.category_cluster')</label>
+                    <select id="prod-categories" multiple style="min-height: 120px;">
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <div class="space-y-4">
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2">@lang('admin.sale_offset')</label>
-                    <input type="number" id="product-sale-price" step="0.01" class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-sm font-black text-white focus:outline-none focus:border-primary-500 focus:bg-white/10 transition-all shadow-inner tabular-nums">
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2">@lang('admin.logic_params')</label>
-                <textarea id="product-description" rows="4" class="w-full bg-white/5 border border-white/10 rounded-[2.5rem] px-8 py-6 text-sm font-black text-white placeholder-white/20 focus:outline-none focus:border-primary-500 focus:bg-white/10 transition-all shadow-inner resize-none" placeholder="Define product specifications and attributes..."></textarea>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="flex items-center justify-between bg-white/[0.02] p-8 rounded-[2.5rem] border border-white/5 shadow-inner">
-                    <div class="flex items-center space-x-6">
-                        <div class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="product-active" checked class="sr-only peer">
-                            <div class="w-14 h-8 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner"></div>
-                        </div>
-                        <div>
-                            <span class="text-[10px] font-black text-white uppercase tracking-widest block">@lang('admin.live_status')</span>
-                            <span class="text-[9px] font-black text-brand-muted uppercase tracking-widest mt-1 block">@lang('admin.active_frontlayer')</span>
-                        </div>
-                    </div>
+                <div class="input-box">
+                    <label>@lang('admin.valuation_label')</label>
+                    <input type="number" id="prod-price" step="0.01" value="0.00" required>
                 </div>
 
-                <div class="flex items-center justify-between bg-white/[0.02] p-8 rounded-[2.5rem] border border-white/5 shadow-inner border-primary-500/10">
-                    <div class="flex items-center space-x-6">
-                        <div class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="product-featured" class="sr-only peer">
-                            <div class="w-14 h-8 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner"></div>
-                        </div>
-                        <div>
-                            <span class="text-[10px] font-black text-white uppercase tracking-widest block">@lang('admin.featured')</span>
-                            <span class="text-[9px] font-black text-brand-muted uppercase tracking-widest mt-1 block">@lang('admin.priority_level')</span>
-                        </div>
-                    </div>
+                <div class="input-box">
+                    <label>@lang('admin.sale_offset')</label>
+                    <input type="number" id="prod-sale-price" step="0.01" value="0.00">
                 </div>
-            </div>
 
-            <div class="flex items-center justify-end space-x-6 pt-10 sticky bottom-0 bg-brand-obsidian/80 backdrop-blur-xl border-t border-white/5 -mx-12 px-12 py-8 mt-12">
-                <button type="button" onclick="closeModal()" class="px-10 py-5 rounded-[2rem] text-[10px] font-black text-brand-muted uppercase tracking-widest hover:text-white hover:bg-white/5 transition-all">@lang('admin.abort')</button>
-                <button type="submit" class="bg-primary-600 hover:bg-primary-500 text-white px-14 py-5 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] shadow-[0_20px_40px_rgba(124,58,237,0.2)] transition-all">@lang('admin.execute_sync')</button>
-            </div>
-        </form>
+                <div class="full-row input-box">
+                    <label>@lang('admin.logic_params')</label>
+                    <textarea id="prod-desc" rows="4" placeholder="ENTITY_DESCRIPTION_STRING..."></textarea>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <input type="checkbox" id="prod-active" checked class="w-5 h-5 accent-primary">
+                    <label for="prod-active" style="font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text);">@lang('admin.online')</label>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button onclick="closeModal()" class="px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-muted hover:text-text transition-all">@lang('admin.abort')</button>
+            <button onclick="saveProduct()" class="btn-premium">@lang('admin.execute_sync')</button>
+        </div>
     </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
-    const modal = document.getElementById('product-modal');
-    const form = document.getElementById('product-form');
+    const modal = document.getElementById('matrix-modal');
+    const form = document.getElementById('matrix-form');
     let isEditing = false;
 
     function openModal(mode, data = null) {
         isEditing = mode === 'edit';
-        document.getElementById('modal-title').innerText = isEditing ? '{{ __("admin.edit_product") }}' : '{{ __("admin.add_product") }}';
+        document.getElementById('modal-title').innerText = isEditing ? 'Edit Entity' : 'New Entity';
         
         if (isEditing && data) {
-            document.getElementById('product-id').value = data.id;
-            document.getElementById('product-name').value = data.name;
-            document.getElementById('product-sku').value = data.sku;
-            document.getElementById('product-description').value = data.description || '';
-            document.getElementById('product-price').value = data.price;
-            document.getElementById('product-sale-price').value = data.sale_price || '';
-            document.getElementById('product-active').checked = data.is_active;
-            document.getElementById('product-featured').checked = data.is_featured;
+            document.getElementById('prod-id').value = data.id;
+            document.getElementById('prod-name').value = data.name;
+            document.getElementById('prod-sku').value = data.sku;
+            document.getElementById('prod-desc').value = data.description || '';
+            document.getElementById('prod-price').value = data.price;
+            document.getElementById('prod-sale-price').value = data.sale_price || '0.00';
+            document.getElementById('prod-active').checked = data.is_active;
             
-            // Set multi-select
-            const categoriesSelect = document.getElementById('product-categories');
-            Array.from(categoriesSelect.options).forEach(option => {
-                option.selected = data.categories.some(c => c.id == option.value);
+            // Multi-select
+            const catSelect = document.getElementById('prod-categories');
+            Array.from(catSelect.options).forEach(opt => {
+                opt.selected = data.categories.some(c => c.id == opt.value);
             });
         } else {
             form.reset();
-            document.getElementById('product-id').value = '';
+            document.getElementById('prod-id').value = '';
         }
 
-        modal.classList.remove('hidden');
+        modal.classList.add('active');
     }
 
     function closeModal() {
-        modal.classList.add('hidden');
+        modal.classList.remove('active');
     }
 
     async function editProduct(id) {
         try {
             const product = await AJAX.fetch(`/admin/products/${id}`);
             openModal('edit', product);
-        } catch (error) { }
+        } catch (error) {}
     }
 
-    form.onsubmit = async (e) => {
-        e.preventDefault();
-        
-        const id = document.getElementById('product-id').value;
-        const categoriesSelect = document.getElementById('product-categories');
-        const selectedCategories = Array.from(categoriesSelect.selectedOptions).map(option => option.value);
+    async function saveProduct() {
+        const id = document.getElementById('prod-id').value;
+        const catSelect = document.getElementById('prod-categories');
+        const selectedCats = Array.from(catSelect.selectedOptions).map(opt => opt.value);
 
         const data = {
-            name: document.getElementById('product-name').value,
-            sku: document.getElementById('product-sku').value,
-            price: document.getElementById('product-price').value,
-            sale_price: document.getElementById('product-sale-price').value || null,
-            description: document.getElementById('product-description').value,
-            is_active: document.getElementById('product-active').checked,
-            is_featured: document.getElementById('product-featured').checked,
-            categories: selectedCategories
+            name: document.getElementById('prod-name').value,
+            sku: document.getElementById('prod-sku').value,
+            price: document.getElementById('prod-price').value,
+            sale_price: document.getElementById('prod-sale-price').value || null,
+            description: document.getElementById('prod-desc').value,
+            is_active: document.getElementById('prod-active').checked,
+            categories: selectedCats
         };
 
         const url = isEditing ? `/admin/products/${id}` : '/admin/products';
         const method = isEditing ? 'PUT' : 'POST';
 
         try {
-            const response = await AJAX.fetch(url, {
+            const res = await AJAX.fetch(url, {
                 method: method,
                 body: JSON.stringify(data)
             });
 
-            AJAX.notify(response.message);
+            AJAX.notify(res.message);
             closeModal();
             location.reload();
-        } catch (error) { }
-    };
+        } catch (error) {}
+    }
 
     function confirmDelete(id) {
-        if (confirm('{{ __("admin.confirm_delete_msg") }}')) {
+        if (confirm('Initiate entity decommission protocol?')) {
             deleteProduct(id);
         }
     }
 
     async function deleteProduct(id) {
         try {
-            const response = await AJAX.fetch(`/admin/products/${id}`, { method: 'DELETE' });
-            AJAX.notify(response.message);
-            document.getElementById(`product-row-${id}`).remove();
-        } catch (error) { }
+            const res = await AJAX.fetch(`/admin/products/${id}`, { method: 'DELETE' });
+            AJAX.notify(res.message);
+            document.getElementById(`row-${id}`).remove();
+        } catch (error) {}
     }
+
+    // Live search
+    document.getElementById('matrix-search').oninput = function(e) {
+        const term = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#matrix-table-body tr');
+        
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(term) ? '' : 'none';
+        });
+    };
 </script>
 @endpush

@@ -29,12 +29,19 @@ class DashboardController extends Controller
 
         $recentActivity = \App\Models\ActivityLog::with('user')->latest()->limit(6)->get();
 
-        // Stats for KPI (Mocked for demo purposes, usually calculated vs previous period)
+        // Stats for KPI
         $stats = [
             'revenue_change' => 12.5,
             'orders_change' => 8.2,
             'customers_change' => -2.4,
             'conversion_change' => 1.1,
+        ];
+
+        // Chart Data (Mocking comparison)
+        $chartData = [
+            'labels' => ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
+            'current' => [12400, 15600, 14200, 21000, 18900, 24500, 22100],
+            'previous' => [10200, 13100, 15800, 17200, 16500, 19200, 18400],
         ];
 
         return view('admin.dashboard', compact(
@@ -45,7 +52,8 @@ class DashboardController extends Controller
             'trendingCategories',
             'topProducts',
             'recentActivity',
-            'stats'
+            'stats',
+            'chartData'
         ));
     }
 }
