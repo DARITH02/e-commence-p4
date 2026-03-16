@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php.dockerfile
+    image: ecommerce-pro-app
+    container_name: ecommerce-pro-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - ecommerce-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: ecommerce-pro-nginx
+    restart: unless-stopped
+    ports:
+      - "9999:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - ecommerce-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: ecommerce-pro-mysql
+    restart: unless-stopped
+    ports:
+      - "33066:3306"
+    environment:
+      MYSQL_DATABASE: ecommerce_pro
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: user
+    volumes:
+      - ecommerce-db:/var/lib/mysql
+    networks:
+      - ecommerce-network
+
+  redis:
+    image: redis:alpine
+    container_name: ecommerce-pro-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - ecommerce-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ecommerce-pro-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8085:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+volumes:
+  ecommerce-db:
+    driver: local
