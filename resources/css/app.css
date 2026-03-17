@@ -5,69 +5,204 @@
 @source "../**/*.blade.php";
 @source "../**/*.js";
 
+/* ─────────────────────────────────────────────────────────────
+   TAILWIND v4 THEME — All design tokens registered here become
+   usable as Tailwind utilities: bg-[--accent], text-[--text], etc.
+───────────────────────────────────────────────────────────── */
 @theme {
+    /* Fonts */
     --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: "DM Mono", monospace;
     --font-heading: "DM Sans", sans-serif;
+
+    /* ── Color primitives (used by both themes) ── */
+    --color-accent:       #4f6ef7;
+    --color-accent-2:     #3b55d9;
+    --color-green:        #22c97a;
+    --color-red:          #f05252;
+    --color-amber:        #f59e0b;
+    --color-violet:       #8b5cf6;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE (default) CSS Variables
+   Accessible as var(--accent), var(--bg), etc. in custom CSS
+─────────────────────────────────────────────────────────────  */
 :root {
-    --ink: #0d0f14;
-    --ink-2: #181b23;
-    --ink-3: #222635;
-    --border: rgba(255, 255, 255, 0.07);
-    --border-2: rgba(255, 255, 255, 0.12);
-    --text: #e8eaf0;
-    --muted: #5a6076;
-    --muted-2: #7e8699;
-    --accent: #4f6ef7;
-    --accent-2: #3b55d9;
-    --accent-glow: rgba(79, 110, 247, 0.18);
-    --green: #22c97a;
-    --red: #f05252;
-    --amber: #f59e0b;
-    --sidebar-w: 260px;
-    
-    /* Dashboard component aliases (dark) */
-    --bg: var(--ink);
-    --bg-2: var(--ink-2);
-    --bg-3: var(--ink-3);
-    --card: var(--ink-2);
-    --text-2: #a0a8be;
-    --accent-bg: rgba(79, 110, 247, 0.1);
-    --green-bg: rgba(34, 201, 122, 0.1);
-    --amber-bg: rgba(245, 158, 11, 0.1);
-    --red-bg: rgba(240, 82, 82, 0.1);
-    --violet: #8b5cf6;
-    --violet-bg: rgba(139, 92, 246, 0.1);
+    /* Background layers */
+    --bg:           #0d0f14;
+    --bg-2:         #181b23;
+    --bg-3:         #222635;
+    --ink:          #0d0f14;
+    --ink-2:        #181b23;
+    --ink-3:        #222635;
+
+    /* Surface aliases (used by per-page CSS) */
+    --surface:      #12141f;
+    --surface-2:    #181b28;
+    --surface-3:    #1e2133;
+
+    /* Borders */
+    --border:       rgba(255, 255, 255, 0.07);
+    --border-2:     rgba(255, 255, 255, 0.12);
+    --border-1:     rgba(255, 255, 255, 0.06);
+
+    /* Text */
+    --text:         #e8eaf0;
+    --text-2:       #a0a8be;
+    --text-1:       #eceef5;
+    --text-3:       #4a5072;
+    --muted:        #5a6076;
+    --muted-2:      #7e8699;
+
+    /* Accent / brand */
+    --accent:       #4f6ef7;
+    --accent-2:     #3b55d9;
+    --accent-glow:  rgba(79, 110, 247, 0.18);
+    --accent-bg:    rgba(79, 110, 247, 0.10);
+    --accent-dim:   rgba(79, 110, 247, 0.10);
+    --accent-mid:   rgba(79, 110, 247, 0.20);
+
+    /* Status colors */
+    --green:        #22c97a;
+    --green-bg:     rgba(34, 201, 122, 0.10);
+    --green-dim:    rgba(34, 201, 122, 0.10);
+    --red:          #f05252;
+    --red-bg:       rgba(240, 82, 82, 0.10);
+    --red-dim:      rgba(240, 71, 71, 0.10);
+    --amber:        #f59e0b;
+    --amber-bg:     rgba(245, 158, 11, 0.10);
+    --amber-dim:    rgba(245, 158, 11, 0.10);
+    --violet:       #8b5cf6;
+    --violet-bg:    rgba(139, 92, 246, 0.10);
+    --violet-dim:   rgba(139, 92, 246, 0.10);
+
+    /* Orders page aliases */
+    --blue:         #4f72f5;
+    --blue-dim:     rgba(79, 114, 245, 0.12);
+    --blue-mid:     rgba(79, 114, 245, 0.22);
+
+    /* Layout */
+    --sidebar-w:    260px;
+    --card:         #181b23;
+
+    /* Card & component */
+    --shadow:       0 2px 8px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.3);
+    --shadow-card:  0 1px 3px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.2);
+    --transition:   0.18s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Border radii */
+    --radius:       14px;
+    --radius-sm:    8px;
+    --radius-md:    12px;
+    --radius-lg:    16px;
+    --radius-xl:    20px;
+    --radius-2xl:   28px;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   LIGHT MODE overrides
+───────────────────────────────────────────────────────────── */
 html.light {
-    --ink: #f4f5f7;
-    --ink-2: #ffffff;
-    --ink-3: #f0f1f4;
-    --border: rgba(0, 0, 0, 0.07);
-    --border-2: rgba(0, 0, 0, 0.12);
-    --text: #111827;
-    --muted: #9ca3af;
-    --muted-2: #4b5563;
-    --accent: #3b55d9;
-    --accent-2: #2d41a8;
-    --accent-glow: rgba(59, 85, 217, 0.08);
-    --green: #059669;
-    --red: #dc2626;
-    --amber: #d97706;
-    
-    /* Dashboard component aliases (light) */
-    --bg: #f4f5f7;
-    --bg-2: #ffffff;
-    --bg-3: #f0f1f4;
-    --card: #ffffff;
-    --text-2: #4b5563;
-    --accent-bg: rgba(59, 85, 217, 0.08);
-    --green-bg: rgba(5, 150, 105, 0.08);
-    --amber-bg: rgba(217, 119, 6, 0.08);
-    --red-bg: rgba(220, 38, 38, 0.08);
-    --violet: #7c3aed;
-    --violet-bg: rgba(124, 58, 237, 0.08);
+    /* Background layers */
+    --bg:           #f4f5f7;
+    --bg-2:         #ffffff;
+    --bg-3:         #f0f1f4;
+    --ink:          #f4f5f7;
+    --ink-2:        #ffffff;
+    --ink-3:        #f0f1f4;
+
+    /* Surface aliases */
+    --surface:      #ffffff;
+    --surface-2:    #f7f8fd;
+    --surface-3:    #eef0f8;
+
+    /* Borders */
+    --border:       rgba(0, 0, 0, 0.07);
+    --border-2:     rgba(0, 0, 0, 0.12);
+    --border-1:     rgba(0, 0, 0, 0.07);
+
+    /* Text */
+    --text:         #111827;
+    --text-2:       #4b5563;
+    --text-1:       #0d1021;
+    --text-3:       #9aa0b8;
+    --muted:        #9ca3af;
+    --muted-2:      #4b5563;
+
+    /* Accent / brand */
+    --accent:       #3b55d9;
+    --accent-2:     #2d41a8;
+    --accent-glow:  rgba(59, 85, 217, 0.08);
+    --accent-bg:    rgba(59, 85, 217, 0.08);
+    --accent-dim:   rgba(53, 88, 232, 0.08);
+    --accent-mid:   rgba(53, 88, 232, 0.16);
+
+    /* Status colors */
+    --green:        #059669;
+    --green-bg:     rgba(5, 150, 105, 0.08);
+    --green-dim:    rgba(5, 150, 105, 0.08);
+    --red:          #dc2626;
+    --red-bg:       rgba(220, 38, 38, 0.08);
+    --red-dim:      rgba(220, 38, 38, 0.08);
+    --amber:        #d97706;
+    --amber-bg:     rgba(217, 119, 6, 0.08);
+    --amber-dim:    rgba(217, 119, 6, 0.08);
+    --violet:       #7c3aed;
+    --violet-bg:    rgba(124, 58, 237, 0.08);
+    --violet-dim:   rgba(124, 58, 237, 0.08);
+
+    /* Orders page aliases */
+    --blue:         #2d52e0;
+    --blue-dim:     rgba(45, 82, 224, 0.08);
+    --blue-mid:     rgba(45, 82, 224, 0.16);
+
+    /* Other */
+    --card:         #ffffff;
+    --shadow:       0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-card:  0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
 }
+
+/* ─────────────────────────────────────────────────────────────
+   GLOBAL UI COMPONENTS — Modals & Pagination
+   Standardized premium components for use across all pages.
+───────────────────────────────────────────────────────────── */
+
+/* ── Modal system ── */
+.modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s ease; padding: 20px;
+}
+.modal-overlay.show { display: flex; opacity: 1; }
+.modal-container {
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow);
+    max-width: 600px; width: 100%; overflow: hidden;
+    transform: translateY(20px) scale(0.98); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.show .modal-container { transform: translateY(0) scale(1); }
+
+/* ── Pagination system ── */
+.premium-pagination {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+    padding: 20px 0;
+}
+.premium-pagination a, .premium-pagination span {
+    min-width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-1);
+    background: var(--surface-2); color: var(--text-2);
+    font-size: 13px; font-weight: 700; text-decoration: none;
+    transition: all var(--transition);
+}
+.premium-pagination a:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent-mid); transform: translateY(-1px); }
+.premium-pagination .active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 4px 12px var(--accent-glow); }
+.premium-pagination .disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Common Action Cards ── */
+.status-pill {
+    padding: 6px 12px; border-radius: 100px; font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 6px;
+}
+.status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }

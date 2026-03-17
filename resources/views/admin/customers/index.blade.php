@@ -8,49 +8,8 @@
 /* ═══════════════════════════════════════════
    DESIGN TOKENS — unified with dashboard
 ═══════════════════════════════════════════ */
-:root {
-    --surface-0:   #0b0d12;
-    --surface-1:   #13151d;
-    --surface-2:   #191c27;
-    --surface-3:   #1f2233;
-    --border-1:    rgba(255,255,255,0.06);
-    --border-2:    rgba(255,255,255,0.11);
-    --text-1:      #eceef4;
-    --text-2:      #9aa0b8;
-    --text-3:      #545b74;
-    --blue:        #4f72f5;
-    --blue-dim:    rgba(79,114,245,0.12);
-    --blue-mid:    rgba(79,114,245,0.22);
-    --green:       #1fba72;
-    --green-dim:   rgba(31,186,114,0.1);
-    --amber:       #e8a000;
-    --amber-dim:   rgba(232,160,0,0.1);
-    --red:         #e84545;
-    --red-dim:     rgba(232,69,69,0.1);
-    --violet:      #8b5cf6;
-    --violet-dim:  rgba(139,92,246,0.1);
-    --radius-sm:   8px;
-    --radius-md:   12px;
-    --radius-lg:   16px;
-    --radius-xl:   20px;
-    --shadow-card: 0 1px 3px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.2);
-    --shadow-hover:0 4px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(79,114,245,0.25);
-    --transition:  0.18s cubic-bezier(0.4,0,0.2,1);
-}
-html.light {
-    --surface-0:  #f0f2f7; --surface-1: #ffffff;
-    --surface-2:  #f7f8fc; --surface-3: #eef0f6;
-    --border-1:   rgba(0,0,0,0.07); --border-2: rgba(0,0,0,0.13);
-    --text-1:     #0f1117; --text-2: #4a5068; --text-3: #9aa0b8;
-    --blue:       #2d52e0; --blue-dim: rgba(45,82,224,0.08);
-    --blue-mid:   rgba(45,82,224,0.16);
-    --green:      #059669; --green-dim: rgba(5,150,105,0.08);
-    --amber:      #b45309; --amber-dim: rgba(180,83,9,0.08);
-    --red:        #c92b2b; --red-dim: rgba(201,43,43,0.08);
-    --violet:     #6d28d9; --violet-dim: rgba(109,40,217,0.08);
-    --shadow-card:0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
-}
-body { background: var(--surface-0) !important; }
+/* Customers page uses global design tokens from app.css */
+body { background: var(--bg) !important; }
 .content-inner { max-width: none !important; }
 
 /* ─── Page animation ─── */
@@ -662,7 +621,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                         </td>
                         <td onclick="event.stopPropagation()">
                             <div class="action-group">
-                                <button onclick="openDrawer({{ $customer->id }})" class="btn-icon" title="@lang('admin.view_profile')">
+                                <button class="btn-icon open-customer-btn" data-id="{{ $customer->id }}" title="@lang('admin.view_profile')">
                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -749,6 +708,13 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
 
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('.open-customer-btn');
+        if (btn) openDrawer(btn.dataset.id);
+    });
+});
+
 /* ═══════════════════════════════════════
    STATE
 ═══════════════════════════════════════ */

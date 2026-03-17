@@ -57,9 +57,19 @@ class User extends Authenticatable
         return $this->roles()->where('slug', $role)->exists();
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin');
+    }
+
     public function isAdmin(): bool
     {
         return $this->hasRole('admin');
+    }
+
+    public function isAnyAdmin(): bool
+    {
+        return $this->isSuperAdmin() || $this->isAdmin();
     }
 
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany

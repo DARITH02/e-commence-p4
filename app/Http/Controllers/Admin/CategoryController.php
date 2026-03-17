@@ -12,14 +12,27 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->withCount('products')->paginate(15);
+        $categories = Category::with('parent')->withCount('products')->latest()->paginate(15);
         $parentCategories = Category::whereNull('parent_id')->get();
         
+        // Global Stats
+        $totalCount    = Category::count();
+        $activeCount   = Category::where('is_active', true)->count();
+        $rootCount     = Category::whereNull('parent_id')->count();
+        $inactiveCount = Category::where('is_active', false)->count();
+
         if (request()->wantsJson()) {
             return response()->json($categories);
         }
 
-        return view('admin.categories.index', compact('categories', 'parentCategories'));
+        return view('admin.categories.index', compact(
+            'categories', 
+            'parentCategories',
+            'totalCount',
+            'activeCount',
+            'rootCount',
+            'inactiveCount'
+        ));
     }
 
     public function store(Request $request)

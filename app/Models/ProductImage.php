@@ -15,5 +15,12 @@ class ProductImage extends Model
         'is_primary',
     ];
 
+    protected $appends = ['image_url'];
+
     public function product() { return $this->belongsTo(Product::class); }
+
+    public function getImageUrlAttribute()
+    {
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->image_path);
+    }
 }

@@ -5,54 +5,6 @@
 
 @push('styles')
 <style>
-/* ═══════════════════════════════════════
-   TOKENS
-═══════════════════════════════════════ */
-:root {
-    --bg:           #0c0e16;
-    --surface:      #12141f;
-    --surface-2:    #181b28;
-    --surface-3:    #1e2133;
-    --border:       rgba(255,255,255,0.06);
-    --border-2:     rgba(255,255,255,0.10);
-    --text:         #eceef5;
-    --text-2:       #8b92b0;
-    --text-3:       #4a5072;
-    --accent:       #4f6ef7;
-    --accent-dim:   rgba(79,110,247,0.10);
-    --accent-mid:   rgba(79,110,247,0.20);
-    --green:        #22c97a;
-    --green-dim:    rgba(34,201,122,0.10);
-    --red:          #f04747;
-    --red-dim:      rgba(240,71,71,0.10);
-    --amber:        #f59e0b;
-    --amber-dim:    rgba(245,158,11,0.10);
-    --radius:       14px;
-    --radius-lg:    20px;
-    --radius-xl:    28px;
-    --shadow:       0 2px 8px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.3);
-    --transition:   0.18s cubic-bezier(0.4,0,0.2,1);
-}
-
-html.light {
-    --bg:           #f1f3fa;
-    --surface:      #ffffff;
-    --surface-2:    #f7f8fd;
-    --surface-3:    #eef0f8;
-    --border:       rgba(0,0,0,0.07);
-    --border-2:     rgba(0,0,0,0.12);
-    --text:         #0d1021;
-    --text-2:       #4a5072;
-    --text-3:       #9aa0b8;
-    --accent:       #3558e8;
-    --accent-dim:   rgba(53,88,232,0.08);
-    --accent-mid:   rgba(53,88,232,0.16);
-    --green:        #059669;
-    --green-dim:    rgba(5,150,105,0.08);
-    --red:          #dc2626;
-    --red-dim:      rgba(220,38,38,0.08);
-    --shadow:       0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
-}
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,128 +14,211 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 input, select, textarea { font-family: inherit; outline: none; }
 input::placeholder, textarea::placeholder { color: var(--text-3); }
 
-/* ── Page ── */
-.page {
+/* ── Page Header ── */
+.page-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     gap: 20px;
-    animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    margin-bottom: 8px;
 }
-@keyframes fadeUp {
-    from { opacity:0; transform:translateY(16px); }
-    to   { opacity:1; transform:translateY(0); }
+.page-header-left h1 {
+    font-size: 28px;
+    font-weight: 850;
+    color: var(--text);
+    letter-spacing: -0.04em;
+    line-height: 1.1;
 }
-
-/* ═══════════════════════════════════════
-   TOPBAR
-═══════════════════════════════════════ */
-.topbar {
+.page-header-left p {
+    font-size: 13px;
+    color: var(--text-3);
+    margin-top: 6px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    gap: 8px;
+    font-weight: 500;
+}
+.page-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Toolbar ── */
+.toolbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
     flex-wrap: wrap;
 }
-
-.topbar-left h1 {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--text);
-    letter-spacing: -0.03em;
-    line-height: 1;
+.search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
 }
-.topbar-left p {
-    font-size: 12px;
-    color: var(--text-3);
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.live-dot {
-    width: 6px; height: 6px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 2s ease infinite;
-}
-@keyframes pulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(34,201,122,0.5); }
-    50%      { box-shadow: 0 0 0 5px rgba(34,201,122,0); }
-}
-
-.topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-/* Search */
-.search-wrap { position: relative; }
 .search-wrap svg {
-    position: absolute; left: 14px; top: 50%;
+    position: absolute;
+    left: 14px;
+    top: 50%;
     transform: translateY(-50%);
-    width: 16px; height: 16px;
+    width: 16px;
+    height: 16px;
     color: var(--text-3);
     pointer-events: none;
-    transition: color var(--transition);
 }
-.search-wrap:focus-within svg { color: var(--accent); }
-.search-input {
+.search-wrap input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px 10px 42px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.2s;
+}
+.search-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-dim);
+    background: var(--surface);
+}
+
+.filter-select {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 10px 16px 10px 40px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 140px;
+}
+.filter-select:hover {
+    border-color: var(--border-2);
     color: var(--text);
-    font-size: 13px;
-    font-weight: 500;
-    width: 260px;
-    transition: border-color var(--transition), box-shadow var(--transition), width var(--transition);
-}
-.search-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-dim);
-    width: 300px;
 }
 
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
+.toolbar-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 4px;
+}
+
+.filter-tabs {
+    display: flex;
+    padding: 4px;
+    background: var(--bg);
     border-radius: var(--radius);
-    font-size: 13px;
-    font-weight: 700;
-    transition: all var(--transition);
-    white-space: nowrap;
-    text-decoration: none;
+    border: 1px solid var(--border);
 }
-.btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+.filter-chip {
+    padding: 6px 14px;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-3);
+    transition: all 0.2s;
+}
+.filter-chip.active {
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+.filter-chip:hover:not(.active) {
+    color: var(--text-2);
+}
 
+.toolbar-results {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
+    margin-left: auto;
+    padding-right: 8px;
+}
+
+/* ── Specific Button Overrides ── */
 .btn-primary {
     background: var(--accent);
     color: #fff;
-    box-shadow: 0 4px 14px rgba(79,110,247,0.25);
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(79,110,247,0.25);
+    transition: all 0.2s;
 }
 .btn-primary:hover {
-    background: #5d7cf8;
-    box-shadow: 0 6px 20px rgba(79,110,247,0.4);
     transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(79,110,247,0.35);
 }
 .btn-ghost {
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text-2);
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
 }
-.btn-ghost:hover { border-color: var(--border-2); color: var(--text); background: var(--surface-2); }
+.btn-ghost:hover {
+    border-color: var(--border-2);
+    background: var(--surface-2);
+    color: var(--text);
+}
 
-/* ═══════════════════════════════════════
-   STATS ROW
-═══════════════════════════════════════ */
-.stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+/* ── Table Actions ── */
+.action-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
 }
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--text-3);
+    border: 1px solid transparent;
+    transition: all 0.25s;
+    background: transparent;
+}
+.btn-icon svg { width: 15px; height: 15px; }
+.btn-icon:hover {
+    background: var(--surface-2);
+    color: var(--accent);
+    border-color: var(--border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+.btn-icon.delete:hover {
+    color: var(--red);
+    background: var(--red-dim);
+    border-color: rgba(240,71,71,0.1);
+}
+.btn-icon:active { transform: scale(0.92); }
+
+/* Stats Card */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 @media (max-width: 800px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 460px) { .stats-row { grid-template-columns: 1fr; } }
-
 .stat-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -196,12 +231,7 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
     transition: border-color var(--transition), transform var(--transition);
 }
 .stat-card:hover { border-color: var(--border-2); transform: translateY(-1px); }
-.stat-ico {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-}
+.stat-ico { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .stat-ico svg { width: 18px; height: 18px; }
 .stat-ico.blue   { background: var(--accent-dim); color: var(--accent); }
 .stat-ico.green  { background: var(--green-dim);  color: var(--green);  }
@@ -210,534 +240,296 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
 .stat-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'DM Mono', monospace; }
 .stat-val   { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1.1; }
 
-/* ═══════════════════════════════════════
-   FILTERS BAR
-═══════════════════════════════════════ */
-.filters-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-.filter-label {
-    font-size: 10px; font-weight: 700;
-    color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-family: 'DM Mono', monospace;
-    margin-right: 4px;
-    flex-shrink: 0;
-}
-.filter-chip {
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text-2);
-    cursor: pointer;
-    transition: all var(--transition);
-}
-.filter-chip:hover { border-color: var(--border-2); color: var(--text); }
-.filter-chip.active {
-    background: var(--accent-dim);
-    border-color: rgba(79,110,247,0.3);
-    color: var(--accent);
-}
-.filter-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
-.filter-select {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 6px 32px 6px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-2);
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a5072' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    transition: all var(--transition);
-}
-.filter-select:focus { border-color: var(--accent); color: var(--text); outline: none; }
-.filter-count {
-    margin-left: auto;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-3);
-    font-family: 'DM Mono', monospace;
-    flex-shrink: 0;
-}
-
-/* ═══════════════════════════════════════
-   TABLE CARD
-═══════════════════════════════════════ */
-.table-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
+/* Table */
+.table-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow); }
 .table-scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
-
 thead th {
-    padding: 12px 20px;
-    text-align: left;
-    font-family: 'DM Mono', monospace;
-    font-size: 9.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--text-3);
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
+    padding: 14px 20px; text-align: left; font-family: 'DM Mono', monospace; font-size: 10px;
+    font-weight: 850; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3);
+    background: var(--surface-2); border-bottom: 1px solid var(--border); white-space: nowrap;
 }
 thead th:last-child { text-align: right; }
-th.sortable { cursor: pointer; user-select: none; }
-th.sortable:hover { color: var(--text-2); }
-th.sortable::after { content: ' ↕'; opacity: 0.4; font-size: 8px; }
-th.sort-asc::after  { content: ' ↑'; opacity: 1; color: var(--accent); }
-th.sort-desc::after { content: ' ↓'; opacity: 1; color: var(--accent); }
-
-tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background var(--transition);
-}
-tbody tr:last-child { border-bottom: none; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background var(--transition); }
 tbody tr:hover { background: var(--surface-2); }
 tbody td { padding: 14px 20px; vertical-align: middle; }
 
-/* Product cell */
+/* Product Row Specifics */
 .prod-cell { display: flex; align-items: center; gap: 12px; }
 .prod-thumb {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface-3);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    overflow: hidden;
+    width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--surface-3); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: hidden;
 }
 .prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.prod-thumb svg { width: 18px; height: 18px; color: var(--text-3); }
-.prod-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1; }
-.prod-sku  { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-3); margin-top: 3px; }
+.prod-name { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.1; }
+.prod-sku  { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.cat-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.cat-pill { 
+    display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 8px; 
+    font-size: 11px; font-weight: 750; background: var(--surface-2); border: 1px solid var(--border); 
+    color: var(--text-2); transition: all 0.2s; cursor: default;
+}
+.cat-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.price-main { font-size: 14.5px; font-weight: 850; color: var(--text); }
+.price-sale { font-size: 11.5px; font-weight: 800; color: #fff; background: var(--green); padding: 2px 10px; border-radius: 100px; display: inline-block; margin-top: 4px; box-shadow: 0 4px 12px rgba(34,201,122,0.25); }
+.price-was { font-size: 11px; color: var(--text-3); text-decoration: line-through; }
 
-/* Category pills */
-.cat-pills { display: flex; flex-wrap: wrap; gap: 5px; }
-.cat-pill {
-    padding: 3px 9px;
-    border-radius: 100px;
-    font-size: 10px;
-    font-weight: 700;
-    background: var(--surface-3);
-    border: 1px solid var(--border);
-    color: var(--text-2);
-    white-space: nowrap;
-}
-
-/* Price */
-.price-main { font-size: 14px; font-weight: 800; color: var(--text); }
-.price-sale {
-    font-size: 11px; font-weight: 700;
-    color: var(--green);
-    background: var(--green-dim);
-    padding: 2px 7px;
-    border-radius: 100px;
-    display: inline-block;
-    margin-top: 3px;
-}
-.price-was { font-size: 10px; color: var(--text-3); text-decoration: line-through; }
-
-/* Status badge */
-.status-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; font-weight: 700;
-    padding: 4px 10px; border-radius: 100px;
-    border: 1px solid transparent; white-space: nowrap;
-}
-.status-badge::before {
-    content: ''; width: 5px; height: 5px;
-    border-radius: 50%; background: currentColor; flex-shrink: 0;
-}
+/* Status */
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; border: 1px solid transparent; white-space: nowrap; }
+.status-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 .status-active   { background: var(--green-dim); color: var(--green); border-color: rgba(34,201,122,0.2); }
 .status-inactive { background: var(--surface-3); color: var(--text-3); border-color: var(--border); }
 
-/* Stock */
-.stock-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; font-weight: 700;
-    padding: 4px 10px; border-radius: 100px;
-    border: 1px solid transparent;
+/* Toast */
+.toast {
+    position:fixed; bottom:24px; right:24px; z-index:2000;
+    display:flex; align-items:center; gap:12px; padding:14px 20px;
+    background:var(--surface); border:1px solid var(--border-2);
+    border-radius:var(--radius-lg); box-shadow:0 12px 32px rgba(0,0,0,0.25);
+    transform:translateY(20px); opacity:0; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    pointer-events:none; min-width:280px;
 }
-.stock-badge::before {
-    content: ''; width: 5px; height: 5px;
-    border-radius: 50%; background: currentColor; flex-shrink: 0;
-}
-.stock-in  { background: var(--green-dim); color: var(--green); border-color: rgba(34,201,122,0.2); }
-.stock-low { background: var(--amber-dim); color: var(--amber); border-color: rgba(245,158,11,0.2); }
-.stock-out { background: var(--red-dim);   color: var(--red);   border-color: rgba(240,71,71,0.2); }
-
-/* Actions */
-.actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
-.icon-btn {
-    width: 32px; height: 32px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text-2);
-    transition: all var(--transition);
-    cursor: pointer;
-}
-.icon-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border-2); }
-.icon-btn.danger:hover { background: var(--red-dim); color: var(--red); border-color: rgba(240,71,71,0.3); }
-.icon-btn svg { width: 14px; height: 14px; }
-
-/* Empty state */
-.empty-state {
-    padding: 80px 40px;
-    text-align: center;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 14px;
-}
-.empty-ico {
-    width: 56px; height: 56px; border-radius: 16px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-3);
-}
-.empty-ico svg { width: 24px; height: 24px; }
-.empty-state h3 { font-size: 15px; font-weight: 700; color: var(--text-2); }
-.empty-state p  { font-size: 12px; color: var(--text-3); max-width: 280px; line-height: 1.6; }
-
-/* Pagination */
-.pager {
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    background: var(--surface-2);
-    display: flex; align-items: center;
-    justify-content: space-between; gap: 12px; flex-wrap: wrap;
-}
-.pager-info { font-size: 11px; color: var(--text-3); font-family: 'DM Mono', monospace; }
-
-/* ═══════════════════════════════════════
-   MODAL
-═══════════════════════════════════════ */
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-dot { width:8px; height:8px; border-radius:50%; }
+.toast.success .toast-dot { background:var(--green); }
+.toast.error .toast-dot { background:var(--red); }
+/* ── Modals ── */
 .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.22s ease;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    z-index: 1000; display: none; align-items: center; justify-content: center;
+    padding: 24px; opacity: 0; transition: opacity 0.3s;
 }
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-
-.modal-shell {
-    background: var(--surface);
-    border: 1px solid var(--border-2);
-    border-radius: var(--radius-xl);
-    width: 100%; max-width: 680px; max-height: 90vh;
-    display: flex; flex-direction: column;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-    transform: translateY(14px) scale(0.98);
-    transition: transform 0.22s cubic-bezier(0.16,1,0.3,1);
+.modal-overlay.open { display: flex; opacity: 1; }
+.modal-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-xl); width: 100%; max-width: 720px;
+    max-height: 90vh; display: flex; flex-direction: column;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
     overflow: hidden;
 }
-.modal-overlay.open .modal-shell { transform: translateY(0) scale(1); }
+.modal-overlay.open .modal-container { transform: translateY(0); }
 
-.modal-head {
-    padding: 22px 26px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center;
-    justify-content: space-between; gap: 16px;
-    flex-shrink: 0;
-}
-.modal-head-left { display: flex; align-items: center; gap: 12px; }
-.modal-icon {
-    width: 40px; height: 40px; border-radius: 12px;
-    background: var(--accent-dim);
-    border: 1px solid rgba(79,110,247,0.2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--accent); flex-shrink: 0;
-}
-.modal-icon svg { width: 18px; height: 18px; }
-.modal-title    { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
+.modal-head { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.modal-head-left { display: flex; align-items: center; gap: 14px; }
+.modal-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-dim); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+.modal-title { font-size: 16px; font-weight: 800; color: var(--text); }
 .modal-subtitle { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-.modal-x {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    color: var(--text-2);
-    display: flex; align-items: center; justify-content: center;
-    transition: all var(--transition); cursor: pointer; flex-shrink: 0;
-}
-.modal-x:hover { background: var(--red-dim); color: var(--red); border-color: rgba(240,71,71,0.3); }
-.modal-x svg { width: 16px; height: 16px; }
+.modal-x { color: var(--text-3); padding: 8px; border-radius: 8px; transition: all 0.2s; }
+.modal-x:hover { background: var(--surface-2); color: var(--text); }
 
-/* Tabs */
-.modal-tabs {
-    display: flex; gap: 2px;
-    padding: 0 26px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface-2);
-    flex-shrink: 0;
-}
-.modal-tab {
-    padding: 11px 15px;
-    font-size: 12px; font-weight: 700;
-    color: var(--text-3);
-    border-bottom: 2px solid transparent;
-    transition: all var(--transition);
-    cursor: pointer; white-space: nowrap; background: none; border-left: none; border-right: none; border-top: none;
-}
+.modal-tabs { display: flex; gap: 4px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.modal-tab { padding: 12px 20px; font-size: 13px; font-weight: 700; color: var(--text-3); border-bottom: 2px solid transparent; transition: all 0.2s; position: relative; top: 1px; }
 .modal-tab:hover { color: var(--text-2); }
 .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-.modal-body {
-    padding: 22px 26px;
-    overflow-y: auto; flex: 1; display: none;
-}
+.modal-body { padding: 24px; overflow-y: auto; display: none; }
 .modal-body.active { display: block; }
-.modal-body::-webkit-scrollbar { width: 4px; }
-.modal-body::-webkit-scrollbar-track { background: transparent; }
-.modal-body::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-row.single { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label { font-size: 11px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13.5px; color: var(--text); transition: all 0.2s; width: 100%; }
+.field input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); background: var(--surface); }
+.req { color: var(--red); }
+.hint { font-size: 11px; color: var(--text-3); margin-top: 4px; }
 
-.modal-foot {
-    padding: 14px 26px;
-    border-top: 1px solid var(--border);
-    display: flex; align-items: center;
-    justify-content: space-between; gap: 12px;
-    background: var(--surface-2); flex-shrink: 0;
-}
+.toggle-row { display: flex; align-items: center; gap: 16px; background: var(--bg); border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; }
+.toggle-info { flex: 1; display: flex; flex-direction: column; }
+.toggle-info strong { font-size: 12.5px; color: var(--text); }
+.toggle-info span { font-size: 10.5px; color: var(--text-3); }
+.toggle { position: relative; width: 38px; height: 20px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track { position: absolute; inset: 0; background: var(--surface-3); border-radius: 100px; cursor: pointer; transition: 0.2s; }
+.toggle-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; box-shadow: var(--shadow-sm); transition: 0.2s; }
+.toggle input:checked + .toggle-track { background: var(--green); }
+.toggle input:checked + .toggle-track .toggle-thumb { transform: translateX(18px); }
+
+.section-head { display: flex; align-items: center; gap: 12px; margin: 24px 0 16px; }
+.section-head span { font-size: 12px; font-weight: 850; color: var(--text); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+.section-line { height: 1px; background: var(--border); flex: 1; }
+
+.modal-foot { padding: 16px 24px; border-top: 1px solid var(--border); background: var(--surface-2); display: flex; align-items: center; justify-content: space-between; }
 .modal-foot-left { font-size: 11px; color: var(--text-3); }
 .modal-foot-right { display: flex; gap: 10px; }
 
-/* Form */
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-.form-row.single { grid-template-columns: 1fr; }
-
-.field { display: flex; flex-direction: column; gap: 7px; }
-.field label {
-    font-size: 10.5px; font-weight: 700;
-    color: var(--text-2);
-    text-transform: uppercase; letter-spacing: 0.07em;
-    font-family: 'DM Mono', monospace;
-    display: flex; align-items: center; gap: 5px;
-}
-.field label .req { color: var(--red); }
-.field input, .field select, .field textarea {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    color: var(--text);
-    font-size: 13px; font-weight: 500;
-    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
-}
-.field input:focus, .field select:focus, .field textarea:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-dim);
-    background: var(--surface);
-    outline: none;
-}
-.field textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
-.field select[multiple] { min-height: 108px; }
-.field .hint { font-size: 11px; color: var(--text-3); line-height: 1.5; }
-
-/* Toggle */
-.toggle-row {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: var(--radius); gap: 12px;
-}
-.toggle-info { display: flex; flex-direction: column; gap: 2px; }
-.toggle-info strong { font-size: 13px; font-weight: 700; color: var(--text); }
-.toggle-info span   { font-size: 11px; color: var(--text-3); }
-.toggle { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
-.toggle input { opacity: 0; width: 0; height: 0; }
-.toggle-track {
-    position: absolute; inset: 0;
-    background: var(--surface-3); border: 1px solid var(--border);
-    border-radius: 100px; cursor: pointer;
-    transition: background var(--transition), border-color var(--transition);
-}
-.toggle input:checked ~ .toggle-track { background: var(--accent); border-color: var(--accent); }
-.toggle-thumb {
-    position: absolute; top: 3px; left: 3px;
-    width: 16px; height: 16px;
-    background: var(--text-3); border-radius: 50%;
-    pointer-events: none;
-    transition: transform var(--transition), background var(--transition);
-}
-.toggle input:checked ~ .toggle-track .toggle-thumb { transform: translateX(18px); background: #fff; }
-
-/* Image upload */
+/* ── Media Upload & Previews ── */
 .upload-zone {
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-lg);
-    padding: 28px 20px;
-    text-align: center; cursor: pointer;
-    transition: all var(--transition); position: relative;
+    border: 2px dashed var(--border-2); border-radius: 16px; padding: 32px;
+    text-align: center; background: var(--surface-2); transition: all 0.3s;
+    position: relative; cursor: pointer; overflow: hidden;
 }
 .upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: var(--accent-dim); }
-.upload-zone input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; }
+.upload-ico { 
+    width: 64px; height: 64px; border-radius: 20px; background: var(--bg); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
 }
-.upload-ico {
-    width: 44px; height: 44px; border-radius: 13px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 10px; color: var(--text-3);
+.upload-ico svg { width: 32px; height: 32px; }
+.upload-zone h4 { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.upload-zone p { font-size: 12px; color: var(--text-3); margin-bottom: 20px; }
+.upload-tag { 
+    display: inline-block; padding: 8px 20px; border-radius: 100px; background: var(--surface-3);
+    color: var(--text-2); font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.05em; border: 1px solid var(--border); transition: all 0.2s;
 }
-.upload-ico svg { width: 20px; height: 20px; }
-.upload-zone h4 { font-size: 13px; font-weight: 700; color: var(--text-2); }
-.upload-zone p  { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
-.upload-tag {
-    display: inline-block; margin-top: 10px;
-    padding: 4px 12px; background: var(--accent-dim);
-    color: var(--accent); border-radius: 100px;
-    font-size: 11px; font-weight: 700;
-    border: 1px solid rgba(79,110,247,0.2);
+.upload-zone:hover .upload-tag { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.img-preview-grid { 
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+    gap: 12px; margin-top: 24px; 
 }
-.img-preview-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 14px; }
 .img-preview {
-    aspect-ratio: 1; border-radius: 12px;
-    overflow: hidden; border: 1px solid var(--border);
-    position: relative; background: var(--surface-3);
+    aspect-ratio: 1; border-radius: 12px; overflow: hidden; position: relative;
+    border: 1px solid var(--border); background: var(--surface-3);
+    animation: zoomIn 0.3s cubic-bezier(0.16,1,0.3,1);
 }
+.img-preview.removing { transform: scale(0.8); opacity: 0; transition: 0.3s; }
 .img-preview img { width: 100%; height: 100%; object-fit: cover; }
+.img-preview.existing { border-color: var(--border-2); }
 .img-preview .rm-img {
-    position: absolute; top: 4px; right: 4px;
-    width: 22px; height: 22px; border-radius: 6px;
-    background: rgba(0,0,0,0.7); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; opacity: 0; transition: opacity var(--transition);
-    cursor: pointer; border: none;
+    position: absolute; top: 6px; right: 6px; width: 26px; height: 26px;
+    border-radius: 8px; background: rgba(0,0,0,0.6); color: #fff;
+    backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; opacity: 0; transform: translateY(-5px); transition: all 0.2s;
+    z-index: 5;
 }
-.img-preview:hover .rm-img { opacity: 1; }
+.img-preview:hover .rm-img { opacity: 1; transform: translateY(0); }
+.img-preview .rm-img:hover { background: var(--red); transform: scale(1.1); }
 
-/* Section head */
-.section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-.section-head span { font-size: 11px; font-weight: 800; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
-.section-line { flex: 1; height: 1px; background: var(--border); }
-
-/* Discount preview */
-.discount-preview {
-    margin-top: 4px; padding: 11px 14px;
-    background: var(--green-dim);
-    border: 1px solid rgba(34,201,122,0.2);
-    border-radius: var(--radius);
-    font-size: 12px; color: var(--green); font-weight: 700;
-}
-.margin-display {
-    padding: 10px 14px;
-    background: var(--surface-3); border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 13px; font-weight: 700; color: var(--text-2);
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Delete confirm */
-.confirm-body {
-    padding: 36px 32px;
-    text-align: center;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 14px;
-}
-.danger-ico {
-    width: 58px; height: 58px; border-radius: 17px;
-    background: var(--red-dim); border: 1px solid rgba(240,71,71,0.2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--red);
-}
-.danger-ico svg { width: 26px; height: 26px; }
-.confirm-body h3 { font-size: 18px; font-weight: 800; color: var(--text); }
-.confirm-body p  { font-size: 13px; color: var(--text-2); line-height: 1.6; max-width: 300px; }
-.confirm-btns { display: flex; gap: 10px; }
+/* ── Delete Modal Specific ── */
+.confirm-body { padding: 40px 32px; text-align: center; }
+.danger-ico { width: 56px; height: 56px; border-radius: 16px; background: var(--red-dim); color: var(--red); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.danger-ico svg { width: 24px; height: 24px; }
+.confirm-body h3 { font-size: 18px; font-weight: 850; color: var(--text); margin-bottom: 8px; }
+.confirm-body p { font-size: 13.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 24px; }
+.confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-/* Toast */
-.toast-wrap {
-    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-    display: flex; flex-direction: column; gap: 8px; pointer-events: none;
-}
-.toast {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px;
-    background: var(--surface); border: 1px solid var(--border-2);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    font-size: 13px; font-weight: 600; color: var(--text);
-    animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1);
-    pointer-events: all; min-width: 220px; max-width: 340px;
-}
-.toast.removing { animation: toastOut 0.25s ease forwards; }
-.toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.toast.success .toast-dot { background: var(--green); }
-.toast.error   .toast-dot { background: var(--red); }
-@keyframes toastIn  { from { opacity:0; transform:translateX(16px) scale(0.96); } to { opacity:1; transform:translateX(0) scale(1); } }
-@keyframes toastOut { to   { opacity:0; transform:translateX(16px) scale(0.96); } }
+/* ── Toast ── */
 
-/* Responsive */
-@media (max-width: 640px) {
-    .modal-overlay { align-items: flex-end; padding: 0; }
-    .modal-shell { max-width: 100%; border-radius: var(--radius-lg) var(--radius-lg) 0 0; align-self: flex-end; }
-    .form-row { grid-template-columns: 1fr; }
-    .img-preview-grid { grid-template-columns: repeat(3,1fr); }
+/* Pagination Override for Laravel Links */
+.premium-pagination { 
+    margin-top: 32px !important; 
+    padding: 24px 20px 0 !important; 
+    border-top: 1px solid var(--border) !important; 
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+.premium-pagination nav { 
+    display: flex !important; 
+    justify-content: center !important; 
+    width: auto !important; 
+    border: none !important; 
+    box-shadow: none !important; 
+    background: transparent !important; 
+}
+/* Aggressively hide the 'Showing X to Y results' part */
+.premium-pagination p, 
+.premium-pagination nav > div:first-child,
+.premium-pagination nav > div:last-child > div:first-child { 
+    display: none !important; 
+}
+
+.premium-pagination nav > div:last-child { 
+    display: flex !important; 
+    flex-direction: column !important; 
+    align-items: center !important; 
+    border: none !important; 
+    margin: 0 !important; 
+    padding: 0 !important; 
+}
+
+.premium-pagination nav > div:last-child > div:last-child { 
+    display: flex !important; 
+    gap: 8px !important; 
+    flex-wrap: wrap !important; 
+    justify-content: center !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.premium-pagination span, .premium-pagination a {
+    min-width: 42px !important; 
+    height: 42px !important; 
+    display: flex !important; 
+    align-items: center !important; 
+    justify-content: center !important;
+    border-radius: 12px !important; 
+    border: 1px solid var(--border-1) !important;
+    background: var(--surface-2) !important; 
+    color: var(--text-2) !important;
+    font-size: 14px !important; 
+    font-weight: 750 !important; 
+    text-decoration: none !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+.premium-pagination a:hover { 
+    background: var(--accent-dim) !important; 
+    color: var(--accent) !important; 
+    border-color: var(--accent-mid) !important; 
+    transform: translateY(-2px) !important; 
+    box-shadow: 0 6px 15px var(--accent-glow) !important;
+}
+.premium-pagination [aria-current="page"] span, 
+.premium-pagination .active span { 
+    background: var(--accent) !important; 
+    color: #fff !important; 
+    border-color: var(--accent) !important; 
+    box-shadow: 0 6px 20px var(--accent-glow) !important; 
+    transform: scale(1.05) !important;
+}
+.premium-pagination .disabled span, 
+.premium-pagination [aria-disabled="true"] span { 
+    opacity: 0.3 !important; 
+    cursor: not-allowed !important; 
 }
 </style>
 @endpush
 
 @section('content')
-<div class="page">
+
+<div class="page" data-superadmin="{{ Auth::user()->isSuperAdmin() ? '1' : '0' }}">
 
     {{-- ── Topbar ── --}}
-    <div class="topbar">
-        <div class="topbar-left">
+    <div class="page-header">
+        <div class="page-header-left">
             <h1>@lang('admin.products')</h1>
-            <p><span class="live-dot"></span>{{ $products->total() }} @lang('admin.total_products')</p>
+            <p>
+                <span class="live-dot"></span>
+                {{ $products->total() }} @lang('admin.total_products')
+            </p>
         </div>
-        <div class="topbar-right">
-            <div class="search-wrap">
+        <div class="page-header-right">
+            <button class="btn-ghost" onclick="exportCSV()">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
-                <input class="search-input" id="prod-search" type="text" placeholder="@lang('admin.search_products')…">
-            </div>
-            <button class="btn btn-ghost" onclick="exportCSV()">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 @lang('admin.export')
             </button>
-            <button class="btn btn-primary" onclick="openProductModal('create')">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            <button class="btn-primary" onclick="openProductModal('create')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
                 @lang('admin.add_product')
             </button>
         </div>
     </div>
 
     {{-- ── Stats ── --}}
-    <div class="stats-row">
-        @php
-            $totalCount    = $products->total();
-            $activeCount   = $products->getCollection()->where('is_active', true)->count();
-            $inactiveCount = $products->getCollection()->where('is_active', false)->count();
-            $lowStockCount = $products->getCollection()->where('stock', '<', 10)->count();
-        @endphp
+    <div class="stats-row " style="margin: 20px 0;">
         <div class="stat-card">
             <div class="stat-ico blue">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
@@ -754,7 +546,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
             <div class="stat-ico amber">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.low_stock')</div><div class="stat-val">{{ number_format($lowStockCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.out_of_stock')</div><div class="stat-val">{{ number_format($lowStockCount) }}</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico red">
@@ -764,26 +556,38 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
         </div>
     </div>
 
-    {{-- ── Filters ── --}}
-    <div class="filters-bar">
-        <span class="filter-label">@lang('admin.filter')</span>
-        <button class="filter-chip active" onclick="filterStatus(this,'all')">@lang('admin.all')</button>
-        <button class="filter-chip" onclick="filterStatus(this,'active')">@lang('admin.active')</button>
-        <button class="filter-chip" onclick="filterStatus(this,'inactive')">@lang('admin.inactive')</button>
-        <div class="filter-divider"></div>
+    {{-- ── Toolbar ── --}}
+    <div class="toolbar" style="margin: 20px 0;">
+        <div class="search-wrap">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" id="prod-search" placeholder="{{ __('admin.search_products') }}" autocomplete="off">
+        </div>
+
         <select class="filter-select" onchange="filterCategory(this.value)">
             <option value="">@lang('admin.all_categories')</option>
             @foreach($categories as $cat)
                 <option value="{{ strtolower($cat->name) }}">{{ $cat->name }}</option>
             @endforeach
         </select>
+
         <select class="filter-select" onchange="sortTable(this.value)">
             <option value="name-asc">@lang('admin.name_az')</option>
             <option value="name-desc">@lang('admin.name_za')</option>
             <option value="price-asc">@lang('admin.price_low')</option>
             <option value="price-desc">@lang('admin.price_high')</option>
         </select>
-        <span class="filter-count" id="row-count"></span>
+        
+        <div class="toolbar-sep"></div>
+        
+        <div class="filter-tabs">
+            <button class="filter-chip active" onclick="filterStatus(this,'all')">@lang('admin.all')</button>
+            <button class="filter-chip" onclick="filterStatus(this,'active')">@lang('admin.active')</button>
+            <button class="filter-chip" onclick="filterStatus(this,'inactive')">@lang('admin.inactive')</button>
+        </div>
+        
+        <div class="toolbar-results" id="row-count"></div>
     </div>
 
     {{-- ── Table ── --}}
@@ -845,14 +649,11 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
 
                         <td>
                             @php
-                                $stock = $product->stock ?? 0;
-                                $sc = $stock > 10 ? 'stock-in' : ($stock > 0 ? 'stock-low' : 'stock-out');
-                                $sl = $stock > 10 ? __('admin.in_stock') : ($stock > 0 ? __('admin.low_stock') : __('admin.out_of_stock'));
+                                $status = $product->stock_status ?? 'instock';
+                                $sc = $status === 'instock' ? 'stock-in' : 'stock-out';
+                                $sl = $status === 'instock' ? __('admin.in_stock') : __('admin.out_of_stock');
                             @endphp
                             <span class="stock-badge {{ $sc }}">{{ $sl }}</span>
-                            @if($stock > 0)
-                                <div style="font-size:10px;color:var(--text-3);margin-top:3px;font-family:'DM Mono',monospace;">{{ $stock }} @lang('admin.units')</div>
-                            @endif
                         </td>
 
                         <td>
@@ -862,13 +663,19 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                         </td>
 
                         <td>
-                            <div class="actions">
-                                <button class="icon-btn" onclick="editProduct({{ $product->id }})" title="@lang('admin.edit')">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            <div class="action-group">
+                                @if(Auth::user()->isSuperAdmin())
+                                <button class="btn-icon edit-prod-btn" data-id="{{ $product->id }}" title="{{ __('admin.edit') }}">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </button>
-                                <button class="icon-btn danger" onclick="openDeleteModal({{ $product->id }}, '{{ addslashes($product->name) }}')" title="@lang('admin.delete')">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                <button class="btn-icon delete delete-prod-btn" data-id="{{ $product->id }}" data-name="{{ $product->name }}" title="{{ __('admin.delete') }}">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
+                                @else
+                                <button class="btn-icon edit-prod-btn" data-id="{{ $product->id }}" title="{{ __('admin.view_details') }}">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -890,20 +697,16 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
         </div>
 
         @if($products->hasPages())
-        <div class="pager">
-            <span class="pager-info">{{ $products->firstItem() }}–{{ $products->lastItem() }} @lang('admin.of') {{ $products->total() }}</span>
+        <div class="premium-pagination" style="margin-bottom:20px">
             {{ $products->links() }}
         </div>
         @endif
     </div>
 
-</div>{{-- /page --}}
+</div>
 
-{{-- ══════════════════════════
-     PRODUCT MODAL
-══════════════════════════ --}}
 <div class="modal-overlay" id="prod-modal" onclick="overlayClick(event)">
-    <div class="modal-shell">
+    <div class="modal-container">
 
         <div class="modal-head">
             <div class="modal-head-left">
@@ -1026,7 +829,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
             <div class="modal-foot-left" id="modal-foot-hint">@lang('admin.required_fields_hint')</div>
             <div class="modal-foot-right">
                 <button class="btn btn-ghost" onclick="closeModal('prod-modal')">@lang('admin.cancel')</button>
-                <button class="btn btn-primary" id="save-btn" onclick="saveProduct()">
+                <button class="btn btn-primary" id="save-btn" onclick="saveProduct()" style="gap:8px">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     @lang('admin.save_product')
                 </button>
@@ -1035,9 +838,11 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
     </div>
 </div>
 
-{{-- ── Delete modal ── --}}
+{{-- ---
+     DELETE MODAL
+--- --}}
 <div class="modal-overlay" id="delete-modal" onclick="overlayClick(event)">
-    <div class="modal-shell" style="max-width:400px;">
+    <div class="modal-container" style="max-width:400px;">
         <div class="confirm-body">
             <div class="danger-ico">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
@@ -1054,7 +859,11 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
     </div>
 </div>
 
-<div class="toast-wrap" id="toast-wrap"></div>
+{{-- Toast --}}
+<div class="toast" id="toast">
+    <span class="toast-dot"></span>
+    <span id="toast-msg"></span>
+</div>
 
 @endsection
 
@@ -1063,6 +872,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
 /* ── State ── */
 let isEditing = false, editingId = null;
 let allRows = [], activeFilter = 'all', activeCat = '';
+let selectedFiles = []; // To hold File objects
 
 document.addEventListener('DOMContentLoaded', () => {
     allRows = Array.from(document.querySelectorAll('#prod-tbody tr[id^="row-"]'));
@@ -1070,6 +880,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initPricingWatchers();
     initDragDrop();
     document.getElementById('prod-search').addEventListener('input', applyFilters);
+
+    // Event delegation
+    document.addEventListener('click', e => {
+        const editBtn = e.target.closest('.edit-prod-btn');
+        if (editBtn) editProduct(editBtn.dataset.id);
+
+        const delBtn = e.target.closest('.delete-prod-btn');
+        if (delBtn) openDeleteModal(delBtn.dataset.id, delBtn.dataset.name);
+    });
 });
 
 /* ── Modal ── */
@@ -1104,17 +923,22 @@ function openProductModal(mode, data = null) {
     // Reset tabs to first
     document.querySelectorAll('.modal-tab')[0].click();
 
-    document.getElementById('modal-title').textContent    = isEditing ? '@lang("admin.edit_product")' : '@lang("admin.add_product")';
-    document.getElementById('modal-subtitle').textContent = isEditing ? '@lang("admin.update_product_info")' : '@lang("admin.fill_product_details")';
+    document.getElementById('modal-title').textContent    = isEditing ? '{{ __("admin.update_product") }}' : '{{ __("admin.add_product") }}';
+    document.getElementById('modal-subtitle').textContent = isEditing ? '{{ __("admin.update_product_info") }}' : '{{ __("admin.fill_product_details") }}';
 
     const editIco = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
     const addIco  = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>';
     document.getElementById('modal-icon').innerHTML = isEditing ? editIco : addIco;
 
     const saveBtn = document.getElementById('save-btn');
-    saveBtn.innerHTML = isEditing
-        ? '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>@lang("admin.update_product")'
-        : '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>@lang("admin.save_product")';
+    const isSuperAdmin = document.querySelector('.page').dataset.superadmin === '1';
+
+    if (saveBtn) {
+        saveBtn.innerHTML = isEditing
+            ? '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>{{ __("admin.update_product") }}'
+            : '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>{{ __("admin.save_product") }}';
+        saveBtn.disabled = false;
+    }
 
     if (isEditing && data) {
         editingId = data.id;
@@ -1128,7 +952,19 @@ function openProductModal(mode, data = null) {
         document.getElementById('prod-active').checked   = !!data.is_active;
         const sel = document.getElementById('prod-categories');
         Array.from(sel.options).forEach(o => o.selected = (data.categories||[]).some(c => c.id == o.value));
-        document.getElementById('img-preview-grid').innerHTML = '';
+        
+        const grid = document.getElementById('img-preview-grid');
+        grid.innerHTML = '';
+        selectedFiles = []; // Reset new uploads but keep existing as previews
+        (data.images || []).forEach(img => {
+            const d = document.createElement('div');
+            d.className = 'img-preview existing';
+            d.innerHTML = `
+                <img src="${img.image_url}" alt="">
+                <button class="rm-img" onclick="deleteExistingImage(${img.id}, this)" title="Delete Permanently">✕</button>
+            `;
+            grid.appendChild(d);
+        });
         updatePricingPreview();
     } else {
         editingId = null;
@@ -1140,6 +976,7 @@ function openProductModal(mode, data = null) {
         document.getElementById('prod-active').checked   = true;
         Array.from(document.getElementById('prod-categories').options).forEach(o => o.selected = false);
         document.getElementById('img-preview-grid').innerHTML = '';
+        selectedFiles = [];
         document.getElementById('discount-preview').style.display = 'none';
         document.getElementById('margin-val').textContent = '—';
     }
@@ -1157,7 +994,7 @@ async function editProduct(id) {
         const data = await res.json();
         openProductModal('edit', data);
     } catch {
-        showToast('@lang("admin.failed_load_product")', 'error');
+        showToast('{{ __("admin.failed_load_product") }}', 'error');
     }
 }
 
@@ -1168,7 +1005,7 @@ async function saveProduct() {
     const price = parseFloat(document.getElementById('prod-price').value);
 
     if (!name || !sku || isNaN(price) || price < 0) {
-        showToast('@lang("admin.fill_required_fields")', 'error');
+        showToast('{{ __("admin.fill_required_fields") }}', 'error');
         document.querySelectorAll('.modal-tab')[0].click();
         return;
     }
@@ -1176,38 +1013,43 @@ async function saveProduct() {
     const saleVal   = document.getElementById('prod-sale-price').value;
     const saleParsed = saleVal ? parseFloat(saleVal) : null;
 
-    const payload = {
-        name, sku, price,
-        sale_price: saleParsed,
-        description: document.getElementById('prod-desc').value,
-        stock: parseInt(document.getElementById('prod-stock').value) || 0,
-        is_active: document.getElementById('prod-active').checked,
-        categories: Array.from(document.getElementById('prod-categories').selectedOptions).map(o => o.value),
-    };
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('sku', sku);
+    fd.append('price', price);
+    fd.append('sale_price', saleParsed || '');
+    fd.append('description', document.getElementById('prod-desc').value);
+    fd.append('stock', parseInt(document.getElementById('prod-stock').value) || 0);
+    fd.append('is_active', document.getElementById('prod-active').checked ? 1 : 0);
+    
+    const cats = Array.from(document.getElementById('prod-categories').selectedOptions).map(o => o.value);
+    cats.forEach(c => fd.append('categories[]', c));
 
-    const url    = isEditing ? `/admin/products/${editingId}` : '/admin/products';
-    const method = isEditing ? 'PUT' : 'POST';
-    const btn    = document.getElementById('save-btn');
+    selectedFiles.forEach(item => fd.append('images[]', item.file));
+
+    if (isEditing) fd.append('_method', 'PUT');
+
+    const url = isEditing ? `/admin/products/${editingId}` : '/admin/products';
+    const btn = document.getElementById('save-btn');
     btn.disabled = true; btn.style.opacity = '0.6';
 
     try {
         const res  = await fetch(url, {
-            method,
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            body: JSON.stringify(payload),
+            body: fd,
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.message || 'Error');
-        showToast(json.message || '@lang("admin.saved_successfully")', 'success');
+        showToast(json.message || '{{ __("admin.saved_successfully") }}', 'success');
         closeModal('prod-modal');
         setTimeout(() => location.reload(), 900);
     } catch (e) {
-        showToast(e.message || '@lang("admin.save_failed")', 'error');
+        showToast(e.message || '{{ __("admin.save_failed") }}', 'error');
     } finally {
         btn.disabled = false; btn.style.opacity = '';
     }
@@ -1215,7 +1057,7 @@ async function saveProduct() {
 
 /* ── Delete ── */
 function openDeleteModal(id, name) {
-    document.getElementById('delete-msg').textContent = `@lang("admin.delete_confirm_prefix") "${name}"? @lang("admin.delete_irreversible")`;
+    document.getElementById('delete-msg').textContent = `{{ __("admin.delete_confirm_prefix") }} "${name}"? {{ __("admin.delete_irreversible") }}`;
     document.getElementById('confirm-delete-btn').onclick = () => doDelete(id);
     openModal('delete-modal');
 }
@@ -1243,9 +1085,9 @@ async function doDelete(id) {
                 updateRowCount();
             }, 320);
         }
-        showToast(json.message || '@lang("admin.deleted_successfully")', 'success');
+        showToast(json.message || '{{ __("admin.deleted_successfully") }}', 'success');
     } catch (e) {
-        showToast(e.message || '@lang("admin.delete_failed")', 'error');
+        showToast(e.message || '{{ __("admin.delete_failed") }}', 'error');
     }
 }
 
@@ -1271,7 +1113,7 @@ function applyFilters() {
 }
 function updateRowCount(n) {
     const el = document.getElementById('row-count');
-    if (el) el.textContent = `${n !== undefined ? n : allRows.length} @lang("admin.results")`;
+    if (el) el.textContent = `${n !== undefined ? n : allRows.length} {{ __('admin.results') }}`;
 }
 
 let sortState = {};
@@ -1334,20 +1176,61 @@ function initDragDrop() {
     zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
     zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); renderPreviews(e.dataTransfer.files); });
 }
-function handleImages(e) { renderPreviews(e.target.files); }
+function handleImages(e) { 
+    const files = Array.from(e.target.files);
+    renderPreviews(files);
+}
 function renderPreviews(files) {
     const grid = document.getElementById('img-preview-grid');
-    Array.from(files).forEach(file => {
+    files.forEach(file => {
         if (!file.type.startsWith('image/')) return;
+        
+        // Add to our state array
+        const fileId = Math.random().toString(36).substr(2, 9);
+        selectedFiles.push({ id: fileId, file: file });
+
         const r = new FileReader();
         r.onload = ev => {
             const d = document.createElement('div');
             d.className = 'img-preview';
-            d.innerHTML = `<img src="${ev.target.result}" alt=""><button class="rm-img" onclick="this.parentElement.remove()" title="Remove">✕</button>`;
+            d.id = `img-pv-${fileId}`;
+            d.innerHTML = `
+                <img src="${ev.target.result}" alt="">
+                <button class="rm-img" onclick="removeSelectedFile('${fileId}')" title="Remove">✕</button>
+            `;
             grid.appendChild(d);
         };
         r.readAsDataURL(file);
     });
+}
+async function deleteExistingImage(imgId, btn) {
+    if (!confirm('{{ __("admin.confirm_delete_image") }}')) return;
+    try {
+        const res = await fetch(`/admin/products/images/${imgId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        if (res.ok) {
+            btn.parentElement.classList.add('removing');
+            setTimeout(() => btn.parentElement.remove(), 300);
+            showToast('{{ __("admin.image_deleted") }}', 'success');
+        } else {
+            showToast('{{ __("admin.failed_delete_image") }}', 'error');
+        }
+    } catch {
+        showToast('{{ __("admin.error_deleting_image") }}', 'error');
+    }
+}
+function removeSelectedFile(id) {
+    selectedFiles = selectedFiles.filter(item => item.id !== id);
+    const el = document.getElementById(`img-pv-${id}`);
+    if (el) {
+        el.classList.add('removing');
+        setTimeout(() => el.remove(), 300);
+    }
 }
 
 /* ── CSV export ── */
@@ -1365,17 +1248,18 @@ function exportCSV() {
     const url  = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     const a    = Object.assign(document.createElement('a'), { href: url, download: 'products.csv' });
     a.click(); URL.revokeObjectURL(url);
-    showToast('@lang("admin.export_ready")', 'success');
+    showToast('{{ __("admin.export_ready") }}', 'success');
 }
 
 /* ── Toast ── */
+let toastTimer;
 function showToast(msg, type = 'success') {
-    const wrap = document.getElementById('toast-wrap');
-    const el   = document.createElement('div');
-    el.className = `toast ${type}`;
-    el.innerHTML = `<div class="toast-dot"></div><span>${msg}</span>`;
-    wrap.appendChild(el);
-    setTimeout(() => { el.classList.add('removing'); setTimeout(() => el.remove(), 280); }, 3200);
+    const t = document.getElementById('toast');
+    t.className = 'toast ' + type;
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 </script>
 @endpush

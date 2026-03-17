@@ -23,6 +23,30 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+.page-heading-sub {
+    font-family:'DM Mono',monospace; font-size:10.5px;
+    color:var(--text-3); letter-spacing:0.04em;
+    display:flex; align-items:center; gap:8px;
+    margin-top: 6px;
+}
+.live-dot {
+    width:7px; height:7px; border-radius:50%; background:var(--green);
+    animation:livePulse 2.5s ease infinite; position:relative;
+}
+.live-dot::after {
+    content:''; position:absolute; inset:-4px; border-radius:inherit;
+    border:2px solid var(--green); opacity:0; animation:liveRipple 2.5s ease infinite;
+}
+@keyframes liveRipple {
+    0%   { transform:scale(0.8); opacity:0.5; }
+    100% { transform:scale(2.2); opacity:0; }
+}
+@keyframes livePulse {
+    0%   { box-shadow:0 0 0 0 rgba(31,186,114,0.4); }
+    70%  { box-shadow:0 0 0 6px rgba(31,186,114,0); }
+    100% { box-shadow:0 0 0 0 rgba(31,186,114,0); }
+}
+
 /* ── KPI Row ── */
 .kpi-row {
     display: grid;
@@ -43,17 +67,17 @@
 .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .kpi-ico { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
 .kpi-ico svg { width: 22px; height: 22px; }
-.kpi-ico.c-blue { background: rgba(79,114,245,0.1); color: #4f72f5; }
-.kpi-ico.c-amber { background: rgba(232,160,0,0.1); color: #e8a000; }
-.kpi-ico.c-green { background: rgba(31,186,114,0.1); color: #1fba72; }
-.kpi-ico.c-violet { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+.kpi-ico.c-blue { background: var(--accent-bg); color: var(--accent); }
+.kpi-ico.c-amber { background: var(--amber-bg); color: var(--amber); }
+.kpi-ico.c-green { background: var(--green-bg); color: var(--green); }
+.kpi-ico.c-violet { background: var(--violet-bg); color: var(--violet); }
 
 .kpi-chip {
     padding: 4px 8px; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 700;
     display: flex; align-items: center; gap: 4px; border: 1px solid transparent;
 }
-.kpi-chip.chip-up { background: rgba(31,186,114,0.1); color: #1fba72; border-color: rgba(31,186,114,0.1); }
-.kpi-chip.chip-down { background: rgba(240,82,82,0.1); color: #f05252; border-color: rgba(240,82,82,0.1); }
+.kpi-chip.chip-up { background: var(--green-bg); color: var(--green); border-color: var(--green-bg); }
+.kpi-chip.chip-down { background: var(--red-bg); color: var(--red); border-color: var(--red-bg); }
 .kpi-chip svg { width: 10px; height: 10px; }
 
 .kpi-body { position: relative; z-index: 1; }
@@ -158,9 +182,9 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 <div class="dash">
     
     <div class="dash-greeting">
-        <h2 class="text-2xl font-bold text-text">@lang('admin.good_morning'), {{ Auth::user()->name }} 👋</h2>
-        <p class="text-sm text-muted mt-1 flex items-center gap-2">
-            <span class="live-dot"></span>
+        <h2 class="text-2xl font-bold text-[--text-1]">@lang('admin.good_morning'), {{ Auth::user()->name }} 👋</h2>
+        <p class="page-heading-sub">
+            <span class="live-dot" style="background:var(--green)"></span>
             @lang('admin.systems_operational') &nbsp;·&nbsp; @lang('admin.updated_just_now')
         </p>
     </div>
@@ -170,8 +194,8 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         <!-- Revenue -->
         <div class="kpi">
             <div class="kpi-head">
-                <div class="kpi-ico c-blue">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                <div class="kpi-ico" style="background:var(--violet-dim);color:var(--violet)">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
@@ -190,11 +214,10 @@ tr:hover td { background: rgba(255,255,255,0.015); }
             </div>
         </div>
 
-        <!-- Orders -->
         <div class="kpi">
             <div class="kpi-head">
-                <div class="kpi-ico c-amber">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                <div class="kpi-ico" style="background:var(--amber-dim);color:var(--amber)">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                     </svg>
                 </div>
@@ -216,8 +239,8 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         <!-- Customers -->
         <div class="kpi">
             <div class="kpi-head">
-                <div class="kpi-ico c-green">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                <div class="kpi-ico" style="background:var(--green-dim);color:var(--green)">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
                 </div>
@@ -239,8 +262,8 @@ tr:hover td { background: rgba(255,255,255,0.015); }
         <!-- Conversion -->
         <div class="kpi">
             <div class="kpi-head">
-                <div class="kpi-ico c-violet">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                <div class="kpi-ico" style="background:var(--accent-dim);color:var(--accent)">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
                 </div>
@@ -532,9 +555,9 @@ function rebuildMainChart() {
     g1.addColorStop(0, c.blueDim);
     g1.addColorStop(1, c.blueFade);
 
-    const labels = {!! json_encode($chartData['labels'] ?? []) !!};
-    const current = {!! json_encode($chartData['current'] ?? []) !!};
-    const previous = {!! json_encode($chartData['previous'] ?? []) !!};
+    const labels = @json($chartData['labels'] ?? []);
+    const current = @json($chartData['current'] ?? []);
+    const previous = @json($chartData['previous'] ?? []);
 
     mainChart = new Chart(ctx, {
         type: 'line',

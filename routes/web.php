@@ -19,6 +19,9 @@ Route::get('/lang/{locale}', function ($locale) {
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
+    Route::get('/register', [AdminAuthController::class, 'showRegisterForm'])->name('admin.register');
+    Route::post('/register', [AdminAuthController::class, 'register'])->name('admin.register.post');
+    Route::get('/forgot-password', [AdminAuthController::class, 'showForgotPasswordForm'])->name('admin.forgot-password');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
     // Protected Admin Routes
@@ -38,6 +41,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'show'])->name('admin.products.show');
         Route::put('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
         Route::delete('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::delete('/products/images/{image}', [\App\Http\Controllers\Admin\ProductController::class, 'destroyImage'])->name('admin.products.images.destroy');
 
         Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin.orders');
         Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('admin.orders.show');
