@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->withCount('products')->get();
+        $categories = Category::with('parent')->withCount('products')->paginate(15);
         $parentCategories = Category::whereNull('parent_id')->get();
         
         if (request()->wantsJson()) {

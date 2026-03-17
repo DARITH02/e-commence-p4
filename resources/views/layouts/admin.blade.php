@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <script>
         (function() {
             if (localStorage.getItem('ecomm-theme') === 'light') {
@@ -21,68 +21,6 @@
     </script>
 
     <style>
-        :root {
-            --ink:       #0d0f14;
-            --ink-2:     #181b23;
-            --ink-3:     #222635;
-            --border:    rgba(255,255,255,0.07);
-            --border-2:  rgba(255,255,255,0.12);
-            --text:      #e8eaf0;
-            --muted:     #5a6076;
-            --muted-2:   #7e8699;
-            --accent:    #4f6ef7;
-            --accent-2:  #3b55d9;
-            --accent-glow: rgba(79,110,247,0.18);
-            --green:     #22c97a;
-            --red:       #f05252;
-            --amber:     #f59e0b;
-            --sidebar-w: 260px;
-        }
-
-        html.light {
-            --ink:       #f4f5f7;
-            --ink-2:     #ffffff;
-            --ink-3:     #f0f1f4;
-            --border:    rgba(0,0,0,0.07);
-            --border-2:  rgba(0,0,0,0.12);
-            --text:      #111827;
-            --muted:     #9ca3af;
-            --muted-2:   #4b5563;
-            --accent:    #3b55d9;
-            --accent-2:  #2d41a8;
-            --accent-glow: rgba(59,85,217,0.08);
-            --green:     #059669;
-            --red:       #dc2626;
-            --amber:     #d97706;
-            /* Dashboard component aliases */
-            --bg:        #f4f5f7;
-            --bg-2:      #ffffff;
-            --bg-3:      #f0f1f4;
-            --card:      #ffffff;
-            --text-2:    #4b5563;
-            --accent-bg: rgba(59,85,217,0.08);
-            --green-bg:  rgba(5,150,105,0.08);
-            --amber-bg:  rgba(217,119,6,0.08);
-            --red-bg:    rgba(220,38,38,0.08);
-            --violet:    #7c3aed;
-            --violet-bg: rgba(124,58,237,0.08);
-        }
-
-        /* Dashboard component aliases (dark) */
-        :root {
-            --bg:        var(--ink);
-            --bg-2:      var(--ink-2);
-            --bg-3:      var(--ink-3);
-            --card:      var(--ink-2);
-            --text-2:    #a0a8be;
-            --accent-bg: rgba(79,110,247,0.1);
-            --green-bg:  rgba(34,201,122,0.1);
-            --amber-bg:  rgba(245,158,11,0.1);
-            --red-bg:    rgba(240,82,82,0.1);
-            --violet:    #8b5cf6;
-            --violet-bg: rgba(139,92,246,0.1);
-        }
-
         /* Mode toggle button */
         .mode-toggle {
             width: 36px; height: 36px; border-radius: 9px;
@@ -637,9 +575,23 @@
                 </svg>
             </div>
             <div class="logo-text">
-                @lang('admin.app_name')
-                <span>@lang('admin.console')</span>
+                {{ config('app.name', 'ECOMM PRO') }}
+                <span>@lang('admin.nav_admin_console')</span>
             </div>
+        </div>
+
+        <div class="px-6 py-2">
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20 group">
+                <div class="w-10 h-10 rounded-lg bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-[10px] font-bold text-accent uppercase tracking-wider">@lang('admin.nav_administrator')</div>
+                    <div class="text-xs font-bold text-text truncate max-w-[120px]">{{ auth()->user()->name }}</div>
+                </div>
+            </a>
         </div>
 
         <!-- Nav -->
@@ -703,6 +655,19 @@
                 </div>
                 @lang('admin.nav_customers')
             </a>
+
+            <div class="nav-section-label" style="margin-top:20px">@lang('admin.nav_settings')</div>
+
+            <a href="{{ route('admin.settings') }}"
+               class="nav-item {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                @lang('admin.nav_settings')
+            </a>
         </nav>
 
         <!-- User footer -->
@@ -742,7 +707,7 @@
             <div class="topbar-title">
                 <div class="page-title">@yield('page_title', __('admin.dashboard'))</div>
                 <div class="page-breadcrumb">
-                    @lang('admin.app_name') <span class="sep">·</span> @yield('page_title', __('admin.dashboard'))
+                    {{ config('app.name', 'ECOMM PRO') }} <span class="sep">·</span> @yield('page_title', __('admin.dashboard'))
                 </div>
             </div>
 
@@ -751,7 +716,7 @@
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                <input class="search-input" type="text" placeholder="@lang('admin.search')">
+                <input class="search-input" type="text" placeholder="@lang('admin.nav_search')">
             </div>
 
             <div class="topbar-divider"></div>
@@ -772,20 +737,56 @@
                 <div class="topbar-divider"></div>
 
                 <!-- Notifications -->
-                <button class="icon-btn" title="@lang('admin.notifications_label')">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-                    <span class="notif-dot"></span>
-                </button>
+                <div class="relative group">
+                    <button class="icon-btn" title="@lang('admin.nav_notifications')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 mt-3 w-80 bg-ink-2 border border-border-2 rounded-2xl shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                        <div class="p-4 border-bottom border-border flex items-center justify-between">
+                            <h3 class="text-sm font-bold">@lang('admin.nav_notifications')</h3>
+                            <span class="text-[10px] font-black font-mono text-accent bg-accent/10 px-2 py-0.5 rounded-full">3 NEW</span>
+                        </div>
+                        <div class="max-h-80 overflow-y-auto">
+                            <div class="p-4 hover:bg-white/5 cursor-pointer transition-colors border-b border-white/5">
+                                <div class="flex gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-4 h-4 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-text">New Order #ORD-8271</p>
+                                        <p class="text-[10px] text-muted mt-0.5">2 minutes ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 hover:bg-white/5 cursor-pointer transition-colors border-b border-white/5">
+                                <div class="flex gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-4 h-4 text-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-text">New Registration: Darith</p>
+                                        <p class="text-[10px] text-muted mt-0.5">1 hour ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 text-center border-t border-border">
+                            <a href="#" class="text-[10px] font-bold text-accent uppercase tracking-widest hover:underline">View all</a>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Settings -->
-                <button class="icon-btn" title="@lang('admin.settings_label')">
+                <a href="{{ route('admin.settings') }}" class="icon-btn" title="@lang('admin.nav_settings')">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
-                </button>
+                </a>
 
                 <!-- Dark / Light toggle -->
                 <button class="mode-toggle" onclick="toggleMode()" title="@lang('admin.toggle_theme')">

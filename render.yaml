@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: ecommerce-pro
+    env: php
+    buildCommand: bash render-build.sh
+    startCommand: apachectl start && php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        fromContext: env
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromService:
+          name: ecommerce-db
+          type: db
+          property: host
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        fromService:
+          name: ecommerce-db
+          type: db
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          name: ecommerce-db
+          type: db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          name: ecommerce-db
+          type: db
+          property: password
+      - key: REDIS_HOST
+        fromService:
+          name: ecommerce-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: ecommerce-redis
+          type: redis
+          property: port
+
+databases:
+  - name: ecommerce-db
+    databaseName: ecommerce_pro
+    user: ecommerce_user
+    plan: free
+
+redis:
+  - name: ecommerce-redis
+    plan: free
+    ipAllowList: [] # Only allow internal connections

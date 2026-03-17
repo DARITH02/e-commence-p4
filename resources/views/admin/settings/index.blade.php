@@ -1,85 +1,192 @@
 @extends('layouts.admin')
 
-@section('title', 'Kernel')
-@section('page_title', 'System Settings')
+@section('title', __('admin.nav_settings'))
+@section('page_title', __('admin.nav_settings'))
+
+@push('styles')
+<style>
+    .settings-page {
+        animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .settings-grid {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 32px;
+    }
+    @media (max-width: 768px) {
+        .settings-grid { grid-template-columns: 1fr; }
+    }
+    .settings-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .settings-nav-item {
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted-2);
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .settings-nav-item:hover {
+        background: var(--ink-2);
+        color: var(--text);
+    }
+    .settings-nav-item.active {
+        background: var(--accent-glow);
+        color: var(--accent);
+        border-color: rgba(79, 110, 247, 0.15);
+    }
+    .settings-card {
+        background: var(--ink-2);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .settings-section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+    .settings-section-desc {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 24px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .form-input {
+        width: 100%;
+        background: var(--ink);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        transition: all 0.2s;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .btn-save {
+        background: var(--accent);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
+    }
+    .btn-save:hover {
+        background: var(--accent-2);
+        transform: translateY(-1px);
+    }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+@endpush
 
 @section('content')
-<div class="space-y-12">
-    <!-- Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-        <div>
-            <h1 class="text-5xl font-black text-white tracking-tighter leading-none">System <span class="text-primary-500">Kernel</span></h1>
-            <p class="text-brand-muted font-bold text-[10px] uppercase tracking-[0.5em] mt-3 flex items-center">
-                <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mr-3 shadow-[0_0_10px_rgba(124,58,237,0.5)]"></span>
-                Core Environment Configuration
-            </p>
-        </div>
-    </div>
-
-    <!-- Settings Grid -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
-        
-        <!-- General Identity -->
-        <div class="glass-panel rounded-[3.5rem] p-10 space-y-8">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-primary-500/10 rounded-2xl flex items-center justify-center text-primary-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <h4 class="text-2xl font-black text-white tracking-tighter uppercase">Platform Identity</h4>
+<div class="settings-page">
+    <div class="settings-grid">
+        <!-- Sidebar Nav -->
+        <div class="settings-nav">
+            <div class="settings-nav-item active">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                </svg>
+                @lang('admin.general_settings')
             </div>
-
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2 mb-3">Store Identifier</label>
-                    <input type="text" value="ECOMM_PRO_V4" class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-sm font-black text-white focus:outline-none focus:border-primary-500 transition-all shadow-inner">
-                </div>
-                <div>
-                    <label class="block text-[9px] font-black text-brand-muted uppercase tracking-[0.3em] ml-2 mb-3">Support Channel</label>
-                    <input type="email" value="ops@ecommerce-pro.io" class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-sm font-black text-white focus:outline-none focus:border-primary-500 transition-all shadow-inner">
-                </div>
+            <div class="settings-nav-item">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+                @lang('admin.payments')
+            </div>
+            <div class="settings-nav-item">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                @lang('admin.security')
+            </div>
+            <div class="settings-nav-item">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                @lang('admin.notification_settings')
             </div>
         </div>
 
-        <!-- Security Layer -->
-        <div class="glass-panel rounded-[3.5rem] p-10 space-y-8">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </div>
-                <h4 class="text-2xl font-black text-white tracking-tighter uppercase">Security Protocol</h4>
-            </div>
+        <!-- Main Content -->
+        <div class="settings-content">
+            <div class="settings-card">
+                <h2 class="settings-section-title">@lang('admin.general_settings')</h2>
+                <p class="settings-section-desc">Manage your store's basic information and preferences.</p>
 
-            <div class="space-y-6">
-                <div class="flex items-center justify-between bg-white/[0.02] p-6 rounded-[2rem] border border-white/5">
-                    <div>
-                        <span class="text-[10px] font-black text-white uppercase tracking-widest block font-bold">Two-Factor Encryption</span>
-                        <span class="text-[8px] font-black text-brand-muted uppercase tracking-widest mt-1 block">Hardware token required for withdrawals</span>
+                <form action="#" method="POST">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                        <div class="form-group">
+                            <label class="form-label">@lang('admin.store_name')</label>
+                            <input type="text" class="form-input" value="ECOMM PRO" placeholder="Enter store name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">@lang('admin.store_email')</label>
+                            <input type="email" class="form-input" value="contact@ecommpro.com" placeholder="Enter store email">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">@lang('admin.currency')</label>
+                            <select class="form-input">
+                                <option value="USD">USD ($)</option>
+                                <option value="KHR">KHR (៛)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">@lang('admin.language')</label>
+                            <select class="form-input">
+                                <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
+                                <option value="km" {{ app()->getLocale() == 'km' ? 'selected' : '' }}>Khmer</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only peer">
-                        <div class="w-12 h-7 bg-white/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                    
+                    <div class="form-group mt-6">
+                        <label class="form-label">@lang('admin.store_description')</label>
+                        <textarea class="form-input h-32 resize-none" placeholder="Brief description of your store">The most advanced e-commerce admin platform with real-time analytics and global distribution.</textarea>
                     </div>
-                </div>
-                
-                <div class="flex items-center justify-between bg-white/[0.02] p-6 rounded-[2rem] border border-white/5">
-                    <div>
-                        <span class="text-[10px] font-black text-white uppercase tracking-widest block font-bold">Maintenance Lock</span>
-                        <span class="text-[8px] font-black text-brand-muted uppercase tracking-widest mt-1 block">Disconnect frontlayer API nodes</span>
+
+                    <div class="pt-6 border-t border-border flex justify-end">
+                        <button type="button" class="btn-save">@lang('admin.save_changes')</button>
                     </div>
-                    <div class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer">
-                        <div class="w-12 h-7 bg-white/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-primary-600 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
-    </div>
-
-    <!-- Action Bar -->
-    <div class="flex items-center justify-end">
-        <button class="bg-primary-600 hover:bg-primary-500 text-white px-14 py-5 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] shadow-[0_20px_40px_rgba(124,58,237,0.2)] transition-all">
-            Commit Changes
-        </button>
     </div>
 </div>
 @endsection

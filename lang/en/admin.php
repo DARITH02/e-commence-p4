@@ -91,4 +91,48 @@ return [
     'nav_settings'         => 'Settings',
     'nav_search'           => 'Search anything...',
 
+    /* ── Footer & Misc ── */
+    'app_name'             => 'ECOMM PRO',
+    'version'              => 'Version',
+    'docs'                 => 'Docs',
+    'api_docs'             => 'API',
+    'security'             => 'Security',
+    'loading'              => 'Loading...',
+
+    /* ── Auth / Login ── */
+    'login_title'          => 'Admin Login - E-Commerce Pro',
+    'welcome_back'         => 'Welcome Back',
+    'enter_credentials'    => 'Enter credentials to access admin panel',
+    'email_address'        => 'Email Address',
+    'password'             => 'Password',
+    'sign_in'              => 'Sign In',
+
+    /* ── Transactions ── */
+    'transaction_history'  => 'Transaction History',
+    'history'              => 'History',
+    'realtime_commerce'    => 'Real-time commerce verification',
+    'total_throughput'     => 'Total Throughput',
+    'success_rate'         => 'Success Rate',
+    'pending_sync'         => 'Pending Sync',
+    'failed_logic'         => 'Failed Logic',
+    'no_transaction_data'  => 'No Transaction Data',
+    'system_awaiting'      => 'System is awaiting initial commerce events. All nodes are ready for synchronization.',
+
+    /* ── Customer Entities ── */
+    'customer_entities'    => 'Customer Entities',
+    'entities'             => 'Entities',
+    'global_identity'      => 'Global Identity Management',
+    'no_entity_defs'       => 'No Entity Definitions',
+    'identity_vault_empty' => 'Identity vault is currently empty. Deployment ready for first user registration event.',
+
+    /* ── Settings ── */
+    'general_settings'     => 'General Settings',
+    'store_name'           => 'Store Name',
+    'store_email'          => 'Store Email',
+    'currency'             => 'Currency',
+    'language'             => 'Language',
+    'store_description'    => 'Store Description',
+    'save_changes'         => 'Save Changes',
+    'notification_settings'=> 'Notification Settings',
+    'payments'             => 'Payments',
 ];

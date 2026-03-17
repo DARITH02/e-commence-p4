@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - E-Commerce Pro</title>
+    <title>@lang('admin.login_title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -25,14 +25,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0020 20m-5-3.328A7 7 0 0012 3m0 0a7 7 0 011.607 10.328M12 3v1m0 0V2m0 16v.01"></path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Welcome Back</h1>
-                <p class="text-slate-500 mt-2">Enter credentials to access admin panel</p>
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">@lang('admin.welcome_back')</h1>
+                <p class="text-slate-500 mt-2">@lang('admin.enter_credentials')</p>
             </div>
 
             <form action="{{ route('admin.login.post') }}" method="POST" class="space-y-6">
                 @csrf
                 <div>
-                    <label class="block text-sm font-medium text-slate-400 mb-2">Email Address</label>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">@lang('admin.email_address')</label>
                     <input type="email" name="email" required 
                         class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
                         placeholder="admin@ecommerce.com">
@@ -40,7 +40,7 @@
 
                 <div>
                     <div class="flex justify-between mb-2">
-                        <label class="block text-sm font-medium text-slate-400">Password</label>
+                        <label class="block text-sm font-medium text-slate-400">@lang('admin.password')</label>
                     </div>
                     <input type="password" name="password" required 
                         class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
@@ -55,7 +55,7 @@
 
                 <button type="submit" 
                     class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-[0.98]">
-                    Sign In
+                    @lang('admin.sign_in')
                 </button>
             </form>
 
