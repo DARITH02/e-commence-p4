@@ -1010,6 +1010,7 @@ function buildGradients(ctx, height) {
 
 function rebuildMainChart() {
     if (mainChart) { mainChart.destroy(); mainChart = null; }
+ 
     const canvas = document.getElementById('mainChart');
     if (!canvas) return;
     const ctx    = canvas.getContext('2d');
@@ -1017,15 +1018,20 @@ function rebuildMainChart() {
     const c      = tc();
     const [g1, g2] = buildGradients(ctx, height);
 
-    const labels = @json([
-        __('admin.month_jan'), __('admin.month_feb'), __('admin.month_mar'),
-        __('admin.month_apr'), __('admin.month_may'), __('admin.month_jun'),
-        __('admin.month_jul'), __('admin.month_aug'), __('admin.month_sep'),
-        __('admin.month_oct'), __('admin.month_nov'), __('admin.month_dec'),
-    ]);
+  @php
+$months = [
+    __('admin.month_jan'), __('admin.month_feb'), __('admin.month_mar'),
+    __('admin.month_apr'), __('admin.month_may'), __('admin.month_jun'),
+    __('admin.month_jul'), __('admin.month_aug'), __('admin.month_sep'),
+    __('admin.month_oct'), __('admin.month_nov'), __('admin.month_dec')
+];
+@endphp
 
-    const current  = {!! isset($chartData) ? json_encode($chartData['current'])  : json_encode([12000,19000,15000,25000,22000,30000,28000,35000,32000,40000,38000,45000]) !!};
-    const previous = {!! isset($chartData) ? json_encode($chartData['previous']) : json_encode([10000,15000,12000,20000,18000,25000,23000,29000,27000,34000,32000,38000]) !!};
+
+const labels = @json($months);
+
+const current  = {!! isset($chartData) ? json_encode($chartData['current'])  : json_encode([12000,19000,15000,25000,22000,30000,28000,35000,32000,40000,38000,45000]) !!};
+const previous = {!! isset($chartData) ? json_encode($chartData['previous']) : json_encode([10000,15000,12000,20000,18000,25000,23000,29000,27000,34000,32000,38000]) !!};
 
     mainChart = new Chart(ctx, {
         type: 'line',
