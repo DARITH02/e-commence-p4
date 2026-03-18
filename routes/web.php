@@ -1,33 +1,12 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\AdminManageController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Cleaned routes for admin dashboard and guest landing page.
-|
-*/
-
-// Root route: redirect based on authentication
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('admin.dashboard');
-    }
-    return view('admin.login'); // Show login page for guests
+    return view('admin.auth.login');
 });
 
-// Language switcher
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'km'])) {
         session(['locale' => $locale]);
@@ -35,7 +14,7 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-// Admin Authentication Routes
+// Admin Authentication
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
@@ -46,38 +25,40 @@ Route::prefix('admin')->group(function () {
 
     // Protected Admin Routes
     Route::middleware(['auth', 'admin'])->group(function () {
-        // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        
+        // Category Management
+        Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories');
+        Route::post('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');
+        Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('admin.categories.show');
+        Route::put('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('admin.categories.update');
+        Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
 
-        // Categories
-        Route::resource('/categories', CategoryController::class)->except(['create', 'edit']);
+        // Product Management
+        Route::get('/products', [\App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.products');
+        Route::post('/products', [\App\Http\Controllers\Admin\ProductController::class, 'store'])->name('admin.products.store');
+        Route::get('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'show'])->name('admin.products.show');
+        Route::put('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
+        Route::delete('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::delete('/products/images/{image}', [\App\Http\Controllers\Admin\ProductController::class, 'destroyImage'])->name('admin.products.images.destroy');
 
-        // Products
-        Route::resource('/products', ProductController::class)->except(['create', 'edit']);
-        Route::delete('/products/images/{image}', [ProductController::class, 'destroyImage'])->name('admin.products.images.destroy');
+        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin.orders');
+        Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('admin.orders.show');
+        Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.orders.status');
+        Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customers');
+        Route::get('/customers/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customers.show');
+        Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
+        Route::post('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
 
-        // Orders
-        Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
-        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
-        Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.status');
-
-        // Customers
-        Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers');
-        Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('admin.customers.show');
-
-        // Settings
-        Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings');
-        Route::post('/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
-
-        // Admin Management (Super Admin only)
-        Route::get('/admins', [AdminManageController::class, 'index'])->name('admin.admins');
-        Route::post('/admins', [AdminManageController::class, 'store'])->name('admin.admins.store');
-        Route::put('/admins/{user}', [AdminManageController::class, 'update'])->name('admin.admins.update');
-        Route::delete('/admins/{user}', [AdminManageController::class, 'destroy'])->name('admin.admins.destroy');
+        // Admin Management (Super Admin only check inside controller)
+        Route::get('/admins', [\App\Http\Controllers\Admin\AdminManageController::class, 'index'])->name('admin.admins');
+        Route::post('/admins', [\App\Http\Controllers\Admin\AdminManageController::class, 'store'])->name('admin.admins.store');
+        Route::put('/admins/{user}', [\App\Http\Controllers\Admin\AdminManageController::class, 'update'])->name('admin.admins.update');
+        Route::delete('/admins/{user}', [\App\Http\Controllers\Admin\AdminManageController::class, 'destroy'])->name('admin.admins.destroy');
     });
 });
 
-// API / SPA placeholder login route
+// User Login Placeholder (for Sanctum/SPA)
 Route::get('/login', function() { 
     return response()->json(['message' => 'Please login via API'], 401); 
 })->name('login');
