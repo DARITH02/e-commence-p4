@@ -1,9 +1,11 @@
 services:
   - type: web
     name: ecommerce-pro
-    env: php
+    runtime: php
+    plan: free
     buildCommand: bash render-build.sh
-    startCommand: apachectl start && php artisan serve --host=0.0.0.0 --port=$PORT
+    startCommand: php -S 0.0.0.0:$PORT -t public
+
     envVars:
       - key: APP_ENV
         value: production
@@ -11,6 +13,7 @@ services:
         value: "false"
       - key: APP_URL
         fromContext: env
+
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
@@ -35,6 +38,14 @@ services:
           name: ecommerce-db
           type: db
           property: password
+
+      # ✅ Use Redis for sessions and cache
+      - key: SESSION_DRIVER
+        value: redis
+      - key: CACHE_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: sync
       - key: REDIS_HOST
         fromService:
           name: ecommerce-redis
@@ -45,6 +56,8 @@ services:
           name: ecommerce-redis
           type: redis
           property: port
+      - key: REDIS_PASSWORD
+        value: ""   # empty for free Redis plan
 
 databases:
   - name: ecommerce-db
@@ -55,4 +68,3 @@ databases:
 redis:
   - name: ecommerce-redis
     plan: free
-    ipAllowList: [] # Only allow internal connections
