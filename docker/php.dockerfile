@@ -44,4 +44,4 @@ USER dev
 EXPOSE 9000
 
 # Start PHP built-in server on Render’s port
-CMD ["php", "-S", "0.0.0.0:$PORT", "-t", "public"]
+CMD ["php-fpm", "-F"]
