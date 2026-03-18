@@ -43,5 +43,5 @@ USER dev
 # Expose port for PHP-FPM
 EXPOSE 9000
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Start PHP built-in server on Render’s port
+CMD ["php", "-S", "0.0.0.0:$PORT", "-t", "public"]
