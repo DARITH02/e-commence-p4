@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', __('admin.orders'))
-@section('page_title', __('admin.orders'))
+@section('title', __('admin.order'))
+@section('page_title', __('admin.order'))
 
 @push('styles')
 <style>
@@ -475,10 +475,10 @@ tbody td { padding:13px 20px; vertical-align:middle; }
     {{-- ── Page Header ── --}}
     <div class="page-header">
         <div class="page-heading">
-            <h1>@lang('admin.orders')</h1>
+            <h1>@lang('admin.order')</h1>
             <p>
                 <span class="live-dot"></span>
-                {{ $orders->total() }} @lang('admin.total_orders')
+                {{ $orders->total() }} @lang('admin.total')
                 &nbsp;·&nbsp; @lang('admin.updated_just_now')
             </p>
         </div>
@@ -494,7 +494,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
                     </svg>
                 </div>
             </div>
-            <div class="kpi-label">@lang('admin.total_orders')</div>
+            <div class="kpi-label">@lang('admin.total')</div>
             <div class="kpi-val">{{ number_format($orders->total()) }}</div>
             <div class="kpi-sub">@lang('admin.all_time')</div>
         </div>

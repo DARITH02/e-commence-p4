@@ -342,7 +342,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                     <tr>
                         <th style="width: 32%">@lang('admin.category')</th>
                         <th style="width: 18%">@lang('admin.slug')</th>
-                        <th style="width: 16%">@lang('admin.parent')</th>
+                        <th style="width: 16%">@lang('admin.parent_category')</th>
                         <th style="width: 12%">@lang('admin.products')</th>
                         <th style="width: 10%">@lang('admin.status')</th>
                         <th style="text-align:right; width: 12%">@lang('admin.actions')</th>
@@ -388,11 +388,11 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                         </td>
                         <td>
                             <span class="status-badge {{ $category->is_active ? 'status-active' : 'status-inactive' }}">
-                                {{ $category->is_active ? __('admin.active') : __('admin.inactive') }}
+                                {{ $category->is_active ? __('admin.active_status') : __('admin.inactive_status') }}
                             </span>
                         </td>
-                        <td>
-    <div class="action-group">
+                        <td colspan="2">
+    <div class="action-group" style="justify-content: flex-end;display: flex;align-items: center;gap: 10px;">
         @if(Auth::user()->isSuperAdmin())
         <button class="btn-icon edit-cat-btn" data-id="{{ $category->id }}" title="{{ __('admin.edit') }}">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">

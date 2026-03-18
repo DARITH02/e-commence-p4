@@ -35,6 +35,11 @@ return [
     'registered_accounts'  => 'គណនីចុះឈ្មោះ',
     'conversion_rate'      => 'អត្រាលក់ដាច់',
     'visitors_to_buyers'   => 'ភ្ញៀវ → អ្នកទិញ',
+    'total_customers'      => 'អតិថិជនសរុប',
+    'with_orders'=> 'មានការបញ្ជាទិញ',
+    'without_orders'=> 'មិនមានការបញ្ជាទិញ',
+    'new_this_month'=> 'ថ្មីខែនេះ',
+    'total_throughput'     => 'ប្រតិបត្តិការសរុប',
 
     /* ── Chart ── */
     'revenue_over_time'    => 'ចំណូលតាមពេលវេលា',
@@ -291,4 +296,43 @@ return [
 
     /* ── Pagination ── */
     'showing'               => 'បង្ហាញ',
+    'new_customers'         => 'អតិថិជនថ្មី',
+    'new_first_customer'    => 'អតិថិជនថ្មីដំបូង',
+    'newest_first'          => 'ថ្មីបំផុតមុន',
+    'oldest_first'          => 'ចាស់បំផុតមុន',
+    'most_spent'            => 'ចំណាយច្រើនបំផុត',
+    'least_spent'           => 'ចំណាយតិចបំផុត',
+    'most_orders'           => 'កម្មង់ច្រើនបំផុត',
+    'least_orders'          => 'កម្មង់តិចបំផុត',
+    'buyer_with_most_orders'=> 'អ្នកទិញកម្មង់ច្រើនបំផុត',
+    'buyer_with_least_orders'=> 'អ្នកទិញកម្មង់តិចបំផុត',
+    'buyer_with_most_spent' => 'អ្នកទិញចំណាយច្រើនបំផុត',
+    'buyer_with_least_spent'=> 'អ្នកទិញចំណាយតិចបំផុត',
+    'buyers'=> 'អ្នកទិញ',
+    'buyer'=> 'អ្នកទិញ',
+    'newest'=> 'ថ្មីបំផុត',
+    'oldest'=> 'ចាស់បំផុត',
+    'new'=> 'ថ្មី',
+     'have_purchased'=> 'មានការទិញ',
+    'without_purchases'=> 'គ្មានការទិញ',
+   'from_all_customers'=>'ពីអតិថិជនទាំងអស់',
+   'joined_recently'=>'ទើបតែចូលរួម',
+   'avg'=>'មធ្យម',
+    'orders'=>'កម្មង់',
+    
+    'order_with_most_purchases'=>'កម្មង់ច្រើនបំផុត',
+    'order_with_least_purchases'=>'កម្មង់តិចបំផុត',
+    'order_with_most_spent'=>'កម្មង់ច្រើនបំផុត',
+    'order_with_least_spent'=>'កម្មង់តិចបំផុត',
+    'joined'=>'ចូលរួម',
+   'search_customers'=>'ស្វែងរកអតិថិជន',
+   'orders_with_most_purchases'=>'កម្មង់ច្រើនបំផុត',
+   'orders_with_least_purchases'=>'កម្មង់តិចបំផុត',
+   'orders_with_most_spent'=>'កម្មង់ច្រើនបំផុត',
+   'orders_with_least_spent'=>'កម្មង់តិចបំផុត',
+   'active'=>'សកម្ម',
+   'inactive'=>'អសកម្ម',
+ 
+
+   
 ];

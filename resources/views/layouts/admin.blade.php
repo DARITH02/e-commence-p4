@@ -840,7 +840,7 @@
 
                 <!-- Title -->
                 <div class="topbar-title">
-                    <div class="page-title">@yield('page_title', __('admin.dashboard'))</div>
+                    <div class="page-title">@yield('    ', __('admin.dashboard'))</div>
                     <div class="page-breadcrumb">
                         {{ config('app.name', 'ECOMM PRO') }} <span class="sep">·</span> @yield('page_title', __('admin.dashboard'))
                     </div>

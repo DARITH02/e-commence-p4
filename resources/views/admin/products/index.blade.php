@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Products')
-@section('page_title', 'Product Catalog')
+@section('title', __('admin.product'))
+@section('page_title', __('admin.product'))
 
 @push('styles')
 <style>
