@@ -44,8 +44,5 @@ USER dev
 EXPOSE 9000
 
 # Start PHP-FPM
-<<<<<<< HEAD
+
 CMD ["php-fpm", "-F"]
-=======
-CMD ["php-fpm", "-F"]
->>>>>>> e50830231de277ea03eeca2c5d7672e170bbc51d
