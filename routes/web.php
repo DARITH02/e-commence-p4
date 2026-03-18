@@ -5,8 +5,24 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 
 Route::get('/', function () {
     return view('admin.auth.login');
+
+    
 });
 
+
+Route::get('/', function () {
+    return view('admin.auth.login');
+
+    
+});Route::get('/', function () {
+    return view('admin.auth.login');
+
+    
+});Route::get('/', function () {
+    return view('admin.auth.login');
+
+    
+});
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'km'])) {
         session(['locale' => $locale]);
