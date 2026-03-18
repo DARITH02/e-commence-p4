@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin') — ECOMM PRO</title>
+    <title>@yield('title', 'Admin') — {{ $admin_settings['store_name'] ?? __('admin.app_name') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -705,12 +705,16 @@
             <!-- Logo -->
             <div class="sidebar-logo">
                 <div class="logo-mark">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
+                    @if(isset($admin_settings['store_logo']))
+                        <img src="{{ asset('storage/' . $admin_settings['store_logo']) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    @else
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                    @endif
                 </div>
                 <div class="logo-text">
-                    {{ config('app.name', 'ECOMM PRO') }}
+                    {{ $admin_settings['store_name'] ?? config('app.name', 'ECOMM PRO') }}
                     <span>@lang('admin.nav_admin_console')</span>
                 </div>
             </div>
@@ -803,6 +807,18 @@
                     </div>
                     @lang('admin.nav_settings')
                 </a>
+
+                @if(auth()->user()->isSuperAdmin())
+                <a href="{{ route('admin.admins') }}"
+                    class="nav-item {{ request()->routeIs('admin.admins*') ? 'active' : '' }}">
+                    <div class="nav-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    @lang('admin.nav_admins')
+                </a>
+                @endif
             </nav>
 
             <!-- User footer -->
@@ -878,7 +894,24 @@
 
                     <style>
                     .lang-switch-btn { padding:4px 10px; border-radius:8px; font-size:10px; font-weight:800; letter-spacing:0.08em; text-decoration:none; transition:all 0.15s; color:var(--muted); }
-                    .lang-switch-btn.active { background:var(--accent); color:#fff; }
+                                        .lang-switch-btn.active { background:var(--accent); color:#fff; }
+                    
+                    /* Notification Styles */
+                    .notif-dropdown { position:absolute; right:0; top:calc(100% + 10px); width:320px; background:var(--ink-2); border:1px solid var(--border-2); border-radius:18px; box-shadow:0 16px 48px rgba(0,0,0,0.4); opacity:0; transform:translateY(6px); pointer-events:none; transition:all 0.2s; z-index:50; }
+                    .notif-header { padding:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+                    .notif-title { font-size:14px; font-weight:700; color:var(--text); }
+                    .notif-badge { font-family:'DM Mono',monospace; font-size:9px; font-weight:800; letter-spacing:0.08em; color:var(--accent); background:var(--accent-bg); padding:3px 8px; border-radius:100px; }
+                    .notif-list { max-height:280px; overflow-y:auto; }
+                    .notif-item { padding:14px 16px; display:flex; gap:12px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
+                    .notif-item:hover { background:rgba(255,255,255,0.03); }
+                    .notif-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+                    .notif-icon.order { background:var(--green-bg); color:var(--green); }
+                    .notif-icon.reg { background:var(--accent-bg); color:var(--accent); }
+                    .notif-msg { font-size:12px; font-weight:700; color:var(--text); line-height:1.4; }
+                    .notif-time { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:2px; }
+                    .notif-empty { padding:40px 20px; text-align:center; color:var(--muted); font-size:12px; }
+                    .notif-footer { padding:12px; text-align:center; border-top:1px solid var(--border); }
+                    .notif-view-all { font-family:'DM Mono',monospace; font-size:10px; font-weight:800; color:var(--accent); text-decoration:none; letter-spacing:0.08em; text-transform:uppercase; }
                     </style>
 
                     <div class="topbar-divider"></div>
@@ -886,36 +919,41 @@
                     <!-- Notifications -->
                     <div class="relative" id="notif-wrap">
                         <button class="icon-btn" title="@lang('admin.nav_notifications')" onclick="toggleNotif()" id="notif-btn">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
-                            <span class="notif-dot"></span>
+                            @if(isset($unread_notifications_count) && $unread_notifications_count > 0)
+                                <span class="notif-dot"></span>
+                            @endif
                         </button>
                         <!-- Notifications Dropdown -->
                         <div style="position:absolute;right:0;top:calc(100% + 10px);width:320px;background:var(--ink-2);border:1px solid var(--border-2);border-radius:18px;box-shadow:0 16px 48px rgba(0,0,0,0.4);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:50;" class="notif-dropdown">
                             <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
                                 <span style="font-size:14px;font-weight:700;color:var(--text);">@lang('admin.nav_notifications')</span>
-                                <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:800;letter-spacing:0.08em;color:var(--accent);background:var(--accent-bg);padding:3px 8px;border-radius:100px;">3 NEW</span>
+                                @if(isset($unread_notifications_count) && $unread_notifications_count > 0)
+                                    <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:800;letter-spacing:0.08em;color:var(--accent);background:var(--accent-bg);padding:3px 8px;border-radius:100px;">{{ $unread_notifications_count }} NEW</span>
+                                @endif
                             </div>
-                            <div style="max-height:280px;overflow-y:auto;">
-                                <div style="padding:14px 16px;display:flex;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                    <div style="width:32px;height:32px;border-radius:9px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <div style="max-height:280px;overflow-y:auto;" id="notif-list">
+                                @if(isset($admin_notifications) && count($admin_notifications) > 0)
+                                    @foreach($admin_notifications as $notif)
+                                        <div style="padding:14px 16px;display:flex;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                                            <div style="width:32px;height:32px;border-radius:9px;background:{{ $notif->data['type'] == 'new_order' ? 'var(--green-bg)' : 'var(--accent-bg)' }};display:flex;align-items:center;justify-content:center;flex-shrink:0;color:{{ $notif->data['type'] == 'new_order' ? 'var(--green)' : 'var(--accent)' }};">
+                                                @if($notif->data['type'] == 'new_order')
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                                @else
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <p style="font-size:12px;font-weight:700;color:var(--text);">{{ $notif->data['message'] }}</p>
+                                                <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;">{{ $notif->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div style="padding:40px 20px;text-align:center;color:var(--muted);font-size:12px;">
+                                        No new notifications
                                     </div>
-                                    <div>
-                                        <p style="font-size:12px;font-weight:700;color:var(--text);">New Order #ORD-8271</p>
-                                        <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;">2 minutes ago</p>
-                                    </div>
-                                </div>
-                                <div style="padding:14px 16px;display:flex;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                    <div style="width:32px;height:32px;border-radius:9px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent);">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                    </div>
-                                    <div>
-                                        <p style="font-size:12px;font-weight:700;color:var(--text);">New Registration: Darith</p>
-                                        <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;">1 hour ago</p>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                             <div style="padding:12px;text-align:center;border-top:1px solid var(--border);">
                                 <a href="#" style="font-family:'DM Mono',monospace;font-size:10px;font-weight:800;color:var(--accent);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">View all</a>
@@ -950,7 +988,7 @@
                 </div>
 
                 <footer>
-                    <p>&copy; 2026 @lang('admin.app_name') &nbsp;·&nbsp; @lang('admin.version') 4.0.2</p>
+                    <p>&copy; {{ date('Y') }} {{ $admin_settings['store_name'] ?? __('admin.app_name') }} &nbsp;·&nbsp; @lang('admin.version') 4.0.2</p>
                     <div class="footer-links">
                         <a href="#">@lang('admin.docs')</a>
                         <a href="#">@lang('admin.api_docs')</a>

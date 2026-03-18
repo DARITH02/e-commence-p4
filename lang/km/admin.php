@@ -98,6 +98,7 @@ return [
     'nav_open_menu'        => 'បើកបញ្ជី',
     'nav_notifications'    => 'ការជូនដំណឹង',
     'nav_settings'         => 'ការកំណត់',
+    'nav_admins'           => 'ការគ្រប់គ្រងក្រុមការងារ',
     'nav_search'           => 'ស្វែងរកអ្វីមួយ...',
 
     /* ── Footer & Misc ── */
@@ -152,6 +153,8 @@ return [
     'save_changes'         => 'រក្សាទុកការផ្លាស់ប្តូរ',
     'notification_settings'=> 'ការកំណត់ជូនដំណឹង',
     'payments'             => 'ការទូទាត់',
+    'store_logo'           => 'ឡូហ្គោហាង',
+    'upload_logo'          => 'បញ្ចូលរូបភាពឡូហ្គោ',
     'appearance'           => 'រូបរាង និងសោភ័ណភាព',
     'timezone'             => 'តំបន់ពេលវេលា',
     'date_format'          => 'ទម្រង់កាលបរិច្ឆេទ',
@@ -254,6 +257,9 @@ return [
     'save_failed'           => 'បានបរាជ័យក្នុងការរក្សាទុកផលិតផល។',
     'delete_confirm_prefix' => 'តើអ្នកប្រាកដថាចង់លុប',
     'delete_irreversible'   => 'សកម្មភាពនេះមិនអាចត្រឡប់ក្រោយវិញបានទេ។',
+    'admin_deleted_success' => 'បានលុបគណនីអ្នកគ្រប់គ្រងដោយជោគជ័យ។',
+    'new_admin_alert'       => 'អ្នកគ្រប់គ្រងថ្មីបានចុះឈ្មោះ: :name',
+    'new_order_alert'       => 'មានការបញ្ជាទិញថ្មី: #:order_number',
     'deleted_successfully'  => 'បានលុបផលិតផលដោយជោគជ័យ។',
     'delete_failed'         => 'បានបរាជ័យក្នុងការលុបផលិតផល។',
 
@@ -333,6 +339,54 @@ return [
    'active'=>'សកម្ម',
    'inactive'=>'អសកម្ម',
  
-
+'total_spent'=>'សរុបចំណាយ',
+   'edit_admin'=>'កែសម្រួលអ្នកគ្រប់គ្រង',
+   'update_admin'=>'កែសម្រួលអ្នកគ្រប់គ្រង',
+   'update_admin_subtitle'=>'កែសម្រួលព័ត៌មានអ្នកគ្រប់គ្រងដែលមានស្រាប់',
+   'admins_management'=>'ការគ្រប់គ្រងអ្នកគ្រប់គ្រង',
+   'add_new_admin'=>'បន្ថែមអ្នកគ្រប់គ្រងថ្មី',
+   'add_new_admin_subtitle'=>'បង្កើតគណនីអ្នកគ្រប់គ្រងថ្មី',
    
+   'role_updated_success'=>'បានកែសម្រួលតួនាទីដោយជោគជ័យ',
+   'admin_updated_success'=>'បានកែសម្រួលអ្នកគ្រប់គ្រងដោយជោគជ័យ',
+   'admin_created_success'=>'បានបង្កើតអ្នកគ្រប់គ្រងដោយជោគជ័យ',
+   'failed_to_delete_admin'=>'បរាជ័យក្នុងការលុបអ្នកគ្រប់គ្រង',
+   'failed_to_update_role'=>'បរាជ័យក្នុងការកែសម្រួលតួនាទី',
+   'failed_to_update_admin'=>'បរាជ័យក្នុងការកែសម្រួលអ្នកគ្រប់គ្រង',
+   'failed_to_create_admin'=>'បរាជ័យក្នុងការបង្កើតអ្នកគ្រប់គ្រង',
+  'role_not_found'=>'រកមិនឃើញតួនាទី',
+  'admin_not_found'=>'រកមិនឃើញអ្នកគ្រប់គ្រង',
+  'role'=>'តួនាទី',
+  'email'=>'អ៊ីមែល',
+  'name'=>'ឈ្មោះ',
+ 
+  'password_confirmation'=>'បញ្ជាក់ពាក្យសម្ងាត់',
+  'create_admin'=>'បង្កើតអ្នកគ្រប់គ្រង',
+  
+  'delete_admin'=>'លុបអ្នកគ្រប់គ្រង',
+ 
+
+
+ 
+ 'manage_admins'=>'គ្រប់គ្រងអ្នកគ្រប់គ្រង',
+ 'manage_your_team'=>'គ្រប់គ្រងក្រុមរបស់អ្នក',
+    'administrator'=>'អ្នកគ្រប់គ្រង',
+    'joined_date'=>'ថ្ងៃខែចូលរួម',
+    'last_active'=>'សកម្មភាពចុងក្រោយ',
+   
+    'view_profile'=>'មើលប្រវត្តិរូប',
+    'edit_profile'=>'កែសម្រួលប្រវត្តិរូប',
+    'delete_profile'=>'លុបប្រវត្តិរូប',
+    'profile_deleted_success'=>'លុបប្រវត្តិរូបដោយជោគជ័យ',
+    'failed_to_delete_profile'=>'បរាជ័យក្នុងការលុបប្រវត្តិរូប',
+    'profile_not_found'=>'រកមិនឃើញប្រវត្តិរូប',
+    'admin_profile'=>'ប្រវត្តិរូបអ្នកគ្រប់គ្រង',
+    'admin_profile_subtitle'=>'ប្រវត្តិរូបអ្នកគ្រប់គ្រង',
+    'add_admin'=>'បន្ថែមអ្នកគ្រប់គ្រង',
+    'add_admin_subtitle'=>'បន្ថែមអ្នកគ្រប់គ្រងថ្មី',
+   
+    'edit_admin_subtitle'=>'កែសម្រួលអ្នកគ្រប់គ្រងដែលមានស្រាប់',
+   
+    'delete_admin_subtitle'=>'លុបអ្នកគ្រប់គ្រង',
+    'save_admin'=>'រក្សាទុកអ្នកគ្រប់គ្រង',
 ];

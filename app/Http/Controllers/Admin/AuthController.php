@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Notifications\NewAdminRegistered;
+use Illuminate\Support\Facades\Notification;
 
 class AuthController extends Controller
 {
@@ -102,6 +104,13 @@ class AuthController extends Controller
         if ($role) {
             $user->roles()->attach($role);
         }
+
+        // Notify Super Admins
+        $superAdmins = User::whereHas('roles', function($q) {
+            $q->where('slug', 'super_admin');
+        })->get();
+        
+        Notification::send($superAdmins, new NewAdminRegistered($user));
 
         Auth::login($user);
 

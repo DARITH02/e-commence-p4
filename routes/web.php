@@ -48,7 +48,14 @@ Route::prefix('admin')->group(function () {
         Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.orders.status');
         Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customers');
         Route::get('/customers/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customers.show');
-        Route::get('/settings', function() { return view('admin.settings.index'); })->name('admin.settings');
+        Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
+        Route::post('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+
+        // Admin Management (Super Admin only check inside controller)
+        Route::get('/admins', [\App\Http\Controllers\Admin\AdminManageController::class, 'index'])->name('admin.admins');
+        Route::post('/admins', [\App\Http\Controllers\Admin\AdminManageController::class, 'store'])->name('admin.admins.store');
+        Route::put('/admins/{user}', [\App\Http\Controllers\Admin\AdminManageController::class, 'update'])->name('admin.admins.update');
+        Route::delete('/admins/{user}', [\App\Http\Controllers\Admin\AdminManageController::class, 'destroy'])->name('admin.admins.destroy');
     });
 });
 

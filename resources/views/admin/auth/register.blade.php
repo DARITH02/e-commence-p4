@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account — {{ config('app.name') }}</title>
+  <title>Create Account — {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -618,10 +618,13 @@
   <div class="side-glow"></div>
   <div class="side-glow2"></div>
 
-  <div class="side-top">
     <div class="wordmark">
-      <div class="wordmark-dot"></div>
-      {{ config('app.name', 'Arcadia') }}
+      @if(isset($admin_settings['store_logo']))
+        <img src="{{ asset('storage/' . $admin_settings['store_logo']) }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
+      @else
+        <div class="wordmark-dot"></div>
+      @endif
+      {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}
     </div>
     <div class="side-hero">
       <h2>Command your<br><em>platform</em><br>with confidence.</h2>
@@ -643,7 +646,7 @@
     </div>
   </div>
 
-  <div class="side-footer">© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</div>
+  <div class="side-footer">© {{ date('Y') }} {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}. All rights reserved.</div>
 </aside>
 
 <!-- Main form -->

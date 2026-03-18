@@ -97,6 +97,7 @@ return [
     'nav_open_menu'        => 'Open menu',
     'nav_notifications'    => 'Notifications',
     'nav_settings'         => 'Settings',
+    'nav_admins'           => 'Team Management',
     'nav_search'           => 'Search anything...',
 
     /* ── Footer & Misc ── */
@@ -151,7 +152,12 @@ return [
     'save_changes'         => 'Save Changes',
     'notification_settings' => 'Notification Settings',
     'payments'             => 'Payments',
-
+    'store_logo'           => 'Store Logo',
+    'upload_logo'          => 'Upload Logo',
+    'timezone'             => 'Timezone',
+    'date_format'          => 'Date Format',
+    'settings_description' => 'Manage your :app basic information and system configurations effectively.',
+    'general_settings_desc'=> 'Configure your store details and regional settings to match your business needs.',
     /* ── Orders Page Specific ── */
     'order'                 => 'Order',
     'orders'                 => 'Orders',
@@ -250,6 +256,8 @@ return [
     'save_failed'           => 'Failed to save product.',
     'delete_confirm_prefix' => 'Are you sure you want to delete',
     'delete_irreversible'   => 'This action is irreversible.',
+    'new_admin_alert'       => 'New Admin Registered: :name',
+    'new_order_alert'       => 'New Order Placed: #:order_number',
     'deleted_successfully'  => 'Product deleted successfully.',
     'delete_failed'         => 'Failed to delete product.',
 
@@ -321,7 +329,49 @@ return [
    'orders_with_least_purchases'=>'Orders with Least Purchases',
    'orders_with_most_spent'=>'Orders with Most Spent',
    'orders_with_least_spent'=>'Orders with Least Spent',
-   
+   'edit_admin'=>'Edit Admin',
+   'update_admin'=>'Update Admin',
+   'update_admin_subtitle'=>'Update existing admin information',
+   'admins_management'=>'Admins Management',
+   'add_new_admin'=>'Add New Admin',
+   'add_new_admin_subtitle'=>'Create a new admin account',
+   'admin_deleted_success'=>'Admin deleted successfully',
+   'role_updated_success'=>'Role updated successfully',
+   'admin_updated_success'=>'Admin updated successfully',
+   'admin_created_success'=>'Admin created successfully',
+   'failed_to_delete_admin'=>'Failed to delete admin',
+   'failed_to_update_role'=>'Failed to update role',
+   'failed_to_update_admin'=>'Failed to update admin',
+   'failed_to_create_admin'=>'Failed to create admin',
+  'role_not_found'=>'Role not found',
+  'admin_not_found'=>'Admin not found',
+  'role'=>'Role',
+  'email'=>'Email',
+  'name'=>'Name',
  
+  'password_confirmation'=>'Password Confirmation',
+  'create_admin'=>'Create Admin',
+  
+  'delete_admin'=>'Delete Admin',
+ 'manage_admins'=>'Manage Admins',
+ 'manage_your_team'=>'Manage Your Team',
+    'administrator'=>'Administrator',
+    'joined_date'=>'Joined Date',
+    'last_active'=>'Last Active',
    
+    'view_profile'=>'View Profile',
+    'edit_profile'=>'Edit Profile',
+    'delete_profile'=>'Delete Profile',
+    'profile_deleted_success'=>'Profile deleted successfully',
+    'failed_to_delete_profile'=>'Failed to delete profile',
+    'profile_not_found'=>'Profile not found',
+    'admin_profile'=>'Admin Profile',
+    'admin_profile_subtitle'=>'Admin Profile',
+    'add_admin'=>'Add Admin',
+    'add_admin_subtitle'=>'Add New Admin',
+   
+    'edit_admin_subtitle'=>'Edit Existing Admin',
+   
+    'delete_admin_subtitle'=>'Delete Admin',
+  'save_admin'=>'Save Admin',
 ];

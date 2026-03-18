@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@lang('admin.login_title')</title>
+  <title>@lang('admin.login_title') — {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -431,8 +431,12 @@
 
   <div class="side-top">
     <div class="wordmark">
-      <div class="wordmark-dot"></div>
-      {{ config('app.name', 'Arcadia') }}
+      @if(isset($admin_settings['store_logo']))
+        <img src="{{ asset('storage/' . $admin_settings['store_logo']) }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
+      @else
+        <div class="wordmark-dot"></div>
+      @endif
+      {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}
     </div>
 
     <div class="side-hero">
@@ -474,7 +478,7 @@
     </div>
   </div>
 
-  <div class="side-footer">© {{ date('Y') }} {{ config('app.name', 'Arcadia') }}. E-Commerce Pro v4.0.2</div>
+  <div class="side-footer">© {{ date('Y') }} {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}. E-Commerce Pro v4.0.2</div>
 </aside>
 
 <!-- Main form -->
@@ -568,7 +572,7 @@
       <span class="vdot"></span>
       <span>v4.0.2</span>
       <span class="vdot"></span>
-      <span>© {{ date('Y') }}</span>
+      <span>© {{ date('Y') }} {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}</span>
     </div>
 
   </div>

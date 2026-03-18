@@ -273,54 +273,79 @@ body { background: var(--bg) !important; }
                     </div>
                 </div>
                 <div class="settings-card-body">
-                    <form action="#" method="POST" id="general-form">
+                    <form action="{{ route('admin.settings.update') }}" method="POST" id="general-form" enctype="multipart/form-data">
                         @csrf
                         <div class="form-grid">
+                            <div class="field col-span-2">
+                                <label>@lang('admin.store_logo')</label>
+                                <div style="display: flex; align-items: center; gap: 20px; background: var(--surface-2); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-1);">
+                                    <div style="width: 80px; height: 80px; border-radius: var(--radius-sm); background: var(--surface-3); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-2);">
+                                        @if(isset($settings['store_logo']))
+                                            <img src="{{ asset('storage/' . $settings['store_logo']) }}" id="logo-preview" style="width: 100%; height: 100%; object-fit: contain;">
+                                        @else
+                                            <svg id="logo-placeholder" style="width: 32px; height: 32px; color: var(--text-3);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            <img src="" id="logo-preview" style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                                        @endif
+                                    </div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                                        <label for="logo-input" class="btn-save" style="width: fit-content; cursor: pointer; background: var(--surface-3); color: var(--text-1); box-shadow: none; border: 1px solid var(--border-2);">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                                            </svg>
+                                            @lang('admin.upload_logo')
+                                        </label>
+                                        <input type="file" id="logo-input" name="logo" hidden accept="image/*" onchange="previewLogo(this)">
+                                        <span class="hint">Recommended: 200x200px, PNG or SVG. Max 2MB.</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="field">
                                 <label>@lang('admin.store_name') <span style="color:var(--red)">*</span></label>
-                                <input type="text" name="store_name" value="{{ config('app.name', 'ECOMM PRO') }}" placeholder="Enter store name">
+                                <input type="text" name="store_name" value="{{ $settings['store_name'] ?? config('app.name', 'ECOMM PRO') }}" placeholder="Enter store name">
                             </div>
                             <div class="field">
                                 <label>@lang('admin.store_email') <span style="color:var(--red)">*</span></label>
-                                <input type="email" name="store_email" value="contact@ecommpro.com" placeholder="Enter store email">
+                                <input type="email" name="store_email" value="{{ $settings['store_email'] ?? 'contact@ecommpro.com' }}" placeholder="Enter store email">
                             </div>
                             <div class="field">
                                 <label>@lang('admin.currency')</label>
                                 <select name="currency">
-                                    <option value="USD">USD ($) — US Dollar</option>
-                                    <option value="KHR">KHR (៛) — Cambodian Riel</option>
-                                    <option value="EUR">EUR (€) — Euro</option>
-                                    <option value="GBP">GBP (£) — British Pound</option>
+                                    <option value="USD" {{ ($settings['currency'] ?? 'USD') == 'USD' ? 'selected' : '' }}>USD ($) — US Dollar</option>
+                                    <option value="KHR" {{ ($settings['currency'] ?? '') == 'KHR' ? 'selected' : '' }}>KHR (៛) — Cambodian Riel</option>
+                                    <option value="EUR" {{ ($settings['currency'] ?? '') == 'EUR' ? 'selected' : '' }}>EUR (€) — Euro</option>
+                                    <option value="GBP" {{ ($settings['currency'] ?? '') == 'GBP' ? 'selected' : '' }}>GBP (£) — British Pound</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>@lang('admin.language')</label>
                                 <select name="language">
-                                    <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-                                    <option value="km" {{ app()->getLocale() == 'km' ? 'selected' : '' }}>ខ្មែរ (Khmer)</option>
+                                    <option value="en" {{ ($settings['language'] ?? app()->getLocale()) == 'en' ? 'selected' : '' }}>English</option>
+                                    <option value="km" {{ ($settings['language'] ?? '') == 'km' ? 'selected' : '' }}>ខ្មែរ (Khmer)</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>@lang('admin.timezone')</label>
                                 <select name="timezone">
-                                    <option value="Asia/Phnom_Penh">Asia/Phnom_Penh (UTC+7)</option>
-                                    <option value="UTC">UTC</option>
-                                    <option value="America/New_York">America/New_York (EST)</option>
-                                    <option value="Europe/London">Europe/London (GMT)</option>
+                                    <option value="Asia/Phnom_Penh" {{ ($settings['timezone'] ?? 'Asia/Phnom_Penh') == 'Asia/Phnom_Penh' ? 'selected' : '' }}>Asia/Phnom_Penh (UTC+7)</option>
+                                    <option value="UTC" {{ ($settings['timezone'] ?? '') == 'UTC' ? 'selected' : '' }}>UTC</option>
+                                    <option value="America/New_York" {{ ($settings['timezone'] ?? '') == 'America/New_York' ? 'selected' : '' }}>America/New_York (EST)</option>
+                                    <option value="Europe/London" {{ ($settings['timezone'] ?? '') == 'Europe/London' ? 'selected' : '' }}>Europe/London (GMT)</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>@lang('admin.date_format')</label>
                                 <select name="date_format">
-                                    <option value="d M Y">01 Jan 2026</option>
-                                    <option value="Y-m-d">2026-01-01</option>
-                                    <option value="m/d/Y">01/01/2026</option>
-                                    <option value="d/m/Y">01/01/2026 (EU)</option>
+                                    <option value="d M Y" {{ ($settings['date_format'] ?? 'd M Y') == 'd M Y' ? 'selected' : '' }}>01 Jan 2026</option>
+                                    <option value="Y-m-d" {{ ($settings['date_format'] ?? '') == 'Y-m-d' ? 'selected' : '' }}>2026-01-01</option>
+                                    <option value="m/d/Y" {{ ($settings['date_format'] ?? '') == 'm/d/Y' ? 'selected' : '' }}>01/01/2026</option>
+                                    <option value="d/m/Y" {{ ($settings['date_format'] ?? '') == 'd/m/Y' ? 'selected' : '' }}>01/01/2026 (EU)</option>
                                 </select>
                             </div>
                             <div class="field col-span-2">
                                 <label>@lang('admin.store_description')</label>
-                                <textarea name="description" placeholder="Brief description of your store">The most advanced e-commerce admin platform with real-time analytics and global distribution.</textarea>
+                                <textarea name="store_description" placeholder="Brief description of your store">{{ $settings['store_description'] ?? 'The most advanced e-commerce admin platform with real-time analytics and global distribution.' }}</textarea>
                                 <span class="hint">Shown in search engines and meta tags. Keep under 160 characters.</span>
                             </div>
                         </div>
@@ -329,11 +354,11 @@ body { background: var(--bg) !important; }
                 <div class="form-footer">
                     <span class="form-footer-hint">* required fields</span>
                     @if(Auth::user()->isSuperAdmin())
-                    <button type="button" class="btn-save" onclick="saveSettings('general')">
+                    <button type="button" class="btn-save" id="save-btn" onclick="saveSettings('general')">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                         </svg>
-                        @lang('admin.save_changes')
+                        <span class="btn-text">@lang('admin.save_changes')</span>
                     </button>
                     @else
                     <button type="button" class="btn-save" style="opacity:0.5;cursor:not-allowed;" disabled title="Only Super Admin can change global store settings">Super Admin Only</button>
@@ -530,11 +555,72 @@ function handleThemeToggle(input) {
 
 /* ── Save handler ── */
 function saveSettings(panel) {
+    if (panel !== 'general') {
+        showToast('Only General settings are functional in this demo.', 'error');
+        return;
+    }
+
+    const form = document.getElementById('general-form');
+    const formData = new FormData(form);
+    const saveBtn = document.getElementById('save-btn');
+    const btnText = saveBtn.querySelector('.btn-text');
+    const originalText = btnText.textContent;
+
+    // Loading state
+    saveBtn.disabled = true;
+    saveBtn.style.opacity = '0.7';
+    btnText.textContent = 'Saving...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        showToast(data.message || 'Settings saved successfully.', 'success');
+        if (data.message.includes('successfully')) {
+            // Optional: refresh page or update UI elements like store name if changed
+            // window.location.reload(); 
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Failed to save settings. Please try again.', 'error');
+    })
+    .finally(() => {
+        saveBtn.disabled = false;
+        saveBtn.style.opacity = '1';
+        btnText.textContent = originalText;
+    });
+}
+
+function showToast(msg, type = 'success') {
     const toast = document.getElementById('toast');
-    toast.className = 'toast success';
-    document.getElementById('toast-msg').textContent = 'Settings saved successfully.';
+    const toastMsg = document.getElementById('toast-msg');
+    
+    toast.className = 'toast ' + type;
+    toastMsg.textContent = msg;
     toast.classList.add('show');
+    
     setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function previewLogo(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('logo-preview');
+            const placeholder = document.getElementById('logo-placeholder');
+            
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 </script>
 @endpush
