@@ -4,12 +4,12 @@ FROM php:8.4-fpm
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip libzip-dev libjpeg-dev libfreetype6-dev \
-    nodejs npm \
+    nodejs npm libpq-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Install and enable Redis
 RUN pecl install redis && docker-php-ext-enable redis
@@ -43,5 +43,5 @@ USER dev
 # Expose port for PHP-FPM
 EXPOSE 9000
 
-# Start PHP built-in server on Render’s port
+# Start PHP-FPM
 CMD ["php-fpm", "-F"]

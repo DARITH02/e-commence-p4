@@ -13,6 +13,10 @@ services:
         value: "false"
       - key: APP_URL
         fromContext: env
+      - key: APP_KEY
+        sync: false # User should set this manually in Render dashboard to persist it
+      - key: LOG_CHANNEL
+        value: errorlog
 
       - key: DB_CONNECTION
         value: mysql
@@ -58,6 +62,8 @@ services:
           property: port
       - key: REDIS_PASSWORD
         value: ""   # empty for free Redis plan
+      - key: REDIS_CLIENT
+        value: phpredis # Standard for Laravel 11/12 on Render
 
 databases:
   - name: ecommerce-db
