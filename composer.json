@@ -83,8 +83,6 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "replace": {
-    "psy/psysh": "*"
-}
+    "prefer-stable": true
+ 
 }
