@@ -30,6 +30,10 @@ class TelegramService
                 'parse_mode' => 'HTML',
             ]);
 
+            if (!$response->successful()) {
+                Log::error('Telegram API error: ' . $response->body());
+            }
+
             return $response->successful();
         } catch (\Exception $e) {
             Log::error('Telegram notification error: ' . $e->getMessage());

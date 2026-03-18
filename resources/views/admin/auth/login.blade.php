@@ -419,6 +419,37 @@
       width: 4px; height: 4px; border-radius: 50%;
       background: var(--muted);
     }
+
+    /* ── Language Switcher ────────────────────── */
+    .lang-switcher {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 50;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .lang-switcher a {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--muted2);
+      letter-spacing: 0.08em;
+      padding: 6px 12px;
+      border-radius: 7px;
+      transition: all 0.2s;
+    }
+    .lang-switcher a.active {
+      color: #fff;
+      background: var(--accent);
+      box-shadow: 0 2px 10px rgba(91,138,245,0.25);
+    }
   </style>
 </head>
 <body>
@@ -483,6 +514,12 @@
 
 <!-- Main form -->
 <main class="main">
+  <!-- Language Switcher -->
+  <div class="lang-switcher">
+    <a href="{{ route('lang.switch', 'en') }}" class="{{ App::getLocale() == 'en' ? 'active' : '' }}">EN</a>
+    <a href="{{ route('lang.switch', 'km') }}" class="{{ App::getLocale() == 'km' ? 'active' : '' }}">KM</a>
+  </div>
+
   <div class="form-card">
 
     <!-- Icon + heading -->
@@ -522,7 +559,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
           </svg>
           <input type="email" id="email" name="email" value="{{ old('email') }}"
-            placeholder="admin@example.com" autocomplete="email" required/>
+            placeholder="{{ __('admin.email_address') }}" autocomplete="email" required/>
         </div>
       </div>
 
@@ -537,7 +574,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
           </svg>
           <input type="password" id="password" name="password"
-            placeholder="••••••••" autocomplete="current-password" required/>
+            placeholder="{{ __('admin.password') }}" autocomplete="current-password" required/>
           <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" width="15" height="15">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
@@ -564,7 +601,7 @@
     <div class="divider">or</div>
 
     <div class="form-footer">
-      @lang('admin.no_account') <a href="{{ route('admin.register') }}">@lang('admin.create_account')</a>
+      @lang('admin.no_account') <a href="{{ route('admin.register') }}">@lang('admin.sign_up')</a>
     </div>
 
     <div class="version-tag">

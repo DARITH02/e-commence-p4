@@ -608,6 +608,37 @@
       .role-selector { gap: 8px; }
       .main { padding: 2rem 1rem 3rem; }
     }
+
+    /* ── Language Switcher ────────────────────── */
+    .lang-switcher {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 50;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .lang-switcher a {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--muted2);
+      letter-spacing: 0.08em;
+      padding: 6px 12px;
+      border-radius: 7px;
+      transition: all 0.2s;
+    }
+    .lang-switcher a.active {
+      color: #fff;
+      background: var(--accent);
+      box-shadow: 0 2px 10px rgba(91,138,245,0.25);
+    }
   </style>
 </head>
 <body>
@@ -651,6 +682,12 @@
 
 <!-- Main form -->
 <main class="main">
+  <!-- Language Switcher -->
+  <div class="lang-switcher">
+    <a href="{{ route('lang.switch', 'en') }}" class="{{ App::getLocale() == 'en' ? 'active' : '' }}">EN</a>
+    <a href="{{ route('lang.switch', 'km') }}" class="{{ App::getLocale() == 'km' ? 'active' : '' }}">KM</a>
+  </div>
+
   <div class="form-card">
 
     <!-- Success screen -->
@@ -661,13 +698,12 @@
       <div class="role-tag admin" id="successRoleTag">⚙ Admin Access Granted</div>
     </div>
 
-    <!-- Form -->
-    <div id="formWrap">
-      <div class="form-header">
-        <div class="badge"><span class="badge-dot"></span> @lang('admin.secure_registration')</div>
-        <h1>@lang('admin.create_account')</h1>
-        <p>@lang('admin.join_us')</p>
-      </div>
+      <div id="formWrap">
+        <div class="form-header">
+          <div class="badge"><span class="badge-dot"></span> SECURE REGISTRATION</div>
+          <h1>@lang('admin.create_account')</h1>
+          <p>@lang('admin.join_us')</p>
+        </div>
 
       <!-- Role selector -->
       <div class="role-selector" id="roleSelector">
@@ -695,7 +731,7 @@
             <label for="name">@lang('admin.full_name')</label>
             <div class="input-wrap">
               <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-              <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="Full name" autocomplete="name"/>
+            <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="{{ __('admin.full_name') }}" autocomplete="name"/>
             </div>
             <div class="err @error('name') show @enderror" id="nameErr">@error('name'){{ $message }}@else Min. 2 characters.@enderror</div>
           </div>
@@ -703,7 +739,7 @@
             <label for="email">@lang('admin.email_address')</label>
             <div class="input-wrap">
               <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-              <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="email@domain.com" autocomplete="email"/>
+              <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="{{ __('admin.email_address') }}" autocomplete="email"/>
             </div>
             <div class="err @error('email') show @enderror" id="emailErr">@error('email'){{ $message }}@else Valid email required.@enderror</div>
           </div>

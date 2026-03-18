@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Notifications\NewAdminRegistered;
+use App\Notifications\AdminLoggedIn;
+use App\Notifications\AdminLoggedOut;
 use Illuminate\Support\Facades\Notification;
 
 class AuthController extends Controller
@@ -35,6 +37,18 @@ class AuthController extends Controller
             $user = Auth::user();
             if ($user->isAnyAdmin()) {
                 $request->session()->regenerate();
+
+                // Notify Super Admins about the login
+                $superAdmins = User::whereHas('roles', function($q) {
+                    $q->where('slug', 'super_admin');
+                })->get();
+                
+                Notification::send($superAdmins, new AdminLoggedIn(
+                    $user, 
+                    $request->ip(), 
+                    $request->userAgent()
+                ));
+
                 return redirect()->intended(route('admin.dashboard'));
             }
 
@@ -124,6 +138,18 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        if ($user && $user->isAnyAdmin()) {
+            // Notify Super Admins about the logout
+            $superAdmins = User::whereHas('roles', function($q) {
+                $q->where('slug', 'super_admin');
+            })->get();
+            
+            Notification::send($superAdmins, new AdminLoggedOut($user));
+        }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

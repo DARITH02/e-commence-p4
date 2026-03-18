@@ -897,21 +897,34 @@
                                         .lang-switch-btn.active { background:var(--accent); color:#fff; }
                     
                     /* Notification Styles */
-                    .notif-dropdown { position:absolute; right:0; top:calc(100% + 10px); width:320px; background:var(--ink-2); border:1px solid var(--border-2); border-radius:18px; box-shadow:0 16px 48px rgba(0,0,0,0.4); opacity:0; transform:translateY(6px); pointer-events:none; transition:all 0.2s; z-index:50; }
-                    .notif-header { padding:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-                    .notif-title { font-size:14px; font-weight:700; color:var(--text); }
-                    .notif-badge { font-family:'DM Mono',monospace; font-size:9px; font-weight:800; letter-spacing:0.08em; color:var(--accent); background:var(--accent-bg); padding:3px 8px; border-radius:100px; }
-                    .notif-list { max-height:280px; overflow-y:auto; }
-                    .notif-item { padding:14px 16px; display:flex; gap:12px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
-                    .notif-item:hover { background:rgba(255,255,255,0.03); }
-                    .notif-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-                    .notif-icon.order { background:var(--green-bg); color:var(--green); }
-                    .notif-icon.reg { background:var(--accent-bg); color:var(--accent); }
-                    .notif-msg { font-size:12px; font-weight:700; color:var(--text); line-height:1.4; }
-                    .notif-time { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:2px; }
-                    .notif-empty { padding:40px 20px; text-align:center; color:var(--muted); font-size:12px; }
-                    .notif-footer { padding:12px; text-align:center; border-top:1px solid var(--border); }
-                    .notif-view-all { font-family:'DM Mono',monospace; font-size:10px; font-weight:800; color:var(--accent); text-decoration:none; letter-spacing:0.08em; text-transform:uppercase; }
+                    .notif-dropdown { 
+                        position:absolute; right:0; top:calc(100% + 12px); width:340px; 
+                        background:rgba(23, 23, 28, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                        border:1px solid rgba(255, 255, 255, 0.08); border-radius:22px; 
+                        box-shadow:0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05); 
+                        opacity:0; transform:translateY(12px); pointer-events:none; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index:100; 
+                    }
+                    .notif-dropdown.show { opacity:1; transform:translateY(0); pointer-events:all; }
+                    .notif-header { padding:18px 20px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; }
+                    .notif-title { font-size:15px; font-weight:800; color:#fff; letter-spacing:-0.01em; }
+                    .notif-badge { font-family:'DM Mono',monospace; font-size:10px; font-weight:800; letter-spacing:0.05em; color:var(--accent); background:rgba(var(--accent-rgb), 0.15); padding:4px 10px; border-radius:100px; border:1px solid rgba(var(--accent-rgb), 0.2); }
+                    .notif-list { max-height:360px; overflow-y:auto; scrollbar-width: none; }
+                    .notif-list::-webkit-scrollbar { display: none; }
+                    .notif-item { padding:16px 20px; display:flex; gap:14px; border-bottom:1px solid rgba(255,255,255,0.04); cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; }
+                    .notif-item:hover { background:rgba(255,255,255,0.04); }
+                    .notif-item:active { background:rgba(255,255,255,0.06); transform: scale(0.98); }
+                    .notif-icon { width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:18px; }
+                    .notif-icon.order { background:rgba(16, 185, 129, 0.15); color:#10b981; border:1px solid rgba(16, 185, 129, 0.1); }
+                    .notif-icon.admin { background:rgba(99, 102, 241, 0.15); color:#818cf8; border:1px solid rgba(99, 102, 241, 0.1); }
+                    .notif-icon.auth { background:rgba(245, 158, 11, 0.15); color:#f59e0b; border:1px solid rgba(245, 158, 11, 0.1); }
+                    .notif-icon.security { background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.1); }
+                    .notif-content { display:flex; flex-direction:column; gap:2px; }
+                    .notif-msg { font-size:13px; font-weight:600; color:rgba(255,255,255,0.9); line-height:1.4; }
+                    .notif-time { font-family:'DM Mono',monospace; font-size:10px; color:rgba(255,255,255,0.4); margin-top:2px; font-weight:500; }
+                    .notif-empty { padding:60px 20px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px; font-weight:500; }
+                    .notif-footer { padding:14px; text-align:center; border-top:1px solid rgba(255,255,255,0.06); }
+                    .notif-view-all { font-family:'DM Mono',monospace; font-size:11px; font-weight:800; color:var(--accent); text-decoration:none; letter-spacing:0.08em; text-transform:uppercase; transition: color 0.2s; }
+                    .notif-view-all:hover { color:#fff; }
                     </style>
 
                     <div class="topbar-divider"></div>
@@ -919,44 +932,62 @@
                     <!-- Notifications -->
                     <div class="relative" id="notif-wrap">
                         <button class="icon-btn" title="@lang('admin.nav_notifications')" onclick="toggleNotif()" id="notif-btn">
-                            </svg>
+                          
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
                             @if(isset($unread_notifications_count) && $unread_notifications_count > 0)
                                 <span class="notif-dot"></span>
                             @endif
                         </button>
                         <!-- Notifications Dropdown -->
-                        <div style="position:absolute;right:0;top:calc(100% + 10px);width:320px;background:var(--ink-2);border:1px solid var(--border-2);border-radius:18px;box-shadow:0 16px 48px rgba(0,0,0,0.4);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:50;" class="notif-dropdown">
-                            <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                                <span style="font-size:14px;font-weight:700;color:var(--text);">@lang('admin.nav_notifications')</span>
+                        <div class="notif-dropdown">
+                            <div class="notif-header">
+                                <span class="notif-title">@lang('admin.nav_notifications')</span>
                                 @if(isset($unread_notifications_count) && $unread_notifications_count > 0)
-                                    <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:800;letter-spacing:0.08em;color:var(--accent);background:var(--accent-bg);padding:3px 8px;border-radius:100px;">{{ $unread_notifications_count }} NEW</span>
+                                    <span class="notif-badge">{{ $unread_notifications_count }} NEW</span>
                                 @endif
                             </div>
-                            <div style="max-height:280px;overflow-y:auto;" id="notif-list">
+                            <div class="notif-list" id="notif-list">
                                 @if(isset($admin_notifications) && count($admin_notifications) > 0)
                                     @foreach($admin_notifications as $notif)
-                                        <div style="padding:14px 16px;display:flex;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                                            <div style="width:32px;height:32px;border-radius:9px;background:{{ $notif->data['type'] == 'new_order' ? 'var(--green-bg)' : 'var(--accent-bg)' }};display:flex;align-items:center;justify-content:center;flex-shrink:0;color:{{ $notif->data['type'] == 'new_order' ? 'var(--green)' : 'var(--accent)' }};">
-                                                @if($notif->data['type'] == 'new_order')
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                                @else
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                                @endif
+                                        @php
+                                            $type = $notif->data['type'] ?? 'default';
+                                            $iconClass = 'admin';
+                                            $svg = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>';
+                                            
+                                            if ($type === 'new_order') {
+                                                $iconClass = 'order';
+                                                $svg = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>';
+                                            } elseif ($type === 'new_admin') {
+                                                $iconClass = 'admin';
+                                                $svg = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>';
+                                            } elseif ($type === 'admin_login') {
+                                                $iconClass = 'auth';
+                                                $svg = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>';
+                                            } elseif ($type === 'admin_logout') {
+                                                $iconClass = 'auth';
+                                                $svg = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>';
+                                            }
+                                        @endphp
+                                        <div class="notif-item">
+                                            <div class="notif-icon {{ $iconClass }}">
+                                                {!! $svg !!}
                                             </div>
-                                            <div>
-                                                <p style="font-size:12px;font-weight:700;color:var(--text);">{{ $notif->data['message'] }}</p>
-                                                <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;">{{ $notif->created_at->diffForHumans() }}</p>
+                                            <div class="notif-content">
+                                                <p class="notif-msg">{{ $notif->data['message'] }}</p>
+                                                <p class="notif-time">{{ $notif->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     @endforeach
                                 @else
-                                    <div style="padding:40px 20px;text-align:center;color:var(--muted);font-size:12px;">
+                                    <div class="notif-empty">
                                         No new notifications
                                     </div>
                                 @endif
                             </div>
-                            <div style="padding:12px;text-align:center;border-top:1px solid var(--border);">
-                                <a href="#" style="font-family:'DM Mono',monospace;font-size:10px;font-weight:800;color:var(--accent);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">View all</a>
+                            <div class="notif-footer">
+                                <a href="#" class="notif-view-all">View all</a>
                             </div>
                         </div>
                     </div>
@@ -1023,16 +1054,13 @@
         function toggleNotif() {
             const dd = document.querySelector('.notif-dropdown');
             if (!dd) return;
-            const open = dd.style.opacity === '1';
-            dd.style.opacity = open ? '0' : '1';
-            dd.style.transform = open ? 'translateY(6px)' : 'translateY(0)';
-            dd.style.pointerEvents = open ? 'none' : 'all';
+            dd.classList.toggle('show');
         }
         document.addEventListener('click', function(e) {
             const wrap = document.getElementById('notif-wrap');
             if (wrap && !wrap.contains(e.target)) {
                 const dd = document.querySelector('.notif-dropdown');
-                if (dd) { dd.style.opacity='0'; dd.style.transform='translateY(6px)'; dd.style.pointerEvents='none'; }
+                if (dd) dd.classList.remove('show');
             }
         });
 

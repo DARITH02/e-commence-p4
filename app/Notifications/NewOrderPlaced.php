@@ -7,9 +7,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NewOrderPlaced extends Notification implements ShouldQueue
+class NewOrderPlaced extends Notification
 {
-    use Queueable;
 
     protected $order;
 
@@ -40,6 +39,6 @@ class NewOrderPlaced extends Notification implements ShouldQueue
                "<b>Order #:</b> #" . $this->order->order_number . "\n" .
                "<b>Total:</b> $" . number_format($this->order->total_amount, 2) . "\n" .
                "<b>Customer:</b> " . $this->order->user->name . "\n" .
-               "<b>Time:</b> " . now()->format('Y-m-d H:i:s');
+               "<b>Time:</b> " . now('Asia/Phnom_Penh')->format('Y-m-d H:i:s') . " (ICT)";
     }
 }

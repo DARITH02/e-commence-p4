@@ -4,13 +4,10 @@ namespace App\Notifications;
 
 use App\Notifications\Channels\TelegramChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewAdminRegistered extends Notification
+class AdminLoggedOut extends Notification
 {
-
     protected $user;
 
     public function __construct($user)
@@ -20,34 +17,23 @@ class NewAdminRegistered extends Notification
 
     public function via($notifiable): array
     {
-        return ['database', 'mail', TelegramChannel::class];
-    }
-
-    public function toMail($notifiable): MailMessage
-    {
-        return (new MailMessage)
-            ->subject('New Admin Registered')
-            ->line('A new administrator has registered on the platform.')
-            ->line('Name: ' . $this->user->name)
-            ->line('Email: ' . $this->user->email)
-            ->action('View Admin Panel', route('admin.dashboard'))
-            ->line('Please review their permissions.');
+        return ['database', TelegramChannel::class];
     }
 
     public function toArray($notifiable): array
     {
         return [
-            'type' => 'new_admin',
+            'type' => 'admin_logout',
             'user_id' => $this->user->id,
             'name' => $this->user->name,
             'email' => $this->user->email,
-            'message' => 'New admin registered: ' . $this->user->name,
+            'message' => 'Admin logged out: ' . $this->user->name,
         ];
     }
 
     public function toTelegram($notifiable)
     {
-        return "<b>🚨 New Admin Registered</b>\n\n" .
+        return "<b>🔒 Admin Logged Out</b>\n\n" .
                "<b>Name:</b> " . $this->user->name . "\n" .
                "<b>Email:</b> " . $this->user->email . "\n" .
                "<b>Time:</b> " . now('Asia/Phnom_Penh')->format('Y-m-d H:i:s') . " (ICT)";
