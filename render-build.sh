@@ -10,11 +10,10 @@ composer install --no-dev --optimize-autoloader
 npm install
 npm run build
 
-# 3. Fix permissions (VERY IMPORTANT)
-chmod -R 775 storage
-chmod -R 775 bootstrap/cache
+# 3. Fix permissions
+chmod -R 775 storage bootstrap/cache
 
-# 4. Generate APP_KEY if missing (and persist)
+# 4. Generate APP_KEY if missing
 if [ -z "$APP_KEY" ]; then
     echo "⚠️ APP_KEY not set, generating..."
     php artisan key:generate
@@ -27,7 +26,7 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# 6. Storage link (for images/uploads)
+# 6. Storage link
 php artisan storage:link || true
 
 echo "✅ Build completed successfully!"

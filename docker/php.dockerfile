@@ -4,6 +4,7 @@ FROM php:8.3-fpm
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip libzip-dev libjpeg-dev libfreetype6-dev \
+    nodejs npm \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -21,14 +22,20 @@ RUN useradd -G www-data,root -u 1000 -d /home/dev dev \
     && mkdir -p /home/dev/.composer \
     && chown -R dev:dev /home/dev
 
-# Copy app files into container
-COPY . /var/www
-
 # Set working directory
 WORKDIR /var/www
 
+# Copy app files into container
+COPY . .
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Install Node dependencies & build frontend
+RUN npm install && npm run build
+
 # Give proper permissions
-RUN chown -R dev:www-data /var/www && chmod -R 775 /var/www
+RUN chown -R dev:www-data /var/www && chmod -R 775 storage bootstrap/cache
 
 # Switch to app user
 USER dev
