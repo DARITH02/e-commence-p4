@@ -42,12 +42,14 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         
-        // Handle image if provided (base64 or file, here assuming standard for now or AJAX base64)
-        // For simplicity in this demo, we'll focus on the text data and status.
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('categories', config('filesystems.default'));
+        }
 
         $category = Category::create($validated);
 
@@ -69,10 +71,19 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($category->image) {
+                Storage::disk(config('filesystems.default'))->delete($category->image);
+            }
+            $validated['image'] = $request->file('image')->store('categories', config('filesystems.default'));
+        }
+
         $category->update($validated);
 
         return response()->json([
@@ -83,6 +94,9 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        if ($category->image) {
+            Storage::disk(config('filesystems.default'))->delete($category->image);
+        }
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully!']);
     }

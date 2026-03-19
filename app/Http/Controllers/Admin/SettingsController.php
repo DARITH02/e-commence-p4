@@ -36,12 +36,12 @@ class SettingsController extends Controller
                 'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            $path = $request->file('logo')->store('settings', 'public');
+            $path = $request->file('logo')->store('settings', config('filesystems.default'));
             
             // Delete old logo if exists
             $oldLogo = Setting::where('key', 'store_logo')->first()?->value;
             if ($oldLogo) {
-                Storage::disk('public')->delete($oldLogo);
+                Storage::disk(config('filesystems.default'))->delete($oldLogo);
             }
 
             Setting::updateOrCreate(

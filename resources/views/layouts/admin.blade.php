@@ -706,7 +706,13 @@
             <div class="sidebar-logo">
                 <div class="logo-mark">
                     @if(isset($admin_settings['store_logo']))
-                        <img src="{{ asset('storage/' . $admin_settings['store_logo']) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                        @php
+                            $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+                            $version = config('cloudinary.asset_version', 'v1773906173');
+                            $prefix = config('cloudinary.upload_folder', '');
+                            $logoUrl = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($prefix) ? "/{$prefix}" : "") . "/{$admin_settings['store_logo']}";
+                        @endphp
+                        <img src="{{ $logoUrl }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                     @else
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />

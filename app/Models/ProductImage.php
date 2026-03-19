@@ -21,6 +21,22 @@ class ProductImage extends Model
 
     public function getImageUrlAttribute()
     {
-        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->image_path);
+        if (!$this->image_path) return null;
+
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+            return $this->image_path;
+        }
+
+        $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+        $version = config('cloudinary.asset_version', 'v1773906173');
+        $prefix = config('cloudinary.upload_folder', '');
+        
+        $url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}";
+        
+        if (!empty($prefix)) {
+            $url .= "/{$prefix}";
+        }
+
+        return "{$url}/{$this->image_path}";
     }
 }

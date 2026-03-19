@@ -651,7 +651,13 @@
 
     <div class="wordmark">
       @if(isset($admin_settings['store_logo']))
-        <img src="{{ asset('storage/' . $admin_settings['store_logo']) }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
+        @php
+            $logo_url = asset('storage/' . $admin_settings['store_logo']);
+            try {
+                $logo_url = \Illuminate\Support\Facades\Storage::url($admin_settings['store_logo']);
+            } catch (\Exception $e) {}
+        @endphp
+        <img src="{{ $logo_url }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
       @else
         <div class="wordmark-dot"></div>
       @endif

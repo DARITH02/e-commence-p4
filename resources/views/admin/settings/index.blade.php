@@ -281,7 +281,13 @@ body { background: var(--bg) !important; }
                                 <div style="display: flex; align-items: center; gap: 20px; background: var(--surface-2); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-1);">
                                     <div style="width: 80px; height: 80px; border-radius: var(--radius-sm); background: var(--surface-3); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-2);">
                                         @if(isset($settings['store_logo']))
-                                            <img src="{{ asset('storage/' . $settings['store_logo']) }}" id="logo-preview" style="width: 100%; height: 100%; object-fit: contain;">
+                                            @php
+                                                $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+                                                $version = config('cloudinary.asset_version', 'v1773906173');
+                                                $prefix = config('cloudinary.upload_folder', '');
+                                                $logoPreviewUrl = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($prefix) ? "/{$prefix}" : "") . "/{$settings['store_logo']}";
+                                            @endphp
+                                            <img src="{{ $logoPreviewUrl }}" id="logo-preview" style="width: 100%; height: 100%; object-fit: contain;">
                                         @else
                                             <svg id="logo-placeholder" style="width: 32px; height: 32px; color: var(--text-3);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>

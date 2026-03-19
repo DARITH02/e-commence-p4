@@ -55,7 +55,7 @@ class ProductController extends Controller
             // Handle Images
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $image) {
-                    $path = $image->store('products', 'public');
+                    $path = $image->store('products', config('filesystems.default'));
                     $product->images()->create([
                         'image_path' => $path,
                         'is_primary' => $index === 0
@@ -108,7 +108,7 @@ class ProductController extends Controller
                 $hasPrimary = $product->images()->where('is_primary', true)->exists();
                 
                 foreach ($request->file('images') as $index => $image) {
-                    $path = $image->store('products', 'public');
+                    $path = $image->store('products', config('filesystems.default'));
                     $product->images()->create([
                         'image_path' => $path,
                         'is_primary' => !$hasPrimary && $index === 0
@@ -137,7 +137,7 @@ class ProductController extends Controller
 
     public function destroyImage(\App\Models\ProductImage $image)
     {
-        Storage::disk('public')->delete($image->image_path);
+        Storage::disk(config('filesystems.default'))->delete($image->image_path);
         $image->delete();
         return response()->json(['message' => 'Image deleted successfully!']);
     }
