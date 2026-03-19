@@ -464,10 +464,10 @@
     <div class="wordmark">
       @if(isset($admin_settings['store_logo']))
         @php
-            $logo_url = asset('storage/' . $admin_settings['store_logo']);
-            try {
-                $logo_url = \Illuminate\Support\Facades\Storage::url($admin_settings['store_logo']);
-            } catch (\Exception $e) {}
+            $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+            $version   = env('CLOUDINARY_ASSET_VERSION', 'v1773906173');
+            $folder    = env('CLOUDINARY_UPLOAD_FOLDER', '');
+            $logo_url  = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($folder) ? "/{$folder}" : "") . "/{$admin_settings['store_logo']}";
         @endphp
         <img src="{{ $logo_url }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
       @else

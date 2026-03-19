@@ -17,6 +17,8 @@ services:
         sync: false # User should set this manually in Render dashboard to persist it
       - key: LOG_CHANNEL
         value: errorlog
+      - key: FILESYSTEM_DISK
+        value: cloudinary
 
       - key: DB_CONNECTION
         value: mysql
