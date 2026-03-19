@@ -21,14 +21,14 @@ services:
         value: cloudinary
 
       - key: DB_CONNECTION
-        value: mysql
+        value: pgsql
       - key: DB_HOST
         fromService:
           name: ecommerce-db
           type: db
           property: host
       - key: DB_PORT
-        value: "3306"
+        value: "5432"
       - key: DB_DATABASE
         fromService:
           name: ecommerce-db
@@ -81,8 +81,8 @@ services:
 
 databases:
   - name: ecommerce-db
-    databaseName: ecommerce_pro
-    user: ecommerce_user
+    databaseName: e_commerce_pg_2ylb
+    user: e_commerce_pg_2ylb_user
     plan: free
 
 redis:
