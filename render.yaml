@@ -75,7 +75,7 @@ services:
       - key: CLOUDINARY_API_SECRET
         sync: false # Set manually in Render dashboard
       - key: CLOUDINARY_ASSET_VERSION
-        value: v1773906173
+        value: v1773897500
       - key: CLOUDINARY_UPLOAD_FOLDER
         value: ""
 
