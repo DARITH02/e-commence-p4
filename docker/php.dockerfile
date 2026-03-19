@@ -22,15 +22,10 @@ RUN pecl install redis && docker-php-ext-enable redis
 # Copy Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create app user
-RUN useradd -G www-data,root -u 1000 -d /home/dev dev \
-    && mkdir -p /home/dev/.composer \
-    && chown -R dev:dev /home/dev
-
 # Set working directory
 WORKDIR /var/www
 
-# Copy project
+# Copy project files
 COPY . .
 
 # Install PHP dependencies
@@ -39,14 +34,15 @@ RUN composer install --no-dev --optimize-autoloader
 # Build frontend
 RUN npm install && npm run build
 
-# Permissions
-RUN chown -R dev:www-data /var/www \
+# Set permissions while still root
+RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Switch to non-root user
-USER dev
+# Optional: create storage symlink
+RUN php artisan storage:link || true
 
 # Expose PHP-FPM port
 EXPOSE 9000
 
+# Start PHP-FPM as default www-data
 CMD ["php-fpm", "-F"]
