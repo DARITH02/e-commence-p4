@@ -16,7 +16,17 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:admin,super',
+            'super_admin_key' => 'required_if:role,super'
         ]);
+
+        // Production Fix: Check Super Admin Key in API too
+        if ($request->role === 'super') {
+            $expectedKey = env('ADMIN_SUPER_KEY', 'arcadia-admin-2026');
+            if ($request->super_admin_key !== $expectedKey) {
+                return response()->json(['message' => 'Unauthorized: Invalid Super Admin Access Key'], 403);
+            }
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -24,26 +34,55 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Assign Role
+        $roleSlug = ($request->role === 'super') ? 'super_admin' : 'admin';
+        $role = \App\Models\Role::where('slug', $roleSlug)->first();
+        if ($role) {
+            $user->roles()->attach($role->id);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-        ]);
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $roleSlug
+            ]
+        ], 201);
     }
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'role' => 'required|in:admin,super'
+        ]);
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Invalid login credentials'], 401);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = Auth::user();
+
+        // Production Fix: Ensure user has the correct role for API access
+        $roleSlug = ($request->role === 'super') ? 'super_admin' : 'admin';
+        if (!$user->hasRole($roleSlug)) {
+            $token = $user->currentAccessToken();
+            if ($token) $token->delete();
+            Auth::logout();
+            return response()->json(['message' => 'Unauthorized: Incorrect role for this endpoint'], 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'role' => $roleSlug
         ]);
     }
 

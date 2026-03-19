@@ -391,4 +391,7 @@ return [
    'no_account' => 'គ្មានគណនី?',
    'sign_up' => 'ចុះឈ្មោះ',
    'forgot_password' => 'ភ្លេចពាក្យសម្ងាត់?',
+   'admin' => 'អ្នកគ្រប់គ្រង',
+   'super_admin' => 'អ្នកគ្រប់គ្រងកំពូល',
+   'super_admin_subtitle' => 'អ្នកគ្រប់គ្រងកំពូល',
 ];

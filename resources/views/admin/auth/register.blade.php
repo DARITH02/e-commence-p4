@@ -1,937 +1,509 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account — {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@lang('admin.create_account') — {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #07090e;
-      --panel:     #0c0f17;
-      --panel2:    #10131c;
-      --border:    rgba(255,255,255,0.065);
-      --border-hi: rgba(255,255,255,0.13);
+      --bg:        #080a10;
+      --panel:     #0e111a;
+      --panel2:    #121622;
+      --border:    rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.12);
       --accent:    #5b8af5;
       --accent2:   #8b5cf6;
       --gold:      #f0b429;
-      --gold-dim:  rgba(240,180,41,0.09);
-      --text:      #eceae4;
-      --muted:     #4e5668;
-      --muted2:    #7e8ba0;
-      --error:     #f56565;
-      --success:   #48bb78;
-      --inp:       #080a10;
-      --radius:    12px;
+      --text:      #f2f4f8;
+      --muted:     #64748b;
+      --muted2:    #94a3b8;
+      --error:     #f43f5e;
+      --inp:       #060812;
+      --theme-toggle-bg: rgba(255,255,255,0.05);
     }
 
-    html { font-size: 16px; }
-    html, body { height: 100%; }
+    body.light-mode {
+      --bg:        #f8fafc;
+      --panel:     #ffffff;
+      --panel2:    #f1f5f9;
+      --border:    rgba(0,0,0,0.05);
+      --border-hi: rgba(0,0,0,0.08);
+      --accent:    #2563eb;
+      --accent2:   #7c3aed;
+      --gold:      #d97706;
+      --text:      #0f172a;
+      --muted:     #64748b;
+      --muted2:    #475569;
+      --error:     #e11d48;
+      --inp:       #f9fbff;
+      --theme-toggle-bg: rgba(0,0,0,0.03);
+    }
+
+    html, body { height: 100%; transition: background-color 0.3s, color 0.3s; }
 
     body {
-      min-height: 100vh;
+      font-family: 'Inter', 'Kantumruy Pro', sans-serif;
       background: var(--bg);
+      min-height: 100vh;
       display: flex;
-      font-family: 'Instrument Sans', sans-serif;
-      font-size: 0.9rem;
-      line-height: 1.5;
       color: var(--text);
       overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* ── Left panel ─────────────────────────────── */
+    /* Ambient orbs */
+    .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; animation: orbFloat 18s ease-in-out infinite; }
+    .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(91,138,245,0.22) 0%, transparent 70%); top: -10%; right: -8%; animation-delay: 0s; }
+    .orb-2 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 70%); bottom: 5%; left: 28%; animation-delay: -6s; }
+    .orb-3 { width: 240px; height: 240px; background: radial-gradient(circle, rgba(91,138,245,0.1) 0%, transparent 70%); top: 50%; left: 8%; animation-delay: -12s; }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(30px,-20px) scale(1.05); }
+      66%      { transform: translate(-15px,25px) scale(0.97); }
+    }
+
+    /* Left panel */
     .side {
       display: none;
-      width: 400px;
-      min-height: 100vh;
-      flex-shrink: 0;
+      width: 400px; min-height: 100vh; flex-shrink: 0;
       background: var(--panel2);
       border-right: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: hidden;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 2.75rem 2.5rem;
+      position: relative; overflow: hidden;
+      flex-direction: column; justify-content: space-between;
+      padding: 2.8rem 2.6rem; z-index: 1;
     }
-    @media(min-width:900px){ .side { display: flex; } }
+    @media(min-width: 960px) { .side { display: flex; } }
 
     .side-grid {
       position: absolute; inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
       background-size: 44px 44px;
-      mask-image: radial-gradient(ellipse at 25% 35%, black 15%, transparent 75%);
-      animation: gridMove 25s linear infinite;
+      mask-image: radial-gradient(ellipse at 35% 45%, black 15%, transparent 70%);
+      animation: gridDrift 30s linear infinite;
     }
-    @keyframes gridMove {
-      from { background-position: 0 0; }
-      to   { background-position: 44px 44px; }
-    }
-
-    .side-glow {
-      position: absolute;
-      width: 340px; height: 340px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(91,138,245,0.14) 0%, transparent 70%);
-      top: 10%; left: -80px;
-      pointer-events: none;
-    }
-    .side-glow2 {
-      position: absolute;
-      width: 220px; height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
-      bottom: 18%; right: -50px;
-      pointer-events: none;
-    }
+    @keyframes gridDrift { from { background-position: 0 0; } to { background-position: 44px 44px; } }
+    .side-glow  { position: absolute; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(91,138,245,0.12) 0%, transparent 70%); top: 5%; left: -100px; pointer-events: none; }
+    .side-glow2 { position: absolute; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); bottom: 10%; right: -60px; pointer-events: none; }
 
     .side-top { position: relative; z-index: 1; }
+    .wordmark { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+    .wordmark img { width: 32px; height: 32px; object-fit: contain; border-radius: 8px; }
+    .wordmark-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
 
-    .wordmark {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1.25rem;
-      letter-spacing: -0.025em;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      color: var(--text);
-    }
-    .wordmark-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px rgba(91,138,245,0.8);
-      flex-shrink: 0;
-    }
+    .side-hero { position: relative; z-index: 1; margin-top: 4rem; }
+    .side-hero h2 { font-family: 'Outfit', sans-serif; font-size: 2.3rem; font-weight: 800; line-height: 1.25; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .side-hero h2 em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .side-hero p { color: var(--muted2); font-size: 0.875rem; line-height: 1.7; }
 
-    .side-hero {
-      position: relative;
-      z-index: 1;
-      margin-top: 3.5rem;
-    }
-    .side-hero h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.1rem;
-      font-weight: 800;
-      line-height: 1.18;
-      letter-spacing: -0.035em;
-      margin-bottom: 1rem;
-    }
-    .side-hero h2 em {
-      font-style: normal;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .side-hero p {
-      color: var(--muted2);
-      font-size: 0.875rem;
-      line-height: 1.65;
-      font-weight: 300;
-    }
+    .feature-list { position: relative; z-index: 1; margin-top: 2.8rem; display: flex; flex-direction: column; gap: 1.2rem; }
+    .feature-item { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: var(--muted2); }
+    .feature-item .fi-icon { width: 32px; height: 32px; border-radius: 10px; background: rgba(91,138,245,0.08); border: 1px solid rgba(91,138,245,0.15); display: flex; align-items: center; justify-content: center; font-size: 14px; }
 
-    .feature-list {
-      position: relative;
-      z-index: 1;
-      margin-top: 2.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      font-size: 0.825rem;
-      color: var(--muted2);
-      line-height: 1.5;
-    }
-    .feature-item .fi-icon {
-      width: 30px; height: 30px;
-      border-radius: 8px;
-      background: rgba(91,138,245,0.08);
-      border: 1px solid rgba(91,138,245,0.15);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      font-size: 13px;
-    }
+    .side-footer { position: relative; z-index: 1; font-size: 0.7rem; color: var(--muted); }
 
-    .side-footer {
-      position: relative;
-      z-index: 1;
-      font-size: 0.72rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    /* Main */
+    .main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 5rem 1.4rem 4rem; position: relative; z-index: 1; }
 
-    /* ── Right panel ────────────────────────────── */
-    .main {
-      flex: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 3rem 1.5rem 4rem;
-      position: relative;
-      overflow: hidden;
-      min-height: 100vh;
-    }
+    .form-card { width: 100%; max-width: 440px; animation: riseIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+    @keyframes riseIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
-    .main::before {
-      content: '';
-      position: fixed;
-      top: -20%; right: -15%;
-      width: 50vw; height: 50vw;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(91,138,245,0.035) 0%, transparent 70%);
-      pointer-events: none;
+    /* Lang & Theme Switcher */
+    .lang-switcher {
+      position: fixed; top: 1.4rem; right: 1.4rem;
+      display: flex; align-items: center; gap: 3px;
+      z-index: 100;
+      background: rgba(14,17,23,0.88);
+      backdrop-filter: blur(18px);
+      padding: 4px; border-radius: 11px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
     }
-
-    .form-card {
-      width: 100%;
-      max-width: 460px;
-      animation: riseIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
-    }
-    @keyframes riseIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .form-header {
-      margin-bottom: 2rem;
-    }
-    .form-header .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--gold-dim);
-      border: 1px solid rgba(240,180,41,0.22);
-      border-radius: 100px;
-      padding: 3px 11px 3px 7px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      margin-bottom: 0.9rem;
-      line-height: 1.5;
-    }
-    .badge-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 7px var(--gold);
-      animation: pulse 2.2s ease infinite;
-      flex-shrink: 0;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.55; transform: scale(0.75); }
-    }
-
-    .form-header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.85rem;
-      font-weight: 800;
-      letter-spacing: -0.035em;
-      line-height: 1.2;
-      margin-bottom: 0.35rem;
-      color: var(--text);
-    }
-    .form-header p {
-      font-size: 0.845rem;
-      color: var(--muted2);
-      font-weight: 300;
-      line-height: 1.55;
-    }
-
-    /* ── Role selector ─────────────────────────── */
-    .role-selector {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-bottom: 1.5rem;
-    }
-    .role-label {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-      padding: 13px 14px;
-      border-radius: var(--radius);
-      border: 1.5px solid var(--border);
-      background: var(--panel);
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, transform 0.15s;
-      position: relative;
-      user-select: none;
-    }
-    .role-label:hover {
-      border-color: var(--border-hi);
-      transform: translateY(-1px);
-    }
-    .role-label .rl-icon {
-      font-size: 1.25rem;
-      line-height: 1;
-      margin-bottom: 2px;
-    }
-    .role-label .rl-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      line-height: 1.3;
-      color: var(--text);
-    }
-    .role-label .rl-desc {
-      font-size: 0.7rem;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-    .role-label .rl-check {
-      position: absolute;
-      top: 9px; right: 9px;
-      width: 17px; height: 17px;
-      border-radius: 50%;
-      border: 1.5px solid var(--border-hi);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 8px;
-      color: transparent;
-      transition: all 0.18s;
-    }
-
-    .role-label.selected-admin {
-      border-color: var(--accent) !important;
-      background: rgba(91,138,245,0.055) !important;
-    }
-    .role-label.selected-admin .rl-check {
-      background: var(--accent) !important;
-      border-color: var(--accent) !important;
-      color: #fff !important;
-    }
-    .role-label.selected-super {
-      border-color: var(--gold) !important;
-      background: rgba(240,180,41,0.055) !important;
-    }
-    .role-label.selected-super .rl-check {
-      background: var(--gold) !important;
-      border-color: var(--gold) !important;
-      color: #000 !important;
-    }
-
-    /* ── Super admin key ───────────────────────── */
-    .super-key-group {
-      display: none;
-      margin-bottom: 1rem;
-      animation: riseIn 0.25s ease both;
-    }
-    .super-key-group.visible { display: block; }
-
-    /* ── Form fields ───────────────────────────── */
-    .field-row {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 1rem;
-    }
-    .field-row.two { grid-template-columns: 1fr 1fr; }
-
-    .fg { position: relative; }
-
-    .fg label {
-      display: block;
-      font-size: 0.695rem;
-      font-weight: 600;
-      color: var(--muted2);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-      line-height: 1.4;
-    }
-    .input-wrap { position: relative; }
-
-    .input-wrap .ico {
-      position: absolute;
-      left: 12px; top: 50%;
-      transform: translateY(-50%);
-      width: 14px; height: 14px;
-      color: var(--muted);
-      pointer-events: none;
-      transition: color 0.2s;
-      z-index: 2;
-      flex-shrink: 0;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 0.67rem 0.8rem 0.67rem 2.35rem;
-      background: var(--inp);
-      border: 1.5px solid var(--border);
-      border-radius: 9px;
-      color: var(--text);
-      font-family: 'Instrument Sans', sans-serif;
-      font-size: 0.855rem;
-      line-height: 1.5;
-      outline: none;
-      transition: border-color 0.18s, box-shadow 0.18s;
-      -webkit-appearance: none;
-    }
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(91,138,245,0.1);
-    }
-    .input-wrap:focus-within .ico { color: var(--accent); }
-    input.inp-gold:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(240,180,41,0.09);
-    }
-    .input-wrap:focus-within .ico-gold { color: var(--gold); }
-    input::placeholder { color: #1e232e; }
-    input.invalid { border-color: var(--error) !important; box-shadow: 0 0 0 3px rgba(245,101,101,0.09) !important; }
-
-    .toggle-pw {
-      position: absolute;
-      right: 10px; top: 50%;
-      transform: translateY(-50%);
-      background: none; border: none;
-      color: var(--muted); cursor: pointer;
-      display: flex; align-items: center;
-      padding: 4px;
-      transition: color 0.18s;
-      line-height: 0;
-    }
-    .toggle-pw:hover { color: var(--muted2); }
-
-    .err {
-      font-size: 0.7rem;
-      color: var(--error);
-      margin-top: 4px;
-      line-height: 1.45;
-      display: none;
-    }
-    .err.show { display: block; }
-
-    /* ── Password strength ─────────────────────── */
-    .pw-meta { margin-top: 5px; }
-    .bars { display: flex; gap: 3px; }
-    .bars span {
-      flex: 1; height: 2px;
-      border-radius: 2px;
-      background: var(--border);
-      transition: background 0.25s;
-    }
-    .pw-label {
-      font-size: 0.67rem;
-      color: var(--muted);
-      margin-top: 3px;
-      line-height: 1.4;
-      letter-spacing: 0.02em;
-    }
-
-    /* ── Terms ─────────────────────────────────── */
-    .terms-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 9px;
-      margin: 1.25rem 0 1.5rem;
-    }
-    .custom-cb {
-      width: 17px; height: 17px;
-      min-width: 17px;
-      border: 1.5px solid var(--border-hi);
-      border-radius: 5px;
-      background: var(--inp);
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      position: relative;
-      transition: all 0.18s;
-      margin-top: 1px;
-      flex-shrink: 0;
-    }
-    .custom-cb:checked {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-    .custom-cb:checked::after {
-      content: '';
-      position: absolute;
-      left: 4px; top: 1.5px;
-      width: 5px; height: 8px;
-      border: 1.75px solid #fff;
-      border-top: none; border-left: none;
-      transform: rotate(45deg);
-    }
-    .terms-text {
-      font-size: 0.8rem;
-      color: var(--muted2);
-      line-height: 1.6;
-    }
-    .terms-text a {
-      color: var(--accent);
+    .lang-btn {
+      font-size: 0.6rem; font-weight: 800;
+      font-family: 'Outfit', sans-serif;
       text-decoration: none;
-      font-weight: 500;
+      color: var(--muted2); letter-spacing: 0.06em;
+      padding: 5px 9px; border-radius: 7px;
+      border: none; background: transparent; cursor: pointer;
+      transition: all 0.18s; position: relative;
+      display: flex; align-items: center; justify-content: center;
     }
-    .terms-text a:hover { text-decoration: underline; }
+    .lang-btn:hover { color: var(--text); }
+    .lang-btn.active { color: #fff !important; background: var(--accent); box-shadow: 0 2px 10px rgba(91,138,245,0.3); }
+    .lang-tooltip {
+      position: absolute; top: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--panel2); border: 1px solid var(--border-hi);
+      border-radius: 6px; padding: 4px 8px;
+      font-size: 0.62rem; color: var(--muted2); white-space: nowrap;
+      pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 200;
+    }
+    .lang-btn:hover .lang-tooltip { opacity: 1; }
 
-    /* ── Submit ────────────────────────────────── */
+    /* Form head */
+    .form-head { margin-bottom: 2.2rem; }
+    .avatar-ring {
+      width: 56px; height: 56px; border-radius: 15px;
+      background: linear-gradient(135deg, rgba(91,138,245,0.14), rgba(139,92,246,0.14));
+      border: 1.5px solid rgba(91,138,245,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 1.3rem;
+      box-shadow: 0 0 28px rgba(91,138,245,0.1), 0 0 0 6px rgba(91,138,245,0.04);
+      animation: floatIcon 4s ease-in-out infinite;
+    }
+    @keyframes floatIcon { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+    .form-head h1 { font-family: 'Outfit', sans-serif; font-size: 1.85rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.3; margin-bottom: 0.35rem; }
+    .form-head p { font-size: 0.85rem; color: var(--muted2); font-weight: 400; line-height: 1.6; }
+
+    /* Role tabs */
+    .role-tabs { display: flex; gap: 5px; background: var(--theme-toggle-bg); border: 1px solid var(--border); border-radius: 11px; padding: 4px; margin-bottom: 1.8rem; }
+    .role-tab { flex: 1; padding: 8px 12px; border-radius: 8px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.03em; transition: all 0.22s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .role-tab.active-admin { background: rgba(91,138,245,0.12); color: var(--accent); box-shadow: 0 0 0 1px rgba(91,138,245,0.22); }
+    .role-tab.active-super { background: rgba(240,180,41,0.1); color: var(--gold); box-shadow: 0 0 0 1px rgba(240,180,41,0.22); }
+    .role-tab:hover:not(.active-admin):not(.active-super) { color: var(--muted2); background: rgba(255,255,255,0.03); }
+
+    /* Fields */
+    .field-row { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; margin-bottom: 1.1rem; }
+    @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+    .fg { margin-bottom: 1.1rem; }
+    .fg-full { grid-column: 1 / -1; }
+    .fg label { display: flex; align-items: center; justify-content: space-between; font-size: 0.69rem; font-weight: 600; color: var(--muted2); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    .input-wrap { position: relative; }
+    .input-wrap .ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--muted); pointer-events: none; transition: color 0.2s; z-index: 2; }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%; padding: 0.72rem 0.9rem 0.72rem 2.4rem;
+      background: var(--inp); border: 1.5px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.875rem;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none;
+    }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,138,245,0.1); }
+    .input-wrap:focus-within .ico { color: var(--accent); }
+    input::placeholder { color: #22263060; }
+    input.invalid { border-color: var(--error) !important; box-shadow: 0 0 0 3px rgba(245,101,101,0.09) !important; animation: shakeInput 0.3s ease; }
+    @keyframes shakeInput { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+    .input-wrap-gold input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(240,180,41,0.1); }
+    .input-wrap-gold:focus-within .ico { color: var(--gold); }
+
+    .toggle-pw { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; display: flex; align-items: center; padding: 4px; transition: color 0.2s; border-radius: 5px; }
+    .toggle-pw:hover { color: var(--text); }
+
+    /* Strength */
+    .pw-strength { margin-top: 6px; }
+    .strength-bar { height: 3px; border-radius: 2px; background: var(--border); overflow: hidden; margin-bottom: 4px; }
+    .strength-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease, background 0.3s ease; width: 0%; }
+    .strength-text { font-size: 0.65rem; color: var(--muted); }
+
+    /* Terms */
+    .terms-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1.8rem; }
+    .custom-cb { width: 17px; height: 17px; border: 1.5px solid var(--border-hi); border-radius: 5px; background: var(--inp); cursor: pointer; appearance: none; -webkit-appearance: none; position: relative; transition: all 0.18s; flex-shrink: 0; margin-top: 2px; }
+    .custom-cb:checked { background: var(--accent); border-color: var(--accent); }
+    .custom-cb:checked::after { content: ''; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg); }
+    .terms-label { font-size: 0.8rem; color: var(--muted2); line-height: 1.6; }
+    .terms-label a { color: var(--accent); text-decoration: none; font-weight: 500; }
+
+    /* Error list */
+    .error-box { background: rgba(245,101,101,0.06); border: 1px solid rgba(245,101,101,0.18); border-radius: 10px; padding: 11px 14px; margin-bottom: 1.1rem; display: flex; align-items: flex-start; gap: 9px; animation: riseIn 0.3s ease; }
+    .error-box p { font-size: 0.78rem; color: #f87171; line-height: 1.55; }
+
+    /* Submit */
     .submit-btn {
-      width: 100%;
-      padding: 0.82rem;
-      border: none;
-      border-radius: 9px;
-      font-family: 'Syne', sans-serif;
-      font-size: 0.875rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+      width: 100%; padding: 0.88rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: 10px;
+      font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.02em; color: #fff; cursor: pointer;
+      position: relative; overflow: hidden;
       transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-      color: #fff;
-      box-shadow: 0 3px 18px rgba(91,138,245,0.28);
-      line-height: 1.4;
+      box-shadow: 0 4px 22px rgba(91,138,245,0.28);
     }
-    .submit-btn.gold-mode {
-      background: linear-gradient(135deg, #f0b429 0%, #e67e22 100%);
-      box-shadow: 0 3px 18px rgba(240,180,41,0.3);
-      color: #0a0802;
-    }
-    .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .submit-btn:active { transform: translateY(0); opacity: 1; }
-    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .submit-btn .sp {
-      display: none;
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.25);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.55s linear infinite;
-      position: absolute; left: 50%; top: 50%;
-      margin: -8px 0 0 -8px;
-    }
+    .submit-btn.gold-mode { background: linear-gradient(135deg, #f0b429, #e67e22); box-shadow: 0 4px 22px rgba(240,180,41,0.32); color: #0a0a0a; }
+    .submit-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.42; cursor: not-allowed; }
+    .submit-btn .sp { display: none; width: 17px; height: 17px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.55s linear infinite; position: absolute; left: 50%; top: 50%; margin: -8.5px 0 0 -8.5px; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .submit-btn.loading > span { visibility: hidden; }
     .submit-btn.loading .sp { display: block; }
 
-    /* ── Footer link ───────────────────────────── */
-    .foot-link {
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 1.25rem;
-      line-height: 1.5;
-    }
-    .foot-link a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .foot-link a:hover { text-decoration: underline; }
+    .divider { display: flex; align-items: center; gap: 10px; margin: 1.3rem 0; color: var(--muted); font-size: 0.7rem; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    /* ── Divider ───────────────────────────────── */
-    .divider {
-      display: flex; align-items: center; gap: 10px;
-      margin: 1.25rem 0;
-      color: var(--muted); font-size: 0.7rem;
-      letter-spacing: 0.05em;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1;
-      height: 1px; background: var(--border);
-    }
+    .form-footer { text-align: center; margin-top: 1.4rem; font-size: 0.8rem; color: var(--muted); }
+    .form-footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
-    /* ── Success screen ────────────────────────── */
-    .success-screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 2.5rem 1.5rem;
-      animation: riseIn 0.4s ease both;
-    }
-    .success-screen.show { display: flex; }
-    .succ-ring {
-      width: 68px; height: 68px;
-      border-radius: 50%;
-      border: 1.5px solid var(--success);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-      color: var(--success);
-      box-shadow: 0 0 28px rgba(72,187,120,0.2);
-      margin-bottom: 1.1rem;
-      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-    @keyframes popIn {
-      from { transform: scale(0.5); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
-    .success-screen h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      line-height: 1.25;
-      margin-bottom: 0.45rem;
-    }
-    .success-screen p {
-      color: var(--muted2);
-      font-size: 0.845rem;
-      line-height: 1.6;
-    }
-    .success-screen .role-tag {
-      margin-top: 1rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 13px;
-      border-radius: 100px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      line-height: 1.4;
-      letter-spacing: 0.02em;
-    }
-    .role-tag.admin { background: rgba(91,138,245,0.08); color: var(--accent); border: 1px solid rgba(91,138,245,0.18); }
-    .role-tag.super { background: rgba(240,180,41,0.08); color: var(--gold); border: 1px solid rgba(240,180,41,0.22); }
+    /* Success Screen */
+    .success-screen { display: none; flex-direction: column; align-items: center; text-align: center; }
+    .success-screen.show { display: flex; animation: riseIn 0.5s both; }
+    .succ-icon { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 1.5rem; background: rgba(91,138,245,0.05); }
 
-    /* ── Responsive ────────────────────────────── */
-    @media (max-width: 520px) {
-      .field-row.two { grid-template-columns: 1fr; }
-      .role-selector { gap: 8px; }
-      .main { padding: 2rem 1rem 3rem; }
-    }
-
-    /* ── Language Switcher ────────────────────── */
-    .lang-switcher {
-      position: absolute;
-      top: 2rem;
-      right: 2rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 50;
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(10px);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-    .lang-switcher a {
-      font-size: 0.65rem;
-      font-weight: 800;
-      text-decoration: none;
-      color: var(--muted2);
-      letter-spacing: 0.08em;
-      padding: 6px 12px;
-      border-radius: 7px;
-      transition: all 0.2s;
-    }
-    .lang-switcher a.active {
-      color: #fff;
-      background: var(--accent);
-      box-shadow: 0 2px 10px rgba(91,138,245,0.25);
+    @media (max-width: 480px) {
+      .main { padding-top: 5.5rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Left decorative panel -->
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Left panel -->
 <aside class="side">
   <div class="side-grid"></div>
   <div class="side-glow"></div>
   <div class="side-glow2"></div>
-
+  <div class="side-top">
     <div class="wordmark">
-      @if(!empty($admin_settings['store_logo']))
-        @php
-            $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
-            $version   = config('cloudinary.asset_version');
-            $folder    = config('cloudinary.upload_folder');
-            $logo_url  = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($folder) ? "/{$folder}" : "") . "/{$admin_settings['store_logo']}";
-        @endphp
-        <img src="{{ $logo_url }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
-      @else
-        <div class="wordmark-dot"></div>
-      @endif
-      {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}
+        @if(!empty($admin_settings['store_logo']))
+            @php
+                 $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+                 $version   = config('cloudinary.asset_version');
+                 $prefix    = config('cloudinary.upload_folder');
+                 $logo_url  = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($prefix) ? "/{$prefix}" : "") . "/{$admin_settings['store_logo']}";
+            @endphp
+            <img src="{{ $logo_url }}" alt="Logo">
+        @else
+            <div class="wordmark-dot"></div>
+        @endif
+        {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}
     </div>
     <div class="side-hero">
-      <h2>Command your<br><em>platform</em><br>with confidence.</h2>
-      <p>Secure, role-based access control for teams that mean business.</p>
+      <h2>Join the<br><em>exclusive</em><br>team.</h2>
+      <p>Create your secure administrative account and start managing your marketplace today.</p>
     </div>
     <div class="feature-list">
-      <div class="feature-item">
-        <div class="fi-icon">🔐</div>
-        <span>Role-based permissions — Admin &amp; Super Admin</span>
-      </div>
-      <div class="feature-item">
-        <div class="fi-icon">📊</div>
-        <span>Full audit trail on every action</span>
-      </div>
-      <div class="feature-item">
-        <div class="fi-icon">⚡</div>
-        <span>Instant access, zero setup friction</span>
-      </div>
+      <div class="feature-item"><div class="fi-icon">🛡️</div><span>Enterprise-grade security</span></div>
+      <div class="feature-item"><div class="fi-icon">⚡</div><span>Instant role-based access</span></div>
+      <div class="feature-item"><div class="fi-icon">🌍</div><span>Multi-language support</span></div>
     </div>
   </div>
-
-  <div class="side-footer">© {{ date('Y') }} {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}. All rights reserved.</div>
+  <div class="side-footer">© {{ date('Y') }} {{ $admin_settings['store_name'] ?? config('app.name', 'Arcadia') }}</div>
 </aside>
+
+<!-- Language & Theme Switcher -->
+<div class="lang-switcher">
+    <button class="lang-btn" id="themeToggle" style="margin-right: 4px;">
+        <span class="dark-icon">🌙</span>
+        <span class="light-icon" style="display:none">☀️</span>
+        <span class="lang-tooltip">Toggle Theme</span>
+    </button>
+    <div style="width: 1px; height: 16px; background: var(--border); margin: 0 4px;"></div>
+    <a href="{{ route('lang.switch', 'en') }}" class="lang-btn {{ App::getLocale() == 'en' ? 'active' : '' }}">
+        EN<span class="lang-tooltip">English</span>
+    </a>
+    <a href="{{ route('lang.switch', 'km') }}" class="lang-btn {{ App::getLocale() == 'km' ? 'active' : '' }}">
+        KM<span class="lang-tooltip">ខ្មែរ</span>
+    </a>
+</div>
 
 <!-- Main form -->
 <main class="main">
-  <!-- Language Switcher -->
-  <div class="lang-switcher">
-    <a href="{{ route('lang.switch', 'en') }}" class="{{ App::getLocale() == 'en' ? 'active' : '' }}">EN</a>
-    <a href="{{ route('lang.switch', 'km') }}" class="{{ App::getLocale() == 'km' ? 'active' : '' }}">KM</a>
-  </div>
-
   <div class="form-card">
 
-    <!-- Success screen -->
     <div class="success-screen" id="successScreen">
-      <div class="succ-ring">✓</div>
-      <h2>@lang('admin.welcome_msg')</h2>
-      <p>@lang('admin.account_created')</p>
-      <div class="role-tag admin" id="successRoleTag">⚙ Admin Access Granted</div>
+        <div class="succ-icon">✓</div>
+        <h1 style="font-family: 'Outfit', sans-serif; font-weight:800; margin-bottom: 0.5rem;">Account Created!</h1>
+        <p style="color: var(--muted2); font-size: 0.9rem; margin-bottom: 2rem;">Welcome to the team. Your admin access has been granted.</p>
+        <a href="{{ route('admin.login') }}" class="submit-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+            <span>Go to Login</span>
+        </a>
     </div>
 
-      <div id="formWrap">
-        <div class="form-header">
-          <div class="badge"><span class="badge-dot"></span> SECURE REGISTRATION</div>
+    <div id="formWrap">
+        <div class="form-head">
+          <div class="avatar-ring">✨</div>
           <h1>@lang('admin.create_account')</h1>
           <p>@lang('admin.join_us')</p>
         </div>
 
-      <!-- Role selector -->
-      <div class="role-selector" id="roleSelector">
-        <div class="role-label selected-admin" data-role="admin" id="roleAdminCard">
-          <div class="rl-check">✓</div>
-          <span class="rl-icon">⚙️</span>
-          <span class="rl-name">Admin</span>
-          <span class="rl-desc">Manage users &amp; content</span>
+        <div class="role-tabs">
+          <button type="button" class="role-tab active-admin" data-role="admin" id="tabAdmin">
+            ⚙️ @lang('admin.admin')
+          </button>
+          <button type="button" class="role-tab" data-role="super" id="tabSuper">
+            👑 @lang('admin.super_admin')
+          </button>
         </div>
-        <div class="role-label" data-role="super" id="roleSuperCard">
-          <div class="rl-check"></div>
-          <span class="rl-icon">👑</span>
-          <span class="rl-name">Super Admin</span>
-          <span class="rl-desc">Full system control</span>
-        </div>
-      </div>
 
-      <form id="registerForm" action="{{ route('admin.register.post') }}" method="POST" novalidate>
-        @csrf
-        <input type="hidden" name="role" id="roleInput" value="admin"/>
-
-        <!-- Name + Email row -->
-        <div class="field-row two">
-          <div class="fg">
-            <label for="name">@lang('admin.full_name')</label>
-            <div class="input-wrap">
-              <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-            <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="{{ __('admin.full_name') }}" autocomplete="name"/>
-            </div>
-            <div class="err @error('name') show @enderror" id="nameErr">@error('name'){{ $message }}@else Min. 2 characters.@enderror</div>
+        @if ($errors->any())
+          <div class="error-box">
+            <p>{{ $errors->first() }}</p>
           </div>
-          <div class="fg">
-            <label for="email">@lang('admin.email_address')</label>
-            <div class="input-wrap">
-              <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-              <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="{{ __('admin.email_address') }}" autocomplete="email"/>
-            </div>
-            <div class="err @error('email') show @enderror" id="emailErr">@error('email'){{ $message }}@else Valid email required.@enderror</div>
+        @endif
+
+        <form action="{{ route('admin.register.post') }}" method="POST" id="registerForm" novalidate>
+          @csrf
+          <input type="hidden" name="role" id="roleInput" value="admin"/>
+
+          <div class="field-row">
+              <div class="fg">
+                <label for="name">@lang('admin.full_name')</label>
+                <div class="input-wrap">
+                  <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                  </svg>
+                  <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="John Doe" required/>
+                </div>
+              </div>
+
+              <div class="fg">
+                <label for="email">@lang('admin.email_address')</label>
+                <div class="input-wrap">
+                  <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                  </svg>
+                  <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="email@example.com" required/>
+                </div>
+              </div>
           </div>
-        </div>
 
-        <!-- Super Admin key -->
-        <div class="super-key-group" id="superKeyGroup">
-          <div class="fg">
-            <label for="super_key">👑 Super Admin Access Key</label>
-            <div class="input-wrap">
-              <svg class="ico ico-gold" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
-              <input type="password" id="super_key" name="super_admin_key" class="inp-gold" placeholder="Enter authorization key" autocomplete="off"/>
+          <div class="fg" id="superKeyRow" style="display: none;">
+            <label for="super_key">👑 Super Admin Authorization Key</label>
+            <div class="input-wrap input-wrap-gold">
+              <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/>
+              </svg>
+              <input type="password" id="super_key" name="super_admin_key" placeholder="Enter key for Super Admin roles"/>
             </div>
-            <div class="err" id="superKeyErr">Invalid authorization key.</div>
           </div>
-        </div>
 
-        <!-- Password row -->
-        <div class="field-row two">
-          <div class="fg">
-            <label for="password">@lang('admin.password')</label>
-            <div class="input-wrap">
-              <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-              <input type="password" id="password" name="password" placeholder="Min. 8 chars" autocomplete="new-password"/>
-              <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password">
-                <svg id="eyeOn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-              </button>
-            </div>
-            <div class="pw-meta">
-              <div class="bars"><span id="b1"></span><span id="b2"></span><span id="b3"></span><span id="b4"></span></div>
-              <div class="pw-label" id="pwLabel"></div>
-            </div>
-            <div class="err @error('password') show @enderror" id="passwordErr">@error('password'){{ $message }}@else Min. 8 characters.@enderror</div>
+          <div class="field-row">
+              <div class="fg">
+                <label for="password">@lang('admin.password')</label>
+                <div class="input-wrap">
+                  <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                  </svg>
+                  <input type="password" id="password" name="password" placeholder="••••••••" required/>
+                  <button type="button" class="toggle-pw" onclick="togglePass('password')">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" width="15" height="15">
+                      <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="pw-strength" id="pwStrength">
+                  <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                  <span class="strength-text" id="strengthText"></span>
+                </div>
+              </div>
+
+              <div class="fg">
+                <label for="confirm">@lang('admin.confirm_password')</label>
+                <div class="input-wrap">
+                  <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                  </svg>
+                  <input type="password" id="confirm" name="password_confirmation" placeholder="••••••••" required/>
+                </div>
+              </div>
           </div>
-          <div class="fg">
-            <label for="confirm">@lang('admin.confirm_password')</label>
-            <div class="input-wrap">
-              <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-              <input type="password" id="confirm" name="password_confirmation" placeholder="Repeat password" autocomplete="new-password"/>
-            </div>
-            <div class="err" id="confirmErr">Passwords don't match.</div>
+
+          <div class="terms-row">
+            <input type="checkbox" class="custom-cb" id="terms" name="terms" required/>
+            <label for="terms" class="terms-label">
+              I agree to the <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>
+            </label>
           </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span>@lang('admin.create_account')</span>
+            <div class="sp"></div>
+          </button>
+        </form>
+
+        <div class="divider">@lang('admin.or')</div>
+
+        <div class="form-footer">
+          @lang('admin.already_have_account')
+          <a href="{{ route('admin.login') }}"> @lang('admin.sign_in')</a>
         </div>
-
-        <!-- Terms -->
-        <div class="terms-row">
-          <input type="checkbox" class="custom-cb" id="terms" name="terms" required/>
-          <label for="terms" class="terms-text">
-            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-          </label>
-        </div>
-
-        <button type="submit" class="submit-btn" id="submitBtn">
-          <span id="btnLabel">@lang('admin.create_account')</span>
-          <div class="sp"></div>
-        </button>
-      </form>
-
-      <div class="divider">or</div>
-      <p class="foot-link">@lang('admin.already_have_account') <a href="{{ route('admin.login') }}">@lang('admin.sign_in_link')</a></p>
     </div>
 
   </div>
 </main>
 
 <script>
+function togglePass(id) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+}
+
 (function(){
-  // ── Role selector ──────────────────────────────
-  const adminCard  = document.getElementById('roleAdminCard');
-  const superCard  = document.getElementById('roleSuperCard');
-  const roleInput  = document.getElementById('roleInput');
-  const superGroup = document.getElementById('superKeyGroup');
-  const submitBtn  = document.getElementById('submitBtn');
+  /* ── Theme Toggle ── */
+  const themeToggle = document.getElementById('themeToggle');
+  const darkIcon = themeToggle.querySelector('.dark-icon');
+  const lightIcon = themeToggle.querySelector('.light-icon');
+  function updateThemeIcons(isLight) {
+    darkIcon.style.display = isLight ? 'none' : 'block';
+    lightIcon.style.display = isLight ? 'block' : 'none';
+  }
+  const currentTheme = localStorage.getItem('theme') || 'dark';
+  if (currentTheme === 'light') { document.body.classList.add('light-mode'); updateThemeIcons(true); }
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    updateThemeIcons(isLight);
+  });
 
-  function selectRole(role) {
-    roleInput.value = role;
-    adminCard.classList.remove('selected-admin');
-    superCard.classList.remove('selected-super');
-    adminCard.querySelector('.rl-check').textContent = '';
-    superCard.querySelector('.rl-check').textContent = '';
-
+  /* ── Role Switching ── */
+  const submitBtn = document.getElementById('submitBtn');
+  const superKeyRow = document.getElementById('superKeyRow');
+  function setRole(role) {
+    document.getElementById('roleInput').value = role;
+    document.getElementById('tabAdmin').className = 'role-tab';
+    document.getElementById('tabSuper').className = 'role-tab';
     if (role === 'admin') {
-      adminCard.classList.add('selected-admin');
-      adminCard.querySelector('.rl-check').textContent = '✓';
-      superGroup.classList.remove('visible');
+      document.getElementById('tabAdmin').classList.add('active-admin');
       submitBtn.classList.remove('gold-mode');
+      superKeyRow.style.display = 'none';
     } else {
-      superCard.classList.add('selected-super');
-      superCard.querySelector('.rl-check').textContent = '✓';
-      superGroup.classList.add('visible');
+      document.getElementById('tabSuper').classList.add('active-super');
       submitBtn.classList.add('gold-mode');
+      superKeyRow.style.display = 'block';
     }
   }
+  document.getElementById('tabAdmin').addEventListener('click', () => setRole('admin'));
+  document.getElementById('tabSuper').addEventListener('click', () => setRole('super'));
 
-  adminCard.addEventListener('click', () => selectRole('admin'));
-  superCard.addEventListener('click', () => selectRole('super'));
-
-  // ── Password strength ──────────────────────────
-  const pw   = document.getElementById('password');
-  const bars = [1,2,3,4].map(i => document.getElementById('b'+i));
-  const plbl = document.getElementById('pwLabel');
-
-  pw.addEventListener('input', () => {
-    const v = pw.value;
+  /* ── Password Strength ── */
+  const pwEl = document.getElementById('password');
+  pwEl.addEventListener('input', () => {
+    const v = pwEl.value;
     let s = 0;
     if (v.length >= 8) s++;
     if (/[A-Z]/.test(v)) s++;
     if (/[0-9]/.test(v)) s++;
     if (/[^A-Za-z0-9]/.test(v)) s++;
-    const cols = ['#f56565','#ed8936','#ecc94b','#48bb78'];
-    const lbls = ['Weak','Fair','Good','Strong'];
-    bars.forEach((b,i) => b.style.background = i < s ? cols[s-1] : 'var(--border)');
-    plbl.textContent = v.length ? lbls[s-1] : '';
-    plbl.style.color = v.length ? cols[s-1] : 'var(--muted)';
+    const fill = document.getElementById('strengthFill');
+    const txt = document.getElementById('strengthText');
+    const lvls = [
+      { p:'25%', c:'#f43f5e', t:'Weak' },
+      { p:'50%', c:'#f0b429', t:'Fair' },
+      { p:'75%', c:'#48bb78', t:'Good' },
+      { p:'100%',c:'#10b981', t:'Strong' }
+    ];
+    if (!v) { fill.style.width='0'; txt.textContent=''; return; }
+    const res = lvls[Math.max(0, s-1)];
+    fill.style.width = res.p;
+    fill.style.background = res.c;
+    txt.textContent = res.t;
+    txt.style.color = res.c;
   });
 
-  // ── Toggle password visibility ─────────────────
-  const confirm = document.getElementById('confirm');
-  document.getElementById('togglePw').addEventListener('click', function() {
-    const t = pw.type === 'password' ? 'text' : 'password';
-    pw.type = confirm.type = t;
-  });
-
-  // ── Validation helpers ─────────────────────────
-  function showErr(id, on) {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('show', on);
-  }
-  function markInvalid(el, on) {
-    el.classList.toggle('invalid', on);
-  }
-
-  // ── Form submit ────────────────────────────────
+  /* ── Form Submit ── */
   document.getElementById('registerForm').addEventListener('submit', function(e) {
-    let ok = true;
-    const name  = document.getElementById('name');
-    const email = document.getElementById('email');
-    const terms = document.getElementById('terms');
-    const role  = roleInput.value;
-    const skey  = document.getElementById('super_key');
-
-    const nameOk = name.value.trim().length >= 2;
-    showErr('nameErr', !nameOk); markInvalid(name, !nameOk);
-    if (!nameOk) ok = false;
-
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
-    showErr('emailErr', !emailOk); markInvalid(email, !emailOk);
-    if (!emailOk) ok = false;
-
-    if (role === 'super') {
-      const skOk = skey.value.trim().length >= 4;
-      showErr('superKeyErr', !skOk); markInvalid(skey, !skOk);
-      if (!skOk) ok = false;
-    }
-
-    const pwOk = pw.value.length >= 8;
-    showErr('passwordErr', !pwOk); markInvalid(pw, !pwOk);
-    if (!pwOk) ok = false;
-
-    const confOk = confirm.value === pw.value && confirm.value.length > 0;
-    showErr('confirmErr', !confOk); markInvalid(confirm, !confOk);
-    if (!confOk) ok = false;
-
-    if (!terms.checked) ok = false;
-
-    if (!ok) { e.preventDefault(); return; }
-
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
   });
-
-  // ── Clear errors on input ──────────────────────
-  ['name','email','password','confirm'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener('input', () => {
-      el.classList.remove('invalid');
-      const errId = { confirm:'confirmErr' }[id] || id+'Err';
-      showErr(errId, false);
-    });
-  });
-
-  // ── Handle server-side errors ─────────────────
-  @if($errors->any())
-    document.getElementById('successScreen').style.display = 'none';
-  @endif
 
 })();
 </script>

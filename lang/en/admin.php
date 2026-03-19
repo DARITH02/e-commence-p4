@@ -368,6 +368,9 @@ return [
   'admin_profile' => 'Admin Profile',
   'admin_profile_subtitle' => 'Admin Profile',
   'add_admin' => 'Add Admin',
+  'admin' => 'Admin',
+  'super_admin' => 'Super Admin',
+  'super_admin_subtitle' => 'Super Admin',
   'add_admin_subtitle' => 'Add New Admin',
 
   'edit_admin_subtitle' => 'Edit Existing Admin',
