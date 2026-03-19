@@ -23,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
         view()->composer(['layouts.admin', 'admin.auth.*'], function ($view) {
             $settings = \App\Models\Setting::where('group', 'general')
                 ->get()
-                ->pluck('value', 'key');
+                ->pluck('value', 'key')
+                ->toArray();
             $view->with('admin_settings', $settings);
 
             if (auth()->check()) {

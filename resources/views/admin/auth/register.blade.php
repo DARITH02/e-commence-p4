@@ -650,12 +650,12 @@
   <div class="side-glow2"></div>
 
     <div class="wordmark">
-      @if(isset($admin_settings['store_logo']))
+      @if(!empty($admin_settings['store_logo']))
         @php
-            $logo_url = asset('storage/' . $admin_settings['store_logo']);
-            try {
-                $logo_url = \Illuminate\Support\Facades\Storage::url($admin_settings['store_logo']);
-            } catch (\Exception $e) {}
+            $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+            $version   = config('cloudinary.asset_version');
+            $folder    = config('cloudinary.upload_folder');
+            $logo_url  = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($folder) ? "/{$folder}" : "") . "/{$admin_settings['store_logo']}";
         @endphp
         <img src="{{ $logo_url }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
       @else

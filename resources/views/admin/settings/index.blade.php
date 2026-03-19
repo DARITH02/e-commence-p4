@@ -280,11 +280,11 @@ body { background: var(--bg) !important; }
                                 <label>@lang('admin.store_logo')</label>
                                 <div style="display: flex; align-items: center; gap: 20px; background: var(--surface-2); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-1);">
                                     <div style="width: 80px; height: 80px; border-radius: var(--radius-sm); background: var(--surface-3); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-2);">
-                                        @if(isset($settings['store_logo']))
+                                        @if(!empty($settings['store_logo']))
                                             @php
-                                                $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
-                                                $version = config('cloudinary.asset_version', 'v1773906173');
-                                                $prefix = config('cloudinary.upload_folder', '');
+                                                 $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
+                                                 $version   = config('cloudinary.asset_version');
+                                                 $prefix    = config('cloudinary.upload_folder');
                                                 $logoPreviewUrl = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($prefix) ? "/{$prefix}" : "") . "/{$settings['store_logo']}";
                                             @endphp
                                             <img src="{{ $logoPreviewUrl }}" id="logo-preview" style="width: 100%; height: 100%; object-fit: contain;">

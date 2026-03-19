@@ -47,6 +47,6 @@ return [
      * Controller action to get cloud_image_url from Blade Upload Widget
      */
     'upload_action' => env('CLOUDINARY_UPLOAD_ACTION'),
-    'asset_version' => env('CLOUDINARY_ASSET_VERSION', 'v1773906173'),
+    'asset_version' => env('CLOUDINARY_ASSET_VERSION', 'v1773897500'),
     'upload_folder' => env('CLOUDINARY_UPLOAD_FOLDER', ''),
 ];

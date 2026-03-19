@@ -705,11 +705,11 @@
             <!-- Logo -->
             <div class="sidebar-logo">
                 <div class="logo-mark">
-                    @if(isset($admin_settings['store_logo']))
+                    @if(!empty($admin_settings['store_logo']))
                         @php
                             $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
-                            $version = config('cloudinary.asset_version', 'v1773906173');
-                            $prefix = config('cloudinary.upload_folder', '');
+                            $version   = config('cloudinary.asset_version');
+                            $prefix    = config('cloudinary.upload_folder');
                             $logoUrl = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($prefix) ? "/{$prefix}" : "") . "/{$admin_settings['store_logo']}";
                         @endphp
                         <img src="{{ $logoUrl }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">

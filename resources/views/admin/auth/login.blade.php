@@ -462,11 +462,11 @@
 
   <div class="side-top">
     <div class="wordmark">
-      @if(isset($admin_settings['store_logo']))
+      @if(!empty($admin_settings['store_logo']))
         @php
             $cloudName = env('CLOUDINARY_CLOUD_NAME', 'dnrblpkal');
-            $version   = env('CLOUDINARY_ASSET_VERSION', 'v1773906173');
-            $folder    = env('CLOUDINARY_UPLOAD_FOLDER', '');
+            $version   = config('cloudinary.asset_version');
+            $folder    = config('cloudinary.upload_folder');
             $logo_url  = "https://res.cloudinary.com/{$cloudName}/image/upload/{$version}" . (!empty($folder) ? "/{$folder}" : "") . "/{$admin_settings['store_logo']}";
         @endphp
         <img src="{{ $logo_url }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
