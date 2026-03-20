@@ -501,7 +501,10 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
 
 @section('content')
 
-<div class="page" data-superadmin="{{ Auth::user()->isSuperAdmin() ? '1' : '0' }}">
+@php
+    $isSuperAdmin = auth()->check() && method_exists(auth()->user(), 'isSuperAdmin') && auth()->user()->isSuperAdmin();
+@endphp
+<div class="page" data-superadmin="{{ $isSuperAdmin ? '1' : '0' }}">
 
     {{-- ── Topbar ── --}}
     <div class="page-header">
@@ -669,7 +672,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
 
                         <td>
                             <div class="action-group">
-                                @if(Auth::user()->isSuperAdmin())
+                                @if($isSuperAdmin)
                                 <button class="btn-icon edit-prod-btn" data-id="{{ $product->id }}" title="{{ __('admin.edit') }}">
                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </button>

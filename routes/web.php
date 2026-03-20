@@ -64,6 +64,4 @@ Route::prefix('admin')->group(function () {
 });
 
 // API login fallback
-Route::get('/login', function () {
-    return response()->json(['message' => 'Please login via API'], 401);
-})->name('login');
+Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
