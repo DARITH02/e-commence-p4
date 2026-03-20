@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->foreignId('brand_id')->nullable()->after('id')->constrained('brands')->onDelete('set null');
-        });
+        if (Schema::hasTable('products') && !Schema::hasColumn('products', 'brand_id')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->foreignId('brand_id')->nullable()->after('id')->constrained('brands')->onDelete('set null');
+            });
+        }
     }
 
     /**

@@ -16,21 +16,33 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['categories', 'images', 'brand'])->latest()->paginate(10);
-        $categories = Category::all();
-        $brands = Brand::all();
+        try {
+            $products = Product::with(['categories', 'images', 'brand'])->latest()->paginate(10);
+            $categories = Category::all();
+            $brands = Brand::all();
 
-        // Calculate global counts
-        $totalCount    = Product::count();
-        $activeCount   = Product::where('is_active', true)->count();
-        $lowStockCount = Product::where('stock_status', 'outofstock')->count(); // Using stock_status as fallback
-        $inactiveCount = Product::where('is_active', false)->count();
+            // Calculate global counts
+            $totalCount    = Product::count();
+            $activeCount   = Product::where('is_active', true)->count();
+            $lowStockCount = Product::where('stock_status', 'outofstock')->count(); // Using stock_status as fallback
+            $inactiveCount = Product::where('is_active', false)->count();
 
-        if (request()->wantsJson()) {
-            return response()->json($products);
+            if (request()->wantsJson()) {
+                return response()->json($products);
+            }
+
+            return view('admin.products.index', compact('products', 'categories', 'brands', 'totalCount', 'activeCount', 'lowStockCount', 'inactiveCount'));
+        } catch (\Exception $e) {
+            if (config('app.debug')) {
+                throw $e;
+            }
+            return response()->json([
+                'error' => 'Product listing failed',
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ], 500);
         }
-
-        return view('admin.products.index', compact('products', 'categories', 'brands', 'totalCount', 'activeCount', 'lowStockCount', 'inactiveCount'));
     }
 
     public function store(Request $request)
