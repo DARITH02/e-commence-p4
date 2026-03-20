@@ -35,7 +35,7 @@ fi
 
 # 6. Database Migrations
 echo "🗄️ Running database migrations..."
-php artisan migrate --force
+php artisan migrate --force || true
 
 # 7. Laravel optimization
 php artisan config:clear

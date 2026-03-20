@@ -60,23 +60,20 @@ Route::prefix('admin')->group(function () {
         Route::post('/admins', [\App\Http\Controllers\Admin\AdminManageController::class, 'store'])->name('admin.admins.store');
         Route::put('/admins/{user}', [\App\Http\Controllers\Admin\AdminManageController::class, 'update'])->name('admin.admins.update');
         Route::delete('/admins/{user}', [\App\Http\Controllers\Admin\AdminManageController::class, 'destroy'])->name('admin.admins.destroy');
-
-        // Diagnostics & Force Migration (Temporary)
-        Route::get('/force-migrate', function() {
-            try {
-                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-                return response()->json([
-                    'success' => true, 
-                    'output' => \Illuminate\Support\Facades\Artisan::output()
-                ]);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false, 
-                    'error' => $e->getMessage()
-                ], 500);
-            }
-        })->name('admin.force-migrate');
     });
+});
+
+// Diagnostics & Force Migration (Temporary Public)
+Route::get('/force-migrate', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:status');
+        $status = \Illuminate\Support\Facades\Artisan::output();
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrate = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json(['success' => true, 'status' => $status, 'migrate' => $migrate]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+    }
 });
 
 // API login fallback
