@@ -4,16 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 
-Route::get('/', function () {
-    return view('admin.auth.login');
-});
+Route::get('/', [AdminAuthController::class, 'showLoginForm']);
 
-Route::get('/lang/{locale}', function ($locale) {
-    if (in_array($locale, ['en', 'km'])) {
-        session(['locale' => $locale]);
-    }
-    return redirect()->back();
-})->name('lang.switch');
+Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class, 'switch'])->name('lang.switch');
 
 // Admin Authentication
 Route::prefix('admin')->group(function () {

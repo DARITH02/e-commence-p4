@@ -624,7 +624,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                                 <div>
                                     <div class="prod-name">{{ $product->name }}</div>
                                     <div class="prod-sku">
-                                        @if($product->brand)
+                                        @if($product->brand && !empty($product->brand->name))
                                             <span style="color:var(--accent);font-weight:700;">{{ $product->brand->name }}</span> • 
                                         @endif
                                         {{ $product->sku }}
@@ -748,16 +748,6 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                     <label>@lang('admin.sku') <span class="req">*</span></label>
                     <input type="text" id="prod-sku" placeholder="SKU-001">
                 </div>
-            <div class="form-row">
-                <div class="field">
-                    <label>@lang('admin.categories')</label>
-                    <select id="prod-categories" multiple>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
-                    <span class="hint">@lang('admin.hold_ctrl_multi')</span>
-                </div>
                 <div class="field">
                     <label>@lang('admin.brand')</label>
                     <select id="prod-brand">
@@ -768,6 +758,16 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                     </select>
                 </div>
             </div>
+            <div class="form-row single">
+                <div class="field">
+                    <label>@lang('admin.categories')</label>
+                    <select id="prod-categories" multiple>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                    <span class="hint">@lang('admin.hold_ctrl_multi')</span>
+                </div>
             </div>
             <div class="form-row single">
                 <div class="field">

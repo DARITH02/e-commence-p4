@@ -29,4 +29,18 @@ class ProductController extends Controller
         }
         return response()->json($product);
     }
+
+    public function featured()
+    {
+        return response()->json(
+            \App\Models\Product::active()->featured()->with('images')->take(8)->get()
+        );
+    }
+
+    public function latest()
+    {
+        return response()->json(
+            \App\Models\Product::active()->latest()->with('images')->take(8)->get()
+        );
+    }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,7 @@ class ProductController extends Controller
     {
         $products = Product::with(['categories', 'images', 'brand'])->latest()->paginate(10);
         $categories = Category::all();
-        $brands = \App\Models\Brand::all();
+        $brands = Brand::all();
 
         // Calculate global counts
         $totalCount    = Product::count();

@@ -16,12 +16,13 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,super',
+            'role' => 'nullable|in:customer,admin,super',
             'super_admin_key' => 'required_if:role,super'
         ]);
 
-        // Production Fix: Check Super Admin Key in API too
-        if ($request->role === 'super') {
+        $roleType = $request->role ?? 'customer';
+
+        if ($roleType === 'super') {
             $expectedKey = env('ADMIN_SUPER_KEY', 'arcadia-admin-2026');
             if ($request->super_admin_key !== $expectedKey) {
                 return response()->json(['message' => 'Unauthorized: Invalid Super Admin Access Key'], 403);
@@ -35,7 +36,13 @@ class AuthController extends Controller
         ]);
 
         // Assign Role
-        $roleSlug = ($request->role === 'super') ? 'super_admin' : 'admin';
+        $roleMapping = [
+            'customer' => 'customer',
+            'admin' => 'admin',
+            'super' => 'super_admin'
+        ];
+        
+        $roleSlug = $roleMapping[$roleType];
         $role = \App\Models\Role::where('slug', $roleSlug)->first();
         if ($role) {
             $user->roles()->attach($role->id);
@@ -59,7 +66,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'role' => 'required|in:admin,super'
+            'role' => 'nullable|in:customer,admin,super'
         ]);
 
         if (!Auth::attempt($request->only('email', 'password'))) {
@@ -67,14 +74,21 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        $roleType = $request->role ?? 'customer';
+        
+        $roleMapping = [
+            'customer' => 'customer',
+            'admin' => 'admin',
+            'super' => 'super_admin'
+        ];
+        
+        $roleSlug = $roleMapping[$roleType];
 
-        // Production Fix: Ensure user has the correct role for API access
-        $roleSlug = ($request->role === 'super') ? 'super_admin' : 'admin';
-        if (!$user->hasRole($roleSlug)) {
-            $token = $user->currentAccessToken();
-            if ($token) $token->delete();
-            Auth::logout();
-            return response()->json(['message' => 'Unauthorized: Incorrect role for this endpoint'], 403);
+        // Ensure user has the correct role
+        if (!$user->hasRole($roleSlug) && $roleType !== 'customer') {
+             // For non-customers, we strictly check role.
+             Auth::logout();
+             return response()->json(['message' => 'Unauthorized: Incorrect role for this endpoint'], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -82,7 +96,11 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'role' => $roleSlug
+            'role' => $roleSlug,
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email
+            ]
         ]);
     }
 
@@ -94,6 +112,28 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return $request->user();
+        return response()->json($request->user());
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+        
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,'.$user->id,
+            'password' => 'sometimes|string|min:8|confirmed'
+        ]);
+
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user
+        ]);
     }
 }
