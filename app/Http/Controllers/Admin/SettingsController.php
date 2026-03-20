@@ -32,21 +32,22 @@ class SettingsController extends Controller
         }
 
         if ($request->hasFile('logo')) {
-            $request->validate([
-                'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-
             $path = $request->file('logo')->store('settings', config('filesystems.default'));
             
-            // Delete old logo if exists
+            // Delete old local logo if exists
             $oldLogo = Setting::where('key', 'store_logo')->first()?->value;
-            if ($oldLogo) {
+            if ($oldLogo && !filter_var($oldLogo, FILTER_VALIDATE_URL)) {
                 Storage::disk(config('filesystems.default'))->delete($oldLogo);
             }
 
             Setting::updateOrCreate(
                 ['key' => 'store_logo'],
                 ['value' => $path, 'group' => 'general']
+            );
+        } elseif ($request->filled('logo_url')) {
+             Setting::updateOrCreate(
+                ['key' => 'store_logo'],
+                ['value' => $request->logo_url, 'group' => 'general']
             );
         }
 

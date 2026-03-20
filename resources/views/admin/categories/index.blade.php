@@ -65,7 +65,7 @@ body { background: var(--bg) !important; font-family: 'DM Sans', sans-serif; }
 .search-wrap svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-3); pointer-events:none; }
 .search-wrap input {
     width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
-    padding:10px 14px 10px 42px; color:var(--text); font-family:inherit; font-size:13.5px; font-weight:600; 
+    padding:10px 14px 10px 42px; color:var(--text); font-family:inherit; font-size:13.5px; font-weight:600;
     transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
 }
 .search-wrap input:focus { border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-dim); background: var(--surface); }
@@ -102,7 +102,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 /* Hierarchy Indicator */
 .cat-identity { display:flex; align-items:center; gap:14px; }
 .indent-1 { padding-left: 36px; border-left: 2px solid var(--border); margin-left: 20px; }
-.tree-line { 
+.tree-line {
     display: flex; align-items: center; justify-content: center; width: 24px; height: 2px; background: var(--border); position: relative; left: -14px;
 }
 
@@ -124,45 +124,225 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 .status-active   { background:var(--green-dim); color:var(--green); border-color:rgba(34,201,122,0.2); }
 .status-inactive { background:var(--surface-3); color:var(--text-3); border-color:var(--border); }
 
-.btn-icon {
-    width:34px; height:34px; border-radius:10px; background:var(--surface-2); border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center; color:var(--text-2); cursor:pointer;
-    transition:all 0.2s;
+/* ═══════════════════════════════════════════
+   ACTION BUTTONS — Updated Split-Button Style
+═══════════════════════════════════════════ */
+.action-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
 }
-.btn-icon:hover { background:var(--accent-dim); border-color:var(--accent-mid); color:var(--accent); transform:translateY(-2px); box-shadow: var(--shadow-sm); }
-.btn-icon.delete:hover { background:var(--red-dim); border-color:rgba(232,69,69,0.25); color:var(--red); }
 
-/* Pagination Override for Laravel Links */
-.premium-pagination { 
-    margin-top: 24px !important; padding: 24px 20px 0 !important; border-top: 1px solid var(--border) !important; 
-    display: flex !important; justify-content: center !important; width: 100% !important;
+/* Primary edit button */
+.btn-action-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+    font-family: inherit;
 }
-.premium-pagination nav { display: flex !important; justify-content: center !important; width: auto !important; border: none !important; box-shadow: none !important; background: transparent !important; }
-.premium-pagination p, 
-.premium-pagination nav > div:first-child,
-.premium-pagination nav > div:last-child > div:first-child { display: none !important; }
-
-.premium-pagination nav > div:last-child { display: flex !important; flex-direction: column !important; align-items: center !important; border: none !important; margin: 0 !important; padding: 0 !important; }
-
-.premium-pagination nav > div:last-child > div:last-child { display: flex !important; gap: 8px !important; flex-wrap: wrap !important; justify-content: center !important; border: none !important; }
-
-.premium-pagination span, .premium-pagination a {
-    min-width: 42px !important; height: 42px !important; display: flex !important; align-items: center !important; justify-content: center !important;
-    border-radius: 12px !important; border: 1px solid var(--border-1) !important;
-    background: var(--surface-2) !important; color: var(--text-2) !important;
-    font-size: 14px !important; font-weight: 750 !important; text-decoration: none !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important; padding: 0 !important; margin: 0 !important; cursor: pointer !important;
+.btn-action-edit svg {
+    width: 13px; height: 13px; flex-shrink: 0;
+    transition: transform 0.18s;
 }
-.premium-pagination a:hover { background: var(--accent-dim) !important; color: var(--accent) !important; border-color: var(--accent-mid) !important; transform: translateY(-2px) !important; box-shadow: 0 6px 15px var(--accent-glow) !important; }
-.premium-pagination [aria-current="page"] span, .premium-pagination .active span { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; box-shadow: 0 6px 20px var(--accent-glow) !important; transform: scale(1.05) !important; }
-.premium-pagination .disabled span, .premium-pagination [aria-disabled="true"] span { opacity: 0.3 !important; cursor: not-allowed !important; background: var(--surface-1) !important; }
+.btn-action-edit:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent-mid);
+    color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+.btn-action-edit:hover svg { transform: rotate(-8deg); }
+
+/* View-only variant (non-superadmin) */
+.btn-action-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+    font-family: inherit;
+}
+.btn-action-view svg { width: 13px; height: 13px; flex-shrink: 0; }
+.btn-action-view:hover {
+    background: var(--surface-3);
+    border-color: var(--border-2);
+    color: var(--text-2);
+    transform: translateY(-1px);
+}
+
+/* Delete icon button */
+.btn-action-del {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
+    flex-shrink: 0;
+}
+.btn-action-del svg { width: 13px; height: 13px; }
+.btn-action-del:hover {
+    background: var(--red-dim);
+    border-color: rgba(232,69,69,0.3);
+    color: var(--red);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(232,69,69,0.15);
+}
+
+/* Divider between edit and delete */
+.action-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   PAGINATION — Premium Redesign
+═══════════════════════════════════════════ */
+.pagination-wrap {
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--surface-2);
+}
+
+.pagination-info {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-3);
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+}
+.pagination-info strong {
+    color: var(--text-2);
+    font-weight: 800;
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Hide Laravel's default info text & wrapper divs */
+.pagination-wrap nav > div:first-child { display: none !important; }
+.pagination-wrap nav > div:last-child > div:first-child { display: none !important; }
+.pagination-wrap nav > div:last-child {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+.pagination-wrap nav > div:last-child > div:last-child {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+/* Every link & span inside pagination */
+.pagination-wrap span,
+.pagination-wrap a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    color: var(--text-3) !important;
+    font-size: 13px !important;
+    font-weight: 750 !important;
+    text-decoration: none !important;
+    transition: all 0.18s cubic-bezier(0.4,0,0.2,1) !important;
+    cursor: pointer !important;
+    font-family: 'DM Mono', monospace !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Hover */
+.pagination-wrap a:hover {
+    background: var(--accent-dim) !important;
+    border-color: var(--accent-mid) !important;
+    color: var(--accent) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px var(--accent-glow) !important;
+}
+
+/* Active page */
+.pagination-wrap [aria-current="page"] span,
+.pagination-wrap span[aria-current="page"] {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 4px 14px var(--accent-glow) !important;
+    font-weight: 850 !important;
+}
+
+/* Disabled prev/next */
+.pagination-wrap span.disabled,
+.pagination-wrap [aria-disabled="true"] span,
+.pagination-wrap span[aria-disabled="true"] {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background: var(--surface-2) !important;
+    box-shadow: none !important;
+}
+
+/* Ellipsis "..." */
+.pagination-wrap span.dots,
+.pagination-wrap span:not([class]) {
+    border-color: transparent !important;
+    background: transparent !important;
+    color: var(--text-3) !important;
+    cursor: default !important;
+    min-width: 24px !important;
+}
+.pagination-wrap span:not([class]):hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Prev/Next arrow buttons get slightly wider */
+.pagination-wrap a[rel="prev"],
+.pagination-wrap a[rel="next"] {
+    gap: 4px !important;
+    padding: 0 14px !important;
+    color: var(--text-2) !important;
+}
 
 /* ═══════════════════════════════════════════
    MODAL
 ═══════════════════════════════════════════ */
-/* ═══════════════════════════════════════════
-   MODAL (Premium Style)
-   ═══════════════════════════════════════════ */
 .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.65);
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
@@ -252,11 +432,12 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 .toast.success .toast-dot { background:var(--green); }
 .toast.error .toast-dot { background:var(--red); }
 
-
 @media(max-width:700px) { thead th:nth-child(3), tbody td:nth-child(3) { display:none; } }
 @media(max-width:520px) {
     thead th:nth-child(2), tbody td:nth-child(2) { display:none; }
     .page-header { flex-direction:column; align-items:flex-start; }
+    .pagination-wrap { flex-direction: column; align-items: center; gap: 12px; }
+    .pagination-info { display: none; }
 }
 </style>
 @endpush
@@ -303,35 +484,35 @@ tbody td { padding:14px 20px; vertical-align:middle; }
         </div>
     </div>
 
-{{-- ── Toolbar ── --}}
-<div class="toolbar">
-<div class="search-wrap">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-    </svg>
-    <input type="text" id="cat-search" placeholder="{{ __('admin.search_categories') }}" autocomplete="off">
-</div>
+    {{-- ── Toolbar ── --}}
+    <div class="toolbar">
+        <div class="search-wrap">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" id="cat-search" placeholder="{{ __('admin.search_categories') }}" autocomplete="off">
+        </div>
 
-<select class="filter-select" id="status-filter">
-    <option value="">{{ __('admin.all_statuses') }}</option>
-    <option value="active">{{ __('admin.active') }}</option>
-    <option value="inactive">{{ __('admin.inactive') }}</option>
-</select>
+        <select class="filter-select" id="status-filter">
+            <option value="">{{ __('admin.all_statuses') }}</option>
+            <option value="active">{{ __('admin.active') }}</option>
+            <option value="inactive">{{ __('admin.inactive') }}</option>
+        </select>
 
-<select class="filter-select" id="parent-filter">
-    <option value="">{{ __('admin.all_levels') }}</option>
-    <option value="root">{{ __('admin.root_only') }}</option>
-    <option value="child">{{ __('admin.subcategories') }}</option>
-</select>
+        <select class="filter-select" id="parent-filter">
+            <option value="">{{ __('admin.all_levels') }}</option>
+            <option value="root">{{ __('admin.root_only') }}</option>
+            <option value="child">{{ __('admin.subcategories') }}</option>
+        </select>
 
-<div class="toolbar-sep"></div>
+        <div class="toolbar-sep"></div>
 
-<button onclick="openModal('create')" class="btn-add">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-    </svg>
-    {{ __('admin.add_category') }}
-</button>
+        <button onclick="openModal('create')" class="btn-add">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            {{ __('admin.add_category') }}
+        </button>
     </div>
 
     {{-- ── Table ── --}}
@@ -358,7 +539,13 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                                 @if($category->parent_id)
                                     <div class="tree-line"></div>
                                 @endif
-                                <div class="cat-avatar">{{ substr($category->name, 0, 1) }}</div>
+                                <div class="cat-avatar">
+                                    @if($category->image_url)
+                                        <img src="{{ $category->image_url }}" alt="{{ $category->name }}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">
+                                    @else
+                                        {{ substr($category->name, 0, 1) }}
+                                    @endif
+                                </div>
                                 <div style="min-width:0">
                                     <div class="cat-name">{{ $category->name }}</div>
                                     <div class="cat-id-label">#{{ $category->id }}</div>
@@ -391,27 +578,45 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                                 {{ $category->is_active ? __('admin.active_status') : __('admin.inactive_status') }}
                             </span>
                         </td>
-                        <td colspan="2">
-    <div class="action-group" style="justify-content: flex-end;display: flex;align-items: center;gap: 10px;">
-        @if(Auth::user()->isSuperAdmin())
-        <button class="btn-icon edit-cat-btn" data-id="{{ $category->id }}" title="{{ __('admin.edit') }}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-            </svg>
-        </button>
-        <button class="btn-icon delete delete-cat-btn" data-id="{{ $category->id }}" data-name="{{ $category->name }}" title="{{ __('admin.delete') }}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-            </svg>
-        </button>
-        @else
-        <button class="btn-icon edit-cat-btn" data-id="{{ $category->id }}" title="{{ __('admin.view_details') }}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-        </button>
-        @endif
-    </div>
-</td>
+                        <td>
+                            {{-- ── Action Buttons ── --}}
+                            <div class="action-group">
+                                @if(Auth::user()->isSuperAdmin())
+                                    {{-- Edit button with label --}}
+                                    <button class="btn-action-edit edit-cat-btn"
+                                            data-id="{{ $category->id }}"
+                                            title="{{ __('admin.edit') }}">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                        </svg>
+                                        {{ __('admin.edit') }}
+                                    </button>
+
+                                    <div class="action-sep"></div>
+
+                                    {{-- Delete icon button --}}
+                                    <button class="btn-action-del delete-cat-btn"
+                                            data-id="{{ $category->id }}"
+                                            data-name="{{ $category->name }}"
+                                            title="{{ __('admin.delete') }}">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+                                @else
+                                    {{-- View-only button --}}
+                                    <button class="btn-action-view edit-cat-btn"
+                                            data-id="{{ $category->id }}"
+                                            title="{{ __('admin.view_details') }}">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                        {{ __('admin.view') }}
+                                    </button>
+                                @endif
+                            </div>
+                        </td>
                     </tr>
                     @empty
                     <tr>
@@ -432,18 +637,26 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             </table>
         </div>
 
+        {{-- ── Pagination ── --}}
         @if(method_exists($categories, 'hasPages') && $categories->hasPages())
-        <div class="premium-pagination">
-            {{ $categories->links() }}
+        <div class="pagination-wrap">
+            <div class="pagination-info">
+                {{ __('admin.showing') }}
+                <strong>{{ $categories->firstItem() }}–{{ $categories->lastItem() }}</strong>
+                {{ __('admin.of') }}
+                <strong>{{ $categories->total() }}</strong>
+                {{ __('admin.results') }}
+            </div>
+            <div class="pagination-nav">
+                {{ $categories->links() }}
+            </div>
         </div>
         @endif
     </div>
 
 </div>
 
-{{-- ---
-     CATEGORY MODAL
---- --}}
+{{-- ─── Category Modal ─── --}}
 <div id="cat-modal" class="modal-overlay" onclick="handleOverlayClick(event)">
     <div class="modal-container">
 
@@ -505,6 +718,20 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                 </div>
 
                 <div class="form-row single">
+                    <div class="field">
+                        <label>Image URL (Optional)</label>
+                        <input type="text" id="f-image-url" placeholder="https://example.com/category.webp">
+                    </div>
+                </div>
+
+                <div class="form-row single">
+                    <div class="field">
+                        <label>{{ __('admin.image') }} (Upload)</label>
+                        <input type="file" id="f-image" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-row single">
                     <div class="toggle-row">
                         <div class="toggle-info">
                             <strong>{{ __('admin.active_status') }}</strong>
@@ -533,9 +760,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
     </div>
 </div>
 
-{{-- ---
-     DELETE MODAL
---- --}}
+{{-- ─── Delete Modal ─── --}}
 <div id="del-modal" class="modal-overlay">
     <div class="modal-container" style="max-width:400px;">
         <div class="confirm-body">
@@ -565,7 +790,6 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Event delegation for action buttons
     document.addEventListener('click', e => {
         const editBtn = e.target.closest('.edit-cat-btn');
         if (editBtn) editCategory(editBtn.dataset.id);
@@ -575,15 +799,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/* ---
-   STATE
---- */
 let isEditing    = false;
 let deleteTarget = null;
 
-/* ═══════════════════════════════════════
-   MODAL OPEN / CLOSE
-═══════════════════════════════════════ */
 const modal    = document.getElementById('cat-modal');
 const delModal = document.getElementById('del-modal');
 
@@ -601,26 +819,27 @@ function openModal(mode, data = null) {
     const addIco  = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>';
     document.getElementById('modal-icon').innerHTML = isEditing ? editIco : addIco;
 
-    // Reset tabs to first
     document.querySelectorAll('.modal-tab')[0].click();
 
-    /* Reset */
     document.getElementById('cat-form').reset();
     document.getElementById('f-id').value = '';
     document.getElementById('slug-preview').textContent = '—';
 
     if (isEditing && data) {
-        document.getElementById('f-id').value    = data.id;
-        document.getElementById('f-name').value  = data.name;
-        document.getElementById('f-parent').value = data.parent_id || '';
-        document.getElementById('f-desc').value  = data.description || '';
-        document.getElementById('f-active').checked = !!data.is_active;
+        document.getElementById('f-id').value       = data ? data.id : '';
+        document.getElementById('f-name').value     = data ? data.name : '';
+        document.getElementById('f-parent').value   = data ? (data.parent_id || '') : '';
+        document.getElementById('f-desc').value     = data ? (data.description || '') : '';
+        document.getElementById('f-active').checked = data ? !!data.is_active : true;
+        document.getElementById('f-image').value    = '';
+        document.getElementById('f-image-url').value = (data && data.image && data.image.startsWith('http')) ? data.image : '';
+        
+        // Update slug preview
         document.getElementById('slug-preview').textContent = data.slug || slugify(data.name);
     }
 
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
-
     setTimeout(() => document.getElementById('f-name').focus(), 230);
 }
 
@@ -644,9 +863,6 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeModal(); closeDeleteModal(); }
 });
 
-/* ═══════════════════════════════════════
-   SLUG PREVIEW — live as user types
-═══════════════════════════════════════ */
 function slugify(str) {
     return str.toLowerCase()
               .trim()
@@ -660,9 +876,6 @@ document.getElementById('f-name').addEventListener('input', function () {
     document.getElementById('slug-preview').textContent = slug || '—';
 });
 
-/* ═══════════════════════════════════════
-   EDIT CATEGORY
-═══════════════════════════════════════ */
 async function editCategory(id) {
     try {
         const res = await fetch(`/admin/categories/${id}`, {
@@ -676,12 +889,9 @@ async function editCategory(id) {
     }
 }
 
-/* ═══════════════════════════════════════
-   SAVE CATEGORY
-═══════════════════════════════════════ */
 async function saveCategory() {
-    const btn  = document.getElementById('save-btn');
-    const id   = document.getElementById('f-id').value;
+    const btn = document.getElementById('save-btn');
+    const id = document.getElementById('f-id').value;
     const name = document.getElementById('f-name').value.trim();
 
     if (!name) {
@@ -689,29 +899,37 @@ async function saveCategory() {
         return;
     }
 
-    const payload = {
-        name,
-        parent_id:   document.getElementById('f-parent').value   || null,
-        description: document.getElementById('f-desc').value,
-        is_active:   document.getElementById('f-active').checked,
-    };
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('parent_id', document.getElementById('f-parent').value || '');
+    formData.append('description', document.getElementById('f-desc').value);
+    formData.append('is_active', document.getElementById('f-active').checked ? '1' : '0');
+
+    const imageFile = document.getElementById('f-image').files[0];
+    const imageUrl = document.getElementById('f-image-url').value;
+
+    if (imageFile) {
+        formData.append('image', imageFile);
+    } else if (imageUrl) {
+        formData.append('image', imageUrl);
+    }
+
+    if (isEditing) {
+        formData.append('_method', 'PUT');
+    }
 
     btn.disabled = true;
     btn.innerHTML = '{{ __("admin.saving") }}...';
 
     try {
-        const url    = isEditing ? `/admin/categories/${id}` : '/admin/categories';
-        const method = isEditing ? 'PUT' : 'POST';
-
+        const url = isEditing ? `/admin/categories/${id}` : '/admin/categories';
         const res = await fetch(url, {
-            method,
+            method: 'POST', // Use POST with _method=PUT for update
             headers: {
-                'Content-Type':     'application/json',
-                'Accept':           'application/json',
-                'X-CSRF-TOKEN':     document.querySelector('meta[name="csrf-token"]').content,
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify(payload)
+            body: formData
         });
 
         const data = await res.json();
@@ -724,13 +942,10 @@ async function saveCategory() {
         showToast(err.message || '{{ __("admin.error_saving") }}', 'error');
     } finally {
         btn.disabled = false;
-        btn.textContent = isEditing ? '{{ __("admin.save_category") }}' : '{{ __("admin.add_category") }}';
+        btn.textContent = isEditing ? '{{ __("admin.save_changes") }}' : '{{ __("admin.add_category") }}';
     }
 }
 
-/* ═══════════════════════════════════════
-   DELETE
-═══════════════════════════════════════ */
 function promptDelete(id, name) {
     deleteTarget = id;
     document.getElementById('del-msg').textContent =
@@ -780,9 +995,6 @@ async function executeDelete() {
     }
 }
 
-/* ═══════════════════════════════════════
-   LIVE SEARCH + FILTERS
-═══════════════════════════════════════ */
 function filterTable() {
     const term   = document.getElementById('cat-search').value.toLowerCase();
     const status = document.getElementById('status-filter').value;
@@ -805,9 +1017,6 @@ document.getElementById('cat-search').addEventListener('input', filterTable);
 document.getElementById('status-filter').addEventListener('change', filterTable);
 document.getElementById('parent-filter').addEventListener('change', filterTable);
 
-/* ---
-   TOAST
---- */
 let toastTimer;
 function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');

@@ -384,6 +384,33 @@ return [
   'no_account' => 'No account?',
   'sign_up' => 'Sign Up',
   'forgot_password' => 'Forgot Password?',
+  
+  /* ── Brands Page ── */
+  'brands'               => 'Brands',
+  'total_brands'         => 'total brands',
+  'search_brands'        => 'Search brands',
+  'add_brand'            => 'Add Brand',
+  'brand'                => 'Brand',
+  'no_brands_found'      => 'No Brands Found',
+  'add_first_brand'      => 'Add your first brand',
+  'fill_brand_details'   => 'Fill in the brand details below',
+  'brand_name'           => 'Brand Name',
+  'brand_name_placeholder' => 'Enter brand name',
+  'logo'                 => 'Logo',
+  'website'              => 'Website',
+  'website_placeholder'  => 'https://example.com',
+  'sort_order'           => 'Sort Order',
+  'brand_logo'           => 'Brand Logo',
+  'delete_brand'         => 'Delete Brand',
+  'delete_brand_confirm' => 'Are you sure you want to delete this brand? This will not delete the products associated with it, but they will no longer have a brand assigned.',
+  'brand_saved'          => 'Brand saved successfully.',
+  'brand_deleted'        => 'Brand deleted successfully.',
+  'nav_brands'           => 'Brands',
+  'add_brand_subtitle'   => 'Create a new brand for your products',
+  'edit_brand_subtitle'  => 'Modify existing brand details',
+ 
+  'general_info'         => 'General Info',
+  'description_placeholder' => 'Brief brand overview...',
 
 
 ];

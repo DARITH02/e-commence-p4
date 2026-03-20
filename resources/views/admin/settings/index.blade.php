@@ -303,6 +303,10 @@ body { background: var(--bg) !important; }
                                             @lang('admin.upload_logo')
                                         </label>
                                         <input type="file" id="logo-input" name="logo" hidden accept="image/*" onchange="previewLogo(this)">
+                                        <input type="text" name="logo_url" placeholder="Or enter Logo URL..." 
+                                               value="{{ (isset($settings['store_logo']) && filter_var($settings['store_logo'], FILTER_VALIDATE_URL)) ? $settings['store_logo'] : '' }}"
+                                               style="margin-top: 8px; font-size: 11px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-2); background: var(--surface-3); width: 100%;"
+                                               oninput="previewLogoUrl(this.value)">
                                         <span class="hint">Recommended: 200x200px, PNG or SVG. Max 2MB.</span>
                                     </div>
                                 </div>
@@ -618,15 +622,25 @@ function previewLogo(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const preview = document.getElementById('logo-preview');
-            const placeholder = document.getElementById('logo-placeholder');
-            
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-            if (placeholder) placeholder.style.display = 'none';
+            updateLogoPreview(e.target.result);
         }
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+function previewLogoUrl(url) {
+    if (url && url.startsWith('http')) {
+        updateLogoPreview(url);
+    }
+}
+
+function updateLogoPreview(src) {
+    const preview = document.getElementById('logo-preview');
+    const placeholder = document.getElementById('logo-placeholder');
+    
+    preview.src = src;
+    preview.style.display = 'block';
+    if (placeholder) placeholder.style.display = 'none';
 }
 </script>
 @endpush

@@ -11,6 +11,8 @@ interface BaseRepositoryInterface
 
     public function find(int $id): ?Model;
 
+    public function findBySlug(string $slug): ?Model;
+
     public function create(array $data): Model;
 
     public function update(int $id, array $data): bool;

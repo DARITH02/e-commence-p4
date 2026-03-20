@@ -13,6 +13,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'brand_id',
         'name',
         'slug',
         'description',
@@ -30,6 +31,11 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
     ];
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 
     public function categories(): BelongsToMany
     {

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\BrandController;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
@@ -33,6 +34,9 @@ Route::middleware('throttle:60,1')->group(function () {
 
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{slug}', [ProductController::class, 'show']);
+
+    Route::get('/brands', [BrandController::class, 'index']);
+    Route::get('/brands/{slug}', [BrandController::class, 'show']);
 });
 
 // 3. Protected Customer Routes
@@ -110,4 +114,9 @@ Route::middleware(['auth:sanctum', 'can:admin-access', 'throttle:100,1'])
                 ]
             ]);
         });
+
+        // Brand Management
+        Route::post('/brands', [BrandController::class, 'store']);
+        Route::put('/brands/{id}', [BrandController::class, 'update']);
+        Route::delete('/brands/{id}', [BrandController::class, 'destroy']);
     });

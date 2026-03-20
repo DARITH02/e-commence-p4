@@ -42,13 +42,15 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
-            'image' => 'nullable|image|max:5120',
+            'image' => 'nullable', // Support file upload or direct URL
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('categories', config('filesystems.default'));
+        } elseif ($request->filled('image') && filter_var($request->image, FILTER_VALIDATE_URL)) {
+             $validated['image'] = $request->image;
         }
 
         $category = Category::create($validated);
@@ -77,11 +79,13 @@ class CategoryController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($category->image) {
+            // Delete old local image
+            if ($category->image && !filter_var($category->image, FILTER_VALIDATE_URL)) {
                 Storage::disk(config('filesystems.default'))->delete($category->image);
             }
             $validated['image'] = $request->file('image')->store('categories', config('filesystems.default'));
+        } elseif ($request->filled('image') && filter_var($request->image, FILTER_VALIDATE_URL)) {
+             $validated['image'] = $request->image;
         }
 
         $category->update($validated);

@@ -623,7 +623,12 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                                 </div>
                                 <div>
                                     <div class="prod-name">{{ $product->name }}</div>
-                                    <div class="prod-sku">{{ $product->sku }}</div>
+                                    <div class="prod-sku">
+                                        @if($product->brand)
+                                            <span style="color:var(--accent);font-weight:700;">{{ $product->brand->name }}</span> • 
+                                        @endif
+                                        {{ $product->sku }}
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -743,6 +748,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                     <label>@lang('admin.sku') <span class="req">*</span></label>
                     <input type="text" id="prod-sku" placeholder="SKU-001">
                 </div>
+            <div class="form-row">
                 <div class="field">
                     <label>@lang('admin.categories')</label>
                     <select id="prod-categories" multiple>
@@ -752,6 +758,16 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                     </select>
                     <span class="hint">@lang('admin.hold_ctrl_multi')</span>
                 </div>
+                <div class="field">
+                    <label>@lang('admin.brand')</label>
+                    <select id="prod-brand">
+                        <option value="">@lang('admin.all')</option>
+                        @foreach($brands as $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             </div>
             <div class="form-row single">
                 <div class="field">
@@ -823,6 +839,12 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
                 <span class="upload-tag">@lang('admin.browse_files')</span>
             </div>
             <div class="img-preview-grid" id="img-preview-grid"></div>
+
+            <div class="field" style="margin-top:20px;">
+                <label>Direct Image URLs (One per line)</label>
+                <textarea id="prod-image-urls" rows="3" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.webp"></textarea>
+                <span class="hint">Use this to add images from external websites.</span>
+            </div>
         </div>
 
         <div class="modal-foot">
@@ -872,7 +894,8 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
 /* ── State ── */
 let isEditing = false, editingId = null;
 let allRows = [], activeFilter = 'all', activeCat = '';
-let selectedFiles = []; // To hold File objects
+let selectedFiles = []; 
+let deletedImages = []; // Track images deleted from gallery
 
 document.addEventListener('DOMContentLoaded', () => {
     allRows = Array.from(document.querySelectorAll('#prod-tbody tr[id^="row-"]'));
@@ -953,6 +976,8 @@ function openProductModal(mode, data = null) {
         const sel = document.getElementById('prod-categories');
         Array.from(sel.options).forEach(o => o.selected = (data.categories||[]).some(c => c.id == o.value));
         
+        document.getElementById('prod-brand').value = data.brand_id || '';
+        
         const grid = document.getElementById('img-preview-grid');
         grid.innerHTML = '';
         selectedFiles = []; // Reset new uploads but keep existing as previews
@@ -975,10 +1000,12 @@ function openProductModal(mode, data = null) {
         document.getElementById('prod-stock').value      = '0';
         document.getElementById('prod-active').checked   = true;
         Array.from(document.getElementById('prod-categories').options).forEach(o => o.selected = false);
+        document.getElementById('prod-brand').value = '';
         document.getElementById('img-preview-grid').innerHTML = '';
         selectedFiles = [];
         document.getElementById('discount-preview').style.display = 'none';
         document.getElementById('margin-val').textContent = '—';
+        document.getElementById('prod-image-urls').value = '';
     }
     openModal('prod-modal');
     setTimeout(() => document.getElementById('prod-name').focus(), 230);
@@ -1019,6 +1046,7 @@ async function saveProduct() {
     fd.append('price', price);
     fd.append('sale_price', saleParsed || '');
     fd.append('description', document.getElementById('prod-desc').value);
+    fd.append('brand_id', document.getElementById('prod-brand').value);
     fd.append('stock', parseInt(document.getElementById('prod-stock').value) || 0);
     fd.append('is_active', document.getElementById('prod-active').checked ? 1 : 0);
     
@@ -1026,6 +1054,9 @@ async function saveProduct() {
     cats.forEach(c => fd.append('categories[]', c));
 
     selectedFiles.forEach(item => fd.append('images[]', item.file));
+
+    const urls = document.getElementById('prod-image-urls').value.split('\n').map(u => u.trim()).filter(u => u.length > 0);
+    urls.forEach(u => fd.append('image_urls[]', u));
 
     if (isEditing) fd.append('_method', 'PUT');
 

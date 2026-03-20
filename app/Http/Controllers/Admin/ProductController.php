@@ -14,8 +14,9 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['categories', 'images'])->latest()->paginate(10);
+        $products = Product::with(['categories', 'images', 'brand'])->latest()->paginate(10);
         $categories = Category::all();
+        $brands = \App\Models\Brand::all();
 
         // Calculate global counts
         $totalCount    = Product::count();
@@ -27,7 +28,7 @@ class ProductController extends Controller
             return response()->json($products);
         }
 
-        return view('admin.products.index', compact('products', 'categories', 'totalCount', 'activeCount', 'lowStockCount', 'inactiveCount'));
+        return view('admin.products.index', compact('products', 'categories', 'brands', 'totalCount', 'activeCount', 'lowStockCount', 'inactiveCount'));
     }
 
     public function store(Request $request)
@@ -39,9 +40,12 @@ class ProductController extends Controller
             'sale_price' => 'nullable|numeric|min:0',
             'sku' => 'required|string|unique:products,sku',
             'categories' => 'required|array',
+            'brand_id' => 'nullable|exists:brands,id',
             'is_active' => 'boolean',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
+            'images.*' => 'nullable', // Support file or URL
+            'image_urls' => 'nullable|array',
+            'image_urls.*' => 'nullable|url',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -53,13 +57,26 @@ class ProductController extends Controller
             $product->categories()->attach($request->categories);
 
             // Handle Images
+            // Handle Uploaded Images
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $image) {
                     $path = $image->store('products', config('filesystems.default'));
                     $product->images()->create([
                         'image_path' => $path,
-                        'is_primary' => $index === 0
+                        'is_primary' => !($product->images()->count() > 0) && $index === 0
                     ]);
+                }
+            }
+
+            // Handle Image URLs
+            if ($request->filled('image_urls')) {
+                foreach ($request->image_urls as $url) {
+                    if (!empty($url)) {
+                        $product->images()->create([
+                            'image_path' => $url,
+                            'is_primary' => !($product->images()->count() > 0)
+                        ]);
+                    }
                 }
             }
 
@@ -67,7 +84,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'message' => 'Product created successfully!',
-                'product' => $product->load(['categories', 'images'])
+                'product' => $product->load(['categories', 'images', 'brand'])
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -77,7 +94,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return response()->json($product->load(['categories', 'images', 'variants.values']));
+        return response()->json($product->load(['categories', 'images', 'brand', 'variants.values']));
     }
 
     public function update(Request $request, Product $product)
@@ -89,9 +106,11 @@ class ProductController extends Controller
             'sale_price' => 'nullable|numeric|min:0',
             'sku' => 'required|string|unique:products,sku,' . $product->id,
             'categories' => 'required|array',
+            'brand_id' => 'nullable|exists:brands,id',
             'is_active' => 'boolean',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
+            'images.*' => 'nullable',
+            'image_urls' => 'nullable|array',
+            'image_urls.*' => 'nullable|url',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -103,10 +122,9 @@ class ProductController extends Controller
             $product->categories()->sync($request->categories);
 
             // Handle New Images
+            // Handle Uploaded Images
             if ($request->hasFile('images')) {
-                // Determine if we already have a primary image
                 $hasPrimary = $product->images()->where('is_primary', true)->exists();
-                
                 foreach ($request->file('images') as $index => $image) {
                     $path = $image->store('products', config('filesystems.default'));
                     $product->images()->create([
@@ -117,11 +135,25 @@ class ProductController extends Controller
                 }
             }
 
+            // Handle Image URLs
+            if ($request->filled('image_urls')) {
+                $hasPrimary = $product->images()->where('is_primary', true)->exists();
+                foreach ($request->image_urls as $url) {
+                    if (!empty($url)) {
+                         $product->images()->create([
+                            'image_path' => $url,
+                            'is_primary' => !$hasPrimary
+                        ]);
+                        $hasPrimary = true;
+                    }
+                }
+            }
+
             DB::commit();
 
             return response()->json([
                 'message' => 'Product updated successfully!',
-                'product' => $product->load(['categories', 'images'])
+                'product' => $product->load(['categories', 'images', 'brand'])
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
