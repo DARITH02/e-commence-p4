@@ -16,8 +16,10 @@ class ProductService
 
     public function getAllProducts($filters = [])
     {
+        $cacheKey = 'products_all_' . md5(json_encode($filters));
+
         // Cache products for 60 minutes
-        return Cache::remember('products_all', 3600, function () use ($filters) {
+        return Cache::remember($cacheKey, 3600, function () use ($filters) {
             return $this->productRepository->getActiveProducts($filters);
         });
     }

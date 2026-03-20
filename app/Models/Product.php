@@ -8,10 +8,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
+
 
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
+    
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($product) {
+            Cache::forget('products_all');
+            Cache::forget("product_{$product->slug}");
+        });
+
+        static::deleted(function ($product) {
+            Cache::forget('products_all');
+            Cache::forget("product_{$product->slug}");
+        });
+    }
+
 
     protected $fillable = [
         'brand_id',

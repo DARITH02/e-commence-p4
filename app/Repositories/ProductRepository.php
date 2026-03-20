@@ -26,11 +26,17 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             $query->where('name', 'like', '%' . $filters['search'] . '%');
         }
 
-        return $query->with('images')->get();
+        return $query->with(['images', 'categories', 'brand'])->get();
     }
 
     public function getFeaturedProducts(): Collection
     {
         return $this->model->featured()->with('images')->get();
+    }
+    public function findBySlug(string $slug): ?\Illuminate\Database\Eloquent\Model
+    {
+        return $this->model->where('slug', $slug)
+            ->with(['images', 'categories', 'brand', 'variants.values', 'reviews'])
+            ->first();
     }
 }
