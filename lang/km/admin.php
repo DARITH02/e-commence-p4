@@ -338,6 +338,8 @@ return [
    'orders_with_least_spent' => 'កម្មង់តិចបំផុត',
    'active' => 'សកម្ម',
    'inactive' => 'អសកម្ម',
+   'deleted' => 'បានលុប',
+   'restore' => 'ស្ដារឡើងវិញ',
 
    'total_spent' => 'សរុបចំណាយ',
    'edit_admin' => 'កែសម្រួលអ្នកគ្រប់គ្រង',
@@ -420,5 +422,6 @@ return [
    'edit_brand_subtitle'  => 'កែសម្រួលព័ត៌មានលម្អិតនៃម៉ាកយីហោដែលមានស្រាប់',
    'required_fields_hint' => 'បញ្ជាក់ថាជាវាលដែលត្រូវការ',
    'inactive_status' => 'អសកម្ម',
+   'remove'=> 'លុប',
    
 ];

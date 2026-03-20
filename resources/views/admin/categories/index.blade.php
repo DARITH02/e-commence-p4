@@ -116,6 +116,30 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 
 .slug-pill { font-family:'DM Mono', monospace; font-size:11px; color:var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border); }
 
+.parent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--surface-2); 
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 750;
+    color: var(--text-2);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+}
+.parent-badge:hover { background: var(--surface-3); border-color: var(--border-2); transform: translateX(2px); }
+.parent-badge svg { width: 10px; height: 10px; color: var(--accent); opacity: 0.8; }
+
+.root-label { 
+    font-size: 10px; font-weight: 850; color: var(--text-3); 
+    text-transform: uppercase; letter-spacing: 0.05em; 
+    background: var(--surface-2); border: 1px dashed var(--border); 
+    padding: 3px 10px; border-radius: 6px; 
+}
+
 .count-badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; color: var(--text-2); font-size: 13.5px; }
 .count-badge span { font-size: 10px; font-weight: 750; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
 
@@ -482,6 +506,14 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             </div>
             <div><div class="stat-label">@lang('admin.inactive')</div><div class="stat-val">{{ number_format($inactiveCount) }}</div></div>
         </div>
+        @if(Auth::user()->isSuperAdmin())
+        <div class="stat-card">
+            <div class="stat-ico red" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
+            <div><div class="stat-label">@lang('admin.deleted')</div><div class="stat-val">{{ number_format($deletedCount) }}</div></div>
+        </div>
+        @endif
     </div>
 
     {{-- ── Toolbar ── --}}
@@ -497,6 +529,9 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             <option value="">{{ __('admin.all_statuses') }}</option>
             <option value="active">{{ __('admin.active') }}</option>
             <option value="inactive">{{ __('admin.inactive') }}</option>
+            @if(Auth::user()->isSuperAdmin())
+                <option value="deleted">{{ __('admin.deleted') }}</option>
+            @endif
         </select>
 
         <select class="filter-select" id="parent-filter">
@@ -532,8 +567,9 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                 <tbody id="cats-tbody">
                     @forelse($categories as $category)
                     <tr id="cat-row-{{ $category->id }}"
-                        data-status="{{ $category->is_active ? 'active' : 'inactive' }}"
-                        data-level="{{ $category->parent_id ? 'child' : 'root' }}">
+                        data-status="{{ $category->trashed() ? 'deleted' : ($category->is_active ? 'active' : 'inactive') }}"
+                        data-level="{{ $category->parent_id ? 'child' : 'root' }}"
+                        @if($category->trashed()) style="opacity: 0.6; background: var(--surface-2);" @endif>
                         <td>
                             <div class="cat-identity {{ $category->parent_id ? 'indent-1' : '' }}">
                                 @if($category->parent_id)
@@ -574,14 +610,32 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                             </div>
                         </td>
                         <td>
-                            <span class="status-badge {{ $category->is_active ? 'status-active' : 'status-inactive' }}">
-                                {{ $category->is_active ? __('admin.active_status') : __('admin.inactive_status') }}
-                            </span>
+                            @if($category->trashed())
+                                <span class="status-badge status-inactive" style="color: var(--red); background: var(--red-dim);">
+                                    {{ __('admin.deleted') }}
+                                </span>
+                            @else
+                                <span class="status-badge {{ $category->is_active ? 'status-active' : 'status-inactive' }}">
+                                    {{ $category->is_active ? __('admin.active_status') : __('admin.inactive_status') }}
+                                </span>
+                            @endif
                         </td>
                         <td>
                             {{-- ── Action Buttons ── --}}
                             <div class="action-group">
-                                @if(Auth::user()->isSuperAdmin())
+                                @if($category->trashed())
+                                    @if(Auth::user()->isSuperAdmin())
+                                        <button class="btn-action-edit restore-cat-btn"
+                                                data-id="{{ $category->id }}"
+                                                style="background: var(--green-dim); color: var(--green); border-color: var(--green-mid);"
+                                                title="{{ __('admin.restore') }}">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                            </svg>
+                                            {{ __('admin.restore') }}
+                                        </button>
+                                    @endif
+                                @elseif(Auth::user()->isSuperAdmin())
                                     {{-- Edit button with label --}}
                                     <button class="btn-action-edit edit-cat-btn"
                                             data-id="{{ $category->id }}"
@@ -793,6 +847,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', e => {
         const editBtn = e.target.closest('.edit-cat-btn');
         if (editBtn) editCategory(editBtn.dataset.id);
+
+        const restoreBtn = e.target.closest('.restore-cat-btn');
+        if (restoreBtn) restoreCategory(restoreBtn.dataset.id);
 
         const delBtn = e.target.closest('.delete-cat-btn');
         if (delBtn) promptDelete(delBtn.dataset.id, delBtn.dataset.name);
@@ -1025,6 +1082,25 @@ function showToast(msg, type = 'success') {
     t.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+async function restoreCategory(id) {
+    try {
+        const res = await fetch(`/admin/categories/${id}/restore`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Error');
+        showToast(data.message || 'Category restored!', 'success');
+        setTimeout(() => location.reload(), 600);
+    } catch (err) {
+        showToast(err.message || 'Error restoring category', 'error');
+    }
 }
 </script>
 @endpush

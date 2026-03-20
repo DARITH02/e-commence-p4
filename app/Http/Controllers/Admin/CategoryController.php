@@ -12,7 +12,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->withCount('products')->latest()->paginate(15);
+        $query = Category::with('parent')->withCount('products');
+        
+        if (auth()->check() && auth()->user()->isSuperAdmin()) {
+            $query->withTrashed();
+        }
+
+        $categories = $query->latest()->paginate(15);
         $parentCategories = Category::whereNull('parent_id')->get();
         
         // Global Stats
@@ -20,6 +26,7 @@ class CategoryController extends Controller
         $activeCount   = Category::where('is_active', true)->count();
         $rootCount     = Category::whereNull('parent_id')->count();
         $inactiveCount = Category::where('is_active', false)->count();
+        $deletedCount  = Category::onlyTrashed()->count();
 
         if (request()->wantsJson()) {
             return response()->json($categories);
@@ -31,7 +38,8 @@ class CategoryController extends Controller
             'totalCount',
             'activeCount',
             'rootCount',
-            'inactiveCount'
+            'inactiveCount',
+            'deletedCount'
         ));
     }
 
@@ -98,10 +106,22 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if ($category->image) {
-            Storage::disk(config('filesystems.default'))->delete($category->image);
-        }
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully!']);
+    }
+
+    public function restore($id)
+    {
+        if (!auth()->user()->isSuperAdmin()) {
+            return response()->json(['message' => 'Unauthorized. Only Super Admin can restore categories.'], 403);
+        }
+
+        $category = Category::withTrashed()->findOrFail($id);
+        $category->restore();
+
+        return response()->json([
+            'message' => 'Category restored successfully!',
+            'category' => $category->load('parent')
+        ]);
     }
 }

@@ -292,6 +292,8 @@ return [
   'active_status'         => 'Active Status',
   'active'                => 'Active',
   'inactive'              => 'Inactive',
+  'deleted'               => 'Deleted',
+  'restore'               => 'Restore',
   'visible_to_customers'  => 'Visible to customers in storefront',
   'save_category'         => 'Save Category',
   'root_levels'           => 'Root Levels',
@@ -411,6 +413,9 @@ return [
  
   'general_info'         => 'General Info',
   'description_placeholder' => 'Brief brand overview...',
+  'remove' => 'Remove',
+ 
+  'force_delete' => 'Force Delete',
 
 
 ];
