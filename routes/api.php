@@ -16,6 +16,11 @@ use App\Http\Controllers\API\SystemController;
 
 // 1. Health & Status
 Route::get('/status', [SystemController::class, 'status']);
+Route::get('/force-clear-cache', function () {
+    \Illuminate\Support\Facades\Cache::increment('product_cache_version');
+    \Illuminate\Support\Facades\Cache::forget('products_all');
+    return response()->json(['success' => true, 'message' => 'Product cache busted! Now version: ' . \Illuminate\Support\Facades\Cache::get('product_cache_version', 1)]);
+});
 
 // 2. Public Storefront Routes
 Route::middleware('throttle:60,1')->group(function () {

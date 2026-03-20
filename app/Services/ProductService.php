@@ -16,7 +16,8 @@ class ProductService
 
     public function getAllProducts($filters = [])
     {
-        $cacheKey = 'products_all_' . md5(json_encode($filters));
+        $version = \Illuminate\Support\Facades\Cache::get('product_cache_version', 1);
+        $cacheKey = "products_all_v{$version}_" . md5(json_encode($filters));
 
         // Cache products for 60 minutes
         return Cache::remember($cacheKey, 3600, function () use ($filters) {

@@ -20,13 +20,13 @@ class Product extends Model
         parent::boot();
 
         static::saved(function ($product) {
-            Cache::forget('products_all');
-            Cache::forget("product_{$product->slug}");
+            \Illuminate\Support\Facades\Cache::increment('product_cache_version');
+            \Illuminate\Support\Facades\Cache::forget("product_{$product->slug}");
         });
 
         static::deleted(function ($product) {
-            Cache::forget('products_all');
-            Cache::forget("product_{$product->slug}");
+            \Illuminate\Support\Facades\Cache::increment('product_cache_version');
+            \Illuminate\Support\Facades\Cache::forget("product_{$product->slug}");
         });
     }
 
