@@ -120,7 +120,7 @@ Route::get('/telegram-backup', function() {
         $output = \Illuminate\Support\Facades\Artisan::output();
         return response()->json(['success' => true, 'output' => $output]);
     } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        return response()->json(['success' => false, 'output' => $e->getMessage()], 200);
     }
 });
 
