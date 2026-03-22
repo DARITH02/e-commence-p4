@@ -72,7 +72,7 @@ class TelegramBackup extends Command
             }
 
             $this->info('Sending to Telegram...');
-            $ok = $telegram->sendDocument($path, "🍱 <b>Daily Database Backup</b>\n📅 " . date('Y-m-d H:i:s'));
+            $ok = $telegram->sendDocument($path, "🍱 Daily Database Backup\n📅 " . date('Y-m-d H:i:s'));
 
             if ($ok) {
                 $this->info('Backup sent successfully!');

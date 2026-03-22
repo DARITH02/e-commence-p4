@@ -429,4 +429,10 @@ return [
   'type_custom_message' => 'Type custom message to customer...',
   'send' => 'Send',
   'telegram_link_hint' => 'Customer needs to link their Telegram account to receive custom messages.',
+  'automation' => 'Automation',
+  'backups' => 'Backups',
+  'reports' => 'Reports',
+  'generate_backup' => 'Generate Backup',
+  'generate_report' => 'Generate Daily Report',
+  'automation_desc' => 'Manage automatic database backups and sales reports via Telegram.',
 ];

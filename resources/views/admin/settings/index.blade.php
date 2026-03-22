@@ -227,31 +227,37 @@ body { background: var(--bg) !important; }
         {{-- ── Sidebar Navigation ── --}}
         <div class="settings-nav">
             <div class="settings-nav-label">Configuration</div>
-            <div class="settings-nav-item active" onclick="showPanel('general')">
+            <div class="settings-nav-item active" onclick="showPanel('general')" id="nav-general">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
                 @lang('admin.general_settings')
             </div>
-            <div class="settings-nav-item" onclick="showPanel('payments')">
+            <div class="settings-nav-item" onclick="showPanel('payments')" id="nav-payments">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                 </svg>
                 @lang('admin.payments')
             </div>
-            <div class="settings-nav-item" onclick="showPanel('security')">
+            <div class="settings-nav-item" onclick="showPanel('security')" id="nav-security">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                 </svg>
                 @lang('admin.security')
             </div>
             <div class="settings-nav-label">Alerts</div>
-            <div class="settings-nav-item" onclick="showPanel('notifications')">
+            <div class="settings-nav-item" onclick="showPanel('notifications')" id="nav-notifications">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                 </svg>
                 @lang('admin.notification_settings')
+            </div>
+            <div class="settings-nav-item" onclick="showPanel('automation')" id="nav-automation">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                @lang('admin.automation')
             </div>
         </div>
 
@@ -508,6 +514,84 @@ body { background: var(--bg) !important; }
                     </div>
                 </div>
             </div>
+            {{-- Premium Automation Panel --}}
+            <div class="settings-card" id="panel-automation" style="display:none;">
+                <div class="settings-card-header" style="background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 100%); border-bottom: none; padding-bottom: 0;">
+                    <div class="settings-card-icon" style="background:var(--accent); color: white; box-shadow: 0 8px 16px var(--accent-dim);">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="settings-card-title" style="font-size: 18px; letter-spacing: -0.01em;">@lang('admin.automation')</div>
+                        <div class="settings-card-sub">@lang('admin.automation_desc')</div>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 100px; font-size: 10px; font-weight: 700; color: #22c55e;">
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite;"></span>
+                            BOT CONNECTED
+                        </span>
+                    </div>
+                </div>
+                
+                <style>
+                    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
+                    .automation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px; }
+                    .automation-item {
+                        background: var(--surface-2); border: 1px solid var(--border-1); padding: 24px; border-radius: var(--radius-lg);
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; overflow: hidden;
+                    }
+                    .automation-item:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-lg); background: var(--surface); }
+                    .automation-item::after {
+                        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+                        background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s;
+                        pointer-events: none;
+                    }
+                    .automation-item:hover::after { opacity: 0.1; }
+                    .automation-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--accent-dim); color: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+                    .automation-title { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+                    .automation-desc { font-size: 12px; color: var(--text-3); line-height: 1.6; margin-bottom: 20px; }
+                    .automation-btn {
+                        width: 100%; padding: 12px; border-radius: 10px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 700; border: none; transition: 0.2s;
+                    }
+                    .automation-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
+                    .automation-badge { font-size: 10px; font-weight: 600; color: var(--text-3); display: flex; align-items: center; gap: 4px; border-top: 1px solid var(--border-1); padding-top: 16px; margin-top: 16px; min-height: 20px; }
+                </style>
+
+                <div class="automation-grid">
+                    <div class="automation-item">
+                        <div class="automation-icon">
+                            <svg style="width:24px;height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 7v10c0 1.1.9 2 2 2h12a2 2 0 002-2V7M4 7a2 2 0 012-2h12a2 2 0 012 2M4 7l8 5 8-5"/></svg>
+                        </div>
+                        <div class="automation-title">@lang('admin.backups')</div>
+                        <div class="automation-desc">Full SQL snapshot of your products, orders, and users. Secured and transmitted via Telegram.</div>
+                        <button class="automation-btn" id="btn-backup" onclick="triggerAutomation('backup')">
+                            <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            @lang('admin.generate_backup')
+                        </button>
+                        <div class="automation-badge">
+                            <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            SCHEDULED EVERY 24H
+                        </div>
+                    </div>
+
+                    <div class="automation-item" style="border-color: rgba(34, 197, 94, 0.2);">
+                        <div class="automation-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                            <svg style="width:24px;height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </div>
+                        <div class="automation-title">@lang('admin.reports')</div>
+                        <div class="automation-desc">Premium sales breakdown including revenue, order volume, and status analytics.</div>
+                        <button class="automation-btn" id="btn-report" onclick="triggerAutomation('report')" style="background: #22c55e;">
+                            <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            @lang('admin.generate_report')
+                        </button>
+                        <div class="automation-badge">
+                            <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            NEXT RUN 00:00 UTC
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -525,16 +609,8 @@ function showPanel(name) {
     document.querySelectorAll('.settings-nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.settings-card').forEach(card => card.style.display = 'none');
     
-    // Find the item that was clicked (if called via event)
-    if(event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    } else {
-        // Default to finding the item by text or data
-        const items = document.querySelectorAll('.settings-nav-item');
-        items.forEach(item => {
-            if(item.textContent.toLowerCase().includes(name)) item.classList.add('active');
-        });
-    }
+    const navItem = document.getElementById('nav-' + name);
+    if (navItem) navItem.classList.add('active');
 
     const panel = document.getElementById('panel-' + name);
     if(panel) {
@@ -542,6 +618,7 @@ function showPanel(name) {
         panel.style.animation = 'fadeUp .3s ease both';
     }
 }
+window.showPanel = showPanel;
 
 /* ── Dark mode toggle sync ── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -551,6 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.checked = !isLight; // checked = dark mode active
     }
 });
+/* ── Theme Toggle ── */
 function handleThemeToggle(input) {
     const isDark = input.checked;
     const isLight = !isDark;
@@ -566,7 +644,7 @@ function handleThemeToggle(input) {
 /* ── Save handler ── */
 function saveSettings(panel) {
     if (panel !== 'general') {
-        showToast('Only General settings are functional in this demo.', 'error');
+        AJAX.notify('Only General settings are functional in this demo.', 'error');
         return;
     }
 
@@ -590,7 +668,7 @@ function saveSettings(panel) {
     })
     .then(response => response.json())
     .then(data => {
-        showToast(data.message || 'Settings saved successfully.', 'success');
+        AJAX.notify(data.message || 'Settings saved successfully.', 'success');
         if (data.message.includes('successfully')) {
             // Optional: refresh page or update UI elements like store name if changed
             // window.location.reload(); 
@@ -598,24 +676,13 @@ function saveSettings(panel) {
     })
     .catch(error => {
         console.error('Error:', error);
-        showToast('Failed to save settings. Please try again.', 'error');
+        AJAX.notify('Failed to save settings. Please try again.', 'error');
     })
     .finally(() => {
         saveBtn.disabled = false;
         saveBtn.style.opacity = '1';
         btnText.textContent = originalText;
     });
-}
-
-function showToast(msg, type = 'success') {
-    const toast = document.getElementById('toast');
-    const toastMsg = document.getElementById('toast-msg');
-    
-    toast.className = 'toast ' + type;
-    toastMsg.textContent = msg;
-    toast.classList.add('show');
-    
-    setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
 function previewLogo(input) {
@@ -642,5 +709,39 @@ function updateLogoPreview(src) {
     preview.style.display = 'block';
     if (placeholder) placeholder.style.display = 'none';
 }
+function triggerAutomation(type) {
+    const btn = document.getElementById('btn-' + type);
+    const originalContent = btn.innerHTML;
+    
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.innerHTML = `
+        <svg class="animate-spin" style="width:14px;height:14px;" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Processing...
+    `;
+
+    fetch(`/telegram-${type}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                AJAX.notify(`${type.charAt(0).toUpperCase() + type.slice(1)} sent to Telegram!`, 'success');
+            } else {
+                AJAX.notify(`Failed: ${data.output}`, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            AJAX.notify(`Automation error. Check console.`, 'error');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.innerHTML = originalContent;
+        });
+}
+window.triggerAutomation = triggerAutomation;
 </script>
 @endpush

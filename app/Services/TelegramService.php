@@ -66,6 +66,7 @@ class TelegramService
             )->post("https://api.telegram.org/bot{$this->token}/sendDocument", [
                 'chat_id' => $targetChatId,
                 'caption' => $caption,
+                'parse_mode' => 'HTML',
             ]);
 
             return $response->successful();
