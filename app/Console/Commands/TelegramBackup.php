@@ -65,15 +65,21 @@ class TelegramBackup extends Command
                 }
             }
 
-            // Fallback: Pure PHP Dumper (MySQL only for now)
-            if (!$binaryWorked && $connection === 'mysql') {
-                $this->info('Binary dump failed or not found. Using PHP fallback...');
-                $this->phpDumpMysql($path);
-                $binaryWorked = true;
+            // Fallback: Pure PHP Dumper
+            if (!$binaryWorked) {
+                if ($connection === 'mysql') {
+                    $this->info('Binary dump failed or not found. Using MySQL PHP fallback...');
+                    $this->phpDumpMysql($path);
+                    $binaryWorked = true;
+                } elseif ($connection === 'pgsql') {
+                    $this->info('Binary dump failed or not found. Using PostgreSQL PHP fallback...');
+                    $this->phpDumpPgsql($path);
+                    $binaryWorked = true;
+                }
             }
 
             if (!$binaryWorked) {
-                throw new \Exception("Backup failed: Binary not found or failed, and no fallback implemented for {$connection}");
+                throw new \Exception("Backup failed: Binary not found and no fallback implemented for {$connection}");
             }
 
             if (!file_exists($path)) {
@@ -109,7 +115,7 @@ class TelegramBackup extends Command
             $tables[] = $row[0];
         }
 
-        $sql = "-- EcommercePro PHP Backup Fallback\n";
+        $sql = "-- EcommercePro PHP Backup Fallback (MySQL)\n";
         $sql .= "-- Date: " . date('Y-m-d H:i:s') . "\n\n";
 
         foreach ($tables as $table) {
@@ -129,6 +135,41 @@ class TelegramBackup extends Command
                     }
                     if ($j < (count($row) - 1)) {
                         $sql .= ',';
+                    }
+                }
+                $sql .= ");\n";
+            }
+        }
+        file_put_contents($path, $sql);
+    }
+
+    private function phpDumpPgsql($path)
+    {
+        $db = \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $tables = [];
+        $result = $db->query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
+        while ($row = $result->fetch(\PDO::FETCH_NUM)) {
+            $tables[] = $row[0];
+        }
+
+        $sql = "-- EcommercePro PHP Backup Fallback (PostgreSQL)\n";
+        $sql .= "-- Date: " . date('Y-m-d H:i:s') . "\n\n";
+
+        foreach ($tables as $table) {
+            // Simplified CREATE TABLE script
+            $sql .= "\n\n-- Dumping data for table {$table}\n";
+            $res = $db->query("SELECT * FROM \"{$table}\"");
+            while ($row = $res->fetch(\PDO::FETCH_NUM)) {
+                $sql .= "INSERT INTO \"{$table}\" VALUES (";
+                for ($j = 0; $j < count($row); $j++) {
+                    if (!isset($row[$j])) {
+                        $sql .= 'NULL';
+                    } else {
+                        $val = str_replace(["\\", "'"], ["\\\\", "''"], $row[$j]);
+                        $sql .= "'" . $val . "'";
+                    }
+                    if ($j < (count($row) - 1)) {
+                        $sql .= ', ';
                     }
                 }
                 $sql .= ");\n";
