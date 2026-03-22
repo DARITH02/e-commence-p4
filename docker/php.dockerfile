@@ -5,7 +5,7 @@ FROM php:8.4-fpm
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip libzip-dev libjpeg-dev libfreetype6-dev \
-    nodejs npm \
+    nodejs npm mariadb-client postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions (SUPPORT BOTH MYSQL + PGSQL)
@@ -21,6 +21,9 @@ RUN pecl install redis && docker-php-ext-enable redis
 
 # Copy Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy PHP configuration
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Set working directory
 WORKDIR /var/www

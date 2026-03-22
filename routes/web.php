@@ -114,5 +114,25 @@ Route::get('/reset-db', function() {
     }
 });
 
+Route::get('/telegram-backup', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('telegram:backup');
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json(['success' => true, 'output' => $output]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+    }
+});
+
+Route::get('/telegram-report', function() {
+    try {
+         \Illuminate\Support\Facades\Artisan::call('telegram:report');
+         $output = \Illuminate\Support\Facades\Artisan::output();
+         return response()->json(['success' => true, 'output' => $output]);
+    } catch (\Exception $e) {
+         return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+    }
+});
+
 // API login fallback
 Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');

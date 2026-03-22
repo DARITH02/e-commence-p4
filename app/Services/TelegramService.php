@@ -43,4 +43,35 @@ class TelegramService
             return false;
         }
     }
+
+    public function sendDocument($filePath, $caption = '', $chatId = null)
+    {
+        $targetChatId = $chatId ?: $this->chatId;
+
+        if (!$this->token || !$targetChatId) {
+            Log::warning('Telegram credentials or chat_id not set.');
+            return false;
+        }
+
+        if (!file_exists($filePath)) {
+            Log::error("Backup file not found at: {$filePath}");
+            return false;
+        }
+
+        try {
+            $response = Http::attach(
+                'document', 
+                file_get_contents($filePath), 
+                basename($filePath)
+            )->post("https://api.telegram.org/bot{$this->token}/sendDocument", [
+                'chat_id' => $targetChatId,
+                'caption' => $caption,
+            ]);
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            Log::error('Telegram document send error: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
