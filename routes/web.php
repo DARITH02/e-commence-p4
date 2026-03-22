@@ -126,11 +126,21 @@ Route::get('/telegram-backup', function() {
 
 Route::get('/telegram-report', function() {
     try {
-         \Illuminate\Support\Facades\Artisan::call('telegram:report');
-         $output = \Illuminate\Support\Facades\Artisan::output();
-         return response()->json(['success' => true, 'output' => $output]);
+        \Illuminate\Support\Facades\Artisan::call('telegram:report');
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json(['success' => true, 'output' => $output]);
     } catch (\Exception $e) {
-         return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        return response()->json(['success' => false, 'output' => $e->getMessage()], 200);
+    }
+});
+
+Route::get('/telegram-webhook', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('telegram:webhook');
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json(['success' => true, 'output' => $output]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'output' => $e->getMessage()], 200);
     }
 });
 
