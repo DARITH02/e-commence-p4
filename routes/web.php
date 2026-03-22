@@ -90,5 +90,29 @@ Route::get('/telegram-setup', function() {
     }
 });
 
+Route::get('/view-logs', function() {
+    $path = storage_path('logs/laravel.log');
+    if (!file_exists($path)) return response()->json(['message' => 'No logs yet.']);
+    
+    $content = file_get_contents($path);
+    // Get last 2000 characters
+    if (strlen($content) > 2000) {
+        $content = substr($content, -2000);
+    }
+    
+    return response($content, 200)->header('Content-Type', 'text/plain');
+});
+
+Route::get('/reset-db', function() {
+    try {
+        // Warning: This deletes everything!
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json(['success' => true, 'message' => 'Database reset and seeded!', 'output' => $output]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+});
+
 // API login fallback
 Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
