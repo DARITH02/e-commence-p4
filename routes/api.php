@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BrandController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\SystemController;
+use App\Http\Controllers\API\TelegramWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,7 @@ use App\Http\Controllers\API\SystemController;
 
 // 1. Health & Status
 Route::get('/status', [SystemController::class, 'status']);
+Route::post('/telegram/webhook', [TelegramWebhookController::class, 'handle']);
 Route::get('/force-clear-cache', function () {
     \Illuminate\Support\Facades\Cache::increment('product_cache_version');
     \Illuminate\Support\Facades\Cache::forget('products_all');

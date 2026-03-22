@@ -27,6 +27,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
         Route::post('/categories/{id}/restore', [\App\Http\Controllers\Admin\CategoryController::class, 'restore'])->name('admin.categories.restore');
+        Route::delete('/categories/image/{image}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroyImage'])->name('admin.categories.image.destroy');
 
 
         // Products
@@ -48,6 +49,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin.orders');
         Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('admin.orders.show');
         Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.orders.status');
+        Route::post('/orders/{order}/telegram', [\App\Http\Controllers\Admin\OrderController::class, 'sendTelegramMessage'])->name('admin.orders.telegram');
 
         // Customers
         Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customers');
@@ -65,7 +67,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// Diagnostics & Force Migration (Temporary Public)
+// Diagnostics & Setup (Temporary Public for Render Free)
 Route::get('/force-migrate', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate:status');
@@ -73,6 +75,16 @@ Route::get('/force-migrate', function() {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         $migrate = \Illuminate\Support\Facades\Artisan::output();
         return response()->json(['success' => true, 'status' => $status, 'migrate' => $migrate]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+    }
+});
+
+Route::get('/telegram-setup', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('telegram:setup');
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json(['success' => true, 'output' => $output]);
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
     }

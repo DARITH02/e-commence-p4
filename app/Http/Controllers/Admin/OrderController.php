@@ -30,7 +30,12 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order->load(['user', 'items.product.images']);
-        $order->created_at_formatted = $order->created_at->format('d M Y, H:i');
+        $formattedDate = $order->created_at->translatedFormat('d M Y, H:i');
+        if (app()->getLocale() === 'km') {
+            $khmerDigits = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
+            $formattedDate = str_replace(range(0, 9), $khmerDigits, $formattedDate);
+        }
+        $order->created_at_formatted = $formattedDate;
         
         $order->order_items = $order->items->map(function ($item) {
             return [
@@ -51,11 +56,41 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|in:pending,processing,shipped,completed,cancelled'
+            'status' => 'required|in:pending,processing,shipped,completed,cancelled',
+            'message' => 'nullable|string|max:1000'
         ]);
 
+        $oldStatus = $order->status;
         $order->update(['status' => $request->status]);
 
+        // Send Notification
+        $notifiable = $order->user ?? $order;
+        if ($notifiable->telegram_chat_id) {
+            $notifiable->notify(new \App\Notifications\OrderStatusUpdated($order, $oldStatus, $request->message));
+        }
+
         return response()->json(['message' => __('admin.status_updated') ?? 'Status completely updated']);
+    }
+
+    public function sendTelegramMessage(Request $request, Order $order)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000'
+        ]);
+
+        $notifiable = $order->user ?? $order;
+
+        if (!$notifiable->telegram_chat_id) {
+            return response()->json(['message' => 'Customer has not linked Telegram.'], 422);
+        }
+
+        $service = new \App\Services\TelegramService();
+        $ok = $service->sendMessage($request->message, $notifiable->telegram_chat_id);
+
+        if ($ok) {
+            return response()->json(['message' => 'Message sent successfully!']);
+        }
+
+        return response()->json(['message' => 'Failed to send message.'], 500);
     }
 }

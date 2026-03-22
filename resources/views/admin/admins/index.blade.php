@@ -140,7 +140,7 @@
                         </span>
                         @endforeach
                     </td>
-                    <td>{{ $admin->created_at->format('M d, Y') }}</td>
+                    <td>@km($admin->created_at->translatedFormat('M d, Y'))</td>
                     <td style="text-align: right;">
                         <div class="actions" style="justify-content: flex-end;">
                             <button class="btn-icon" onclick="editAdmin({{ json_encode($admin) }}, {{ json_encode($admin->roles->pluck('slug')) }})">

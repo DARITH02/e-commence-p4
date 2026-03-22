@@ -15,6 +15,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
+            'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'nullable|in:customer,admin,super',
             'super_admin_key' => 'required_if:role,super'
@@ -32,6 +33,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
 
@@ -56,6 +58,8 @@ class AuthController extends Controller
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
+                'phone' => $user->phone,
+                'telegram_chat_id' => $user->telegram_chat_id,
                 'role' => $roleSlug
             ]
         ], 201);
@@ -99,7 +103,9 @@ class AuthController extends Controller
             'role' => $roleSlug,
             'user' => [
                 'name' => $user->name,
-                'email' => $user->email
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'telegram_chat_id' => $user->telegram_chat_id,
             ]
         ]);
     }
@@ -122,6 +128,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,'.$user->id,
+            'phone' => 'sometimes|string|max:20',
             'password' => 'sometimes|string|min:8|confirmed'
         ]);
 

@@ -16,18 +16,21 @@ class TelegramService
         $this->chatId = config('services.telegram.chat_id');
     }
 
-    public function sendMessage($message)
+    public function sendMessage($message, $chatId = null)
     {
-        if (!$this->token || !$this->chatId) {
-            Log::warning('Telegram credentials not set.');
+        $targetChatId = $chatId ?: $this->chatId;
+
+        if (!$this->token || !$targetChatId) {
+            Log::warning('Telegram credentials or chat_id not set.');
             return false;
         }
 
         try {
             $response = Http::post("https://api.telegram.org/bot{$this->token}/sendMessage", [
-                'chat_id' => $this->chatId,
+                'chat_id' => $targetChatId,
                 'text' => $message,
                 'parse_mode' => 'HTML',
+                'disable_web_page_preview' => true,
             ]);
 
             if (!$response->successful()) {

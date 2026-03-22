@@ -206,7 +206,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
             </div>
             <div class="kpi-body">
                 <div class="kpi-label">@lang('admin.total_revenue')</div>
-                <div class="kpi-val">${{ number_format($totalRevenue, 0) }}</div>
+                <div class="kpi-val">$@km(number_format($totalRevenue, 0))</div>
                 <div class="kpi-sub">@lang('admin.vs_previous_period')</div>
             </div>
             <div class="kpi-spark-wrap">
@@ -228,7 +228,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
             </div>
             <div class="kpi-body">
                 <div class="kpi-label">@lang('admin.total_orders')</div>
-                <div class="kpi-val">{{ number_format($ordersCount) }}</div>
+                <div class="kpi-val">@km(number_format($ordersCount))</div>
                 <div class="kpi-sub">@lang('admin.orders_placed')</div>
             </div>
             <div class="kpi-spark-wrap">
@@ -251,7 +251,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
             </div>
             <div class="kpi-body">
                 <div class="kpi-label">@lang('admin.customers')</div>
-                <div class="kpi-val">{{ number_format($customersCount) }}</div>
+                <div class="kpi-val">@km(number_format($customersCount))</div>
                 <div class="kpi-sub">@lang('admin.registered_accounts')</div>
             </div>
             <div class="kpi-spark-wrap">
@@ -356,10 +356,10 @@ tr:hover td { background: rgba(255,255,255,0.015); }
                                     <span class="s-pill {{ $sc }}">@lang('admin.status_' . $order->status)</span>
                                 </td>
                                 <td>
-                                    <div class="order-ts">{{ $order->created_at->format('d M Y') }}</div>
-                                    <div class="order-ts2">{{ $order->created_at->format('H:i') }}</div>
+                                    <div class="order-ts">@km($order->created_at->translatedFormat('d M Y'))</div>
+                                    <div class="order-ts2">@km($order->created_at->format('H:i'))</div>
                                 </td>
-                                <td><span class="order-amt">${{ number_format($order->total_amount, 2) }}</span></td>
+                                <td><span class="order-amt">$@km(number_format($order->total_amount, 2))</span></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -459,7 +459,7 @@ tr:hover td { background: rgba(255,255,255,0.015); }
                         <div style="min-width:0">
                             <div class="act-user">{{ $act->user->name }}</div>
                             <div class="act-desc">{{ $act->description }}</div>
-                            <div class="act-time">{{ $act->created_at->diffForHumans() }}</div>
+                            <div class="act-time">@km($act->created_at->diffForHumans())</div>
                         </div>
                     </div>
                     @endforeach

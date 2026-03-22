@@ -19,7 +19,11 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         if (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
+            $locale = Session::get('locale');
+            App::setLocale($locale);
+            \Carbon\Carbon::setLocale($locale);
+        } else {
+            \Carbon\Carbon::setLocale(App::getLocale());
         }
 
         return $next($request);

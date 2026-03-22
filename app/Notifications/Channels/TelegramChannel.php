@@ -21,6 +21,8 @@ class TelegramChannel
         }
 
         $message = $notification->toTelegram($notifiable);
-        $this->telegram->sendMessage($message);
+        $chatId = $notifiable->telegram_chat_id ?? null; // For users or models that have this field
+        
+        $this->telegram->sendMessage($message, $chatId);
     }
 }

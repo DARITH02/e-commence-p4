@@ -88,64 +88,79 @@ body { background: var(--bg) !important; font-family: 'DM Sans', sans-serif; }
 .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); filter: brightness(1.05); }
 
 /* ─── Table ─── */
-.table-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow); overflow:hidden; }
+.table-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow);overflow-x: scroll; }
 table { width: 100%; border-collapse: collapse; text-align: left; }
 thead th {
     padding:14px 20px; font-family:'DM Mono', monospace; font-size:10px; text-transform:uppercase;
     letter-spacing:0.12em; color:var(--text-3); font-weight:800; background:var(--surface-2);
     border-bottom:1px solid var(--border);
 }
-tbody tr { border-bottom:1px solid var(--border); transition:background var(--transition); }
-tbody tr:hover { background:var(--surface-2); }
-tbody td { padding:14px 20px; vertical-align:middle; }
+tbody tr { border-bottom:1px solid var(--border); transition:background 0.2s ease; }
+tbody tr:hover { background:var(--bg-light); }
+tbody td { padding:16px 20px; vertical-align:middle; }
 
-/* Hierarchy Indicator */
-.cat-identity { display:flex; align-items:center; gap:14px; }
-.indent-1 { padding-left: 36px; border-left: 2px solid var(--border); margin-left: 20px; }
+.cat-identity { 
+    display:flex; align-items:center; gap:12px; position: relative; 
+    min-height: 42px;
+}
 .tree-line {
-    display: flex; align-items: center; justify-content: center; width: 24px; height: 2px; background: var(--border); position: relative; left: -14px;
+    position: absolute; left: -16px; top: 50%; width: 12px; height: 28px;
+    border-left: 2px solid var(--border); border-bottom: 2px solid var(--border);
+    border-bottom-left-radius: 6px; transform: translateY(-100%);
 }
 
 .cat-avatar {
-    width:40px; height:40px; border-radius:12px; background:var(--accent-dim); border:1px solid var(--accent-mid);
+    width:36px; height:36px; border-radius:10px; background:var(--surface-2); border:1px solid var(--border);
     display:flex; align-items:center; justify-content:center; font-family:'DM Mono', monospace;
     font-size:14px; font-weight:850; color:var(--accent); flex-shrink:0; text-transform:uppercase;
+    box-shadow: var(--shadow-sm); overflow: hidden; transition: all 0.2s;
 }
-.cat-name   { font-size:14.5px; font-weight:850; color:var(--text); line-height:1.1; white-space:nowrap; }
-.cat-id-label { font-family:'DM Mono', monospace; font-size:10px; color:var(--text-3); margin-top: 3px; }
+.cat-avatar:hover { transform: scale(1.05); border-color: var(--accent-mid); }
+.cat-name   { font-size:14px; font-weight:800; color:var(--text); line-height:1.2; white-space:nowrap; letter-spacing: -0.01em; }
+.cat-id-label { font-family:'DM Mono', monospace; font-size:9.5px; color:var(--text-3); margin-top: 2px; font-weight: 700; }
 
 .slug-pill { font-family:'DM Mono', monospace; font-size:11px; color:var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border); }
 
 .parent-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
+    gap: 4px;
+    padding: 3px 10px;
     background: var(--surface-2); 
     border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 11.5px;
-    font-weight: 750;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
     color: var(--text-2);
-    box-shadow: var(--shadow-sm);
     transition: all 0.2s;
+    white-space: nowrap;
 }
-.parent-badge:hover { background: var(--surface-3); border-color: var(--border-2); transform: translateX(2px); }
-.parent-badge svg { width: 10px; height: 10px; color: var(--accent); opacity: 0.8; }
+.parent-badge:hover { background: var(--surface-3); border-color: var(--border-2); transform: translateY(-1px); }
+.parent-badge svg { width: 9px; height: 9px; color: var(--accent); flex-shrink: 0; }
 
 .root-label { 
-    font-size: 10px; font-weight: 850; color: var(--text-3); 
+    font-size: 9px; font-weight: 800; color: var(--text-3); 
     text-transform: uppercase; letter-spacing: 0.05em; 
     background: var(--surface-2); border: 1px dashed var(--border); 
-    padding: 3px 10px; border-radius: 6px; 
+    padding: 2px 8px; border-radius: 4px; 
 }
 
-.count-badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; color: var(--text-2); font-size: 13.5px; }
-.count-badge span { font-size: 10px; font-weight: 750; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.count-badges { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.count-badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    font-size: 12px; font-weight: 800; color: var(--text-2); transition: all 0.2s;
+    white-space: nowrap;
+}
+.count-badge:hover { background: var(--surface-3); border-color: var(--border-2); }
+.count-badge svg { width: 12px; height: 12px; color: var(--text-3); }
+.count-badge span { font-size: 9px; font-weight: 750; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
 
-.status-badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:750; padding:5px 12px; border-radius:100px; border:1px solid; white-space:nowrap; }
+.status-badge { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:800; padding:6px 14px; border-radius:100px; border:1px solid; white-space:nowrap; text-transform: uppercase; letter-spacing: 0.02em; }
 .status-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
 .status-active   { background:var(--green-dim); color:var(--green); border-color:rgba(34,201,122,0.2); }
+.status-active::before { animation: blink 2s infinite; }
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 .status-inactive { background:var(--surface-3); color:var(--text-3); border-color:var(--border); }
 
 /* ═══════════════════════════════════════════
@@ -463,6 +478,35 @@ tbody td { padding:14px 20px; vertical-align:middle; }
     .pagination-wrap { flex-direction: column; align-items: center; gap: 12px; }
     .pagination-info { display: none; }
 }
+.gallery-url-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+.gallery-url-row {
+    display: flex;
+    gap: 8px;
+}
+.gallery-url-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-light);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: none;
+}
+.gallery-url-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 </style>
 @endpush
 
@@ -475,7 +519,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             <h1>{{ __('admin.categories') }}</h1>
             <p>
                 <span class="live-dot"></span>
-                <span>{{ $totalCount }} {{ __('admin.total_categories') }}</span>
+                <span>@km($totalCount) {{ __('admin.total_categories') }}</span>
             </p>
         </div>
     </div>
@@ -486,32 +530,32 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             <div class="stat-ico blue">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.total')</div><div class="stat-val">{{ number_format($totalCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.total')</div><div class="stat-val">@km(number_format($totalCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico green">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.active')</div><div class="stat-val">{{ number_format($activeCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.active')</div><div class="stat-val">@km(number_format($activeCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico purple">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.root_levels')</div><div class="stat-val">{{ number_format($rootCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.root_levels')</div><div class="stat-val">@km(number_format($rootCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico red">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.inactive')</div><div class="stat-val">{{ number_format($inactiveCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.inactive')</div><div class="stat-val">@km(number_format($inactiveCount))</div></div>
         </div>
         @if(Auth::user()->isSuperAdmin())
         <div class="stat-card">
             <div class="stat-ico red" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.deleted')</div><div class="stat-val">{{ number_format($deletedCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.deleted')</div><div class="stat-val">@km(number_format($deletedCount))</div></div>
         </div>
         @endif
     </div>
@@ -556,35 +600,36 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 32%">@lang('admin.category')</th>
-                        <th style="width: 18%">@lang('admin.slug')</th>
-                        <th style="width: 16%">@lang('admin.parent_category')</th>
-                        <th style="width: 12%">@lang('admin.products')</th>
+                        <th style="width: 22%">@lang('admin.category')</th>
+                        <th style="width: 12%">@lang('admin.slug')</th>
+                        <th style="width: 28%">@lang('admin.parent_category')</th>
+                        <th style="width: 18%">@lang('admin.products') & @lang('admin.cat_subs')</th>
                         <th style="width: 10%">@lang('admin.status')</th>
-                        <th style="text-align:right; width: 12%">@lang('admin.actions')</th>
+                        <th style="text-align:right; width: 10%">@lang('admin.actions')</th>
                     </tr>
                 </thead>
                 <tbody id="cats-tbody">
                     @forelse($categories as $category)
                     <tr id="cat-row-{{ $category->id }}"
                         data-status="{{ $category->trashed() ? 'deleted' : ($category->is_active ? 'active' : 'inactive') }}"
-                        data-level="{{ $category->parent_id ? 'child' : 'root' }}"
+                        data-level="{{ $category->parents->isNotEmpty() ? 'child' : 'root' }}"
                         @if($category->trashed()) style="opacity: 0.6; background: var(--surface-2);" @endif>
                         <td>
-                            <div class="cat-identity {{ $category->parent_id ? 'indent-1' : '' }}">
-                                @if($category->parent_id)
+                            <div class="cat-identity" style="padding-left: {{ $category->depth * 22 }}px">
+                                @if($category->parents->isNotEmpty())
                                     <div class="tree-line"></div>
                                 @endif
                                 <div class="cat-avatar">
-                                    @if($category->image_url)
-                                        <img src="{{ $category->image_url }}" alt="{{ $category->name }}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">
+                                    @php $primaryImg = $category->image_url; @endphp
+                                    @if($primaryImg)
+                                        <img src="{{ $primaryImg }}" alt="{{ $category->name }}" style="width:100%; height:100%; object-fit:cover;">
                                     @else
                                         {{ substr($category->name, 0, 1) }}
                                     @endif
                                 </div>
                                 <div style="min-width:0">
                                     <div class="cat-name">{{ $category->name }}</div>
-                                    <div class="cat-id-label">#{{ $category->id }}</div>
+                                    <div class="cat-id-label">ID #{{ $category->id }}</div>
                                 </div>
                             </div>
                         </td>
@@ -592,21 +637,35 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                             <span class="slug-pill">{{ $category->slug }}</span>
                         </td>
                         <td>
-                            @if($category->parent)
-                                <div class="parent-badge">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                                    </svg>
-                                    {{ $category->parent->name }}
+                            @if($category->parents && $category->parents->isNotEmpty())
+                                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                    @foreach($category->parents as $p)
+                                        @if($p)
+                                            <div class="parent-badge" title="{{ $p->full_path ?? '' }}">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                                </svg>
+                                                {{ $p->name }}
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
                             @else
                                 <span class="root-label">@lang('admin.root')</span>
                             @endif
                         </td>
                         <td>
-                            <div class="count-badge">
-                                {{ $category->products_count }}
-                                <span>@lang('admin.items')</span>
+                            <div class="count-badges">
+                                <div class="count-badge" title="@lang('admin.products')">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                    @km($category->products_count)
+                                    <span>@lang('admin.cat_items')</span>
+                                </div>
+                                <div class="count-badge" title="@lang('admin.subcategories')">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                                    @km($category->children_count)
+                                    <span>@lang('admin.cat_subs')</span>
+                                </div>
                             </div>
                         </td>
                         <td>
@@ -638,7 +697,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                                 @elseif(Auth::user()->isSuperAdmin())
                                     {{-- Edit button with label --}}
                                     <button class="btn-action-edit edit-cat-btn"
-                                            data-id="{{ $category->id }}"
+                                            data-id="{{ $category->id }}" data-children="@km($category->children_count)"
                                             title="{{ __('admin.edit') }}">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
@@ -650,7 +709,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 
                                     {{-- Delete icon button --}}
                                     <button class="btn-action-del delete-cat-btn"
-                                            data-id="{{ $category->id }}"
+                                            data-id="{{ $category->id }}" data-children="@km($category->children_count)"
                                             data-name="{{ $category->name }}"
                                             title="{{ __('admin.delete') }}">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -660,7 +719,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                                 @else
                                     {{-- View-only button --}}
                                     <button class="btn-action-view edit-cat-btn"
-                                            data-id="{{ $category->id }}"
+                                            data-id="{{ $category->id }}" data-children="@km($category->children_count)"
                                             title="{{ __('admin.view_details') }}">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -698,7 +757,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                 {{ __('admin.showing') }}
                 <strong>{{ $categories->firstItem() }}–{{ $categories->lastItem() }}</strong>
                 {{ __('admin.of') }}
-                <strong>{{ $categories->total() }}</strong>
+                <strong>@km($categories->total())</strong>
                 {{ __('admin.results') }}
             </div>
             <div class="pagination-nav">
@@ -735,6 +794,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 
         <div class="modal-tabs">
             <button class="modal-tab active" onclick="switchTab(this,'tab-general')">@lang('admin.general_info')</button>
+            <button class="modal-tab" id="tab-gallery-btn" onclick="switchTab(this,'tab-gallery')">@lang('admin.gallery')</button>
         </div>
 
         <div class="modal-body active" id="tab-general">
@@ -754,13 +814,13 @@ tbody td { padding:14px 20px; vertical-align:middle; }
 
                 <div class="form-row single">
                     <div class="field">
-                        <label>{{ __('admin.parent_category') }}</label>
-                        <select id="f-parent">
-                            <option value="">— {{ __('admin.root_category') }} —</option>
+                        <label>{{ __('admin.parent_category') }} ({{ __('admin.multiple_allowed') }})</label>
+                        <select id="f-parent" multiple style="height: 120px;">
                             @foreach($parentCategories as $parent)
-                                <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                                <option value="{{ $parent->id }}">{{ $parent->displayName ?? $parent->name }}</option>
                             @endforeach
                         </select>
+                        <div style="font-size: 11px; color: var(--text-3); margin-top: 4px;">Hold Ctrl (Cmd) to select multiple</div>
                     </div>
                 </div>
 
@@ -774,14 +834,24 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                 <div class="form-row single">
                     <div class="field">
                         <label>Image URL (Optional)</label>
-                        <input type="text" id="f-image-url" placeholder="https://example.com/category.webp">
+                        <input type="text" id="f-image-url" placeholder="https://example.com/category.webp" oninput="previewPrimaryUrl(this)">
                     </div>
                 </div>
 
                 <div class="form-row single">
                     <div class="field">
                         <label>{{ __('admin.image') }} (Upload)</label>
-                        <input type="file" id="f-image" accept="image/*">
+                        <input type="file" id="f-image" accept="image/*" onchange="previewPrimaryImage(this)">
+                    </div>
+                </div>
+
+                <div id="primary-image-preview" style="margin-bottom:20px; display:none;">
+                    <label style="display:block; margin-bottom:8px; font-size:13px; font-weight:500; color:var(--text-muted);">{{ __('admin.preview') }}</label>
+                    <div style="width:120px; height:120px; border-radius:12px; overflow:hidden; border:2px solid var(--border); position:relative; background:var(--bg-light);">
+                        <img id="p-img-tag" src="" style="width:100%; height:100%; object-fit:cover;">
+                        <button type="button" onclick="clearPrimaryPreview()" style="position:absolute; top:4px; right:4px; background:var(--red); color:#fff; border:none; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px;"><path d="M6 18L18 6M6 6l12 12" stroke-width="3" stroke-linecap="round"/></svg>
+                        </button>
                     </div>
                 </div>
 
@@ -798,6 +868,45 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                     </div>
                 </div>
             </form>
+        </div>
+
+        <div class="modal-body" id="tab-gallery">
+            <div class="field" style="margin-bottom:20px;">
+                <label>@lang('admin.image_gallery')</label>
+                <div id="gallery-previews" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:12px; margin-top:10px;">
+                    <!-- Existing images will appear here -->
+                </div>
+            </div>
+
+            <div class="form-row single">
+                <div class="field">
+                    <label>@lang('admin.add_gallery_images')</label>
+                    <input type="file" id="f-gallery-images" multiple accept="image/*">
+                </div>
+            </div>
+
+            <div class="form-row single">
+                <div class="field">
+                    <label>@lang('admin.add_image_urls')</label>
+                    <div id="url-inputs">
+                        <div class="gallery-url-item">
+                            <div class="gallery-url-row">
+                                <input type="text" class="gallery-url-input" placeholder="https://example.com/image.webp" oninput="previewGalleryUrl(this)">
+                                <button class="btn-action-del" onclick="this.closest('.gallery-url-item').remove()" type="button">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+                            <div class="gallery-url-preview">
+                                <img src="" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-action-edit" onclick="addUrlInput()" type="button" style="width:fit-content; margin-top:4px;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;"><path d="M12 4v16m8-8H4" stroke-width="3" stroke-linecap="round"/></svg>
+                        @lang('admin.add_url')
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="modal-foot">
@@ -882,15 +991,96 @@ function openModal(mode, data = null) {
     document.getElementById('f-id').value = '';
     document.getElementById('slug-preview').textContent = '—';
 
+    // Reset Gallery
+    document.getElementById('gallery-previews').innerHTML = '';
+    document.getElementById('f-gallery-images').value = '';
+    
+    // Reset Primary Preview
+    clearPrimaryPreview();
+
+    // Re-show all parents (reset circularity guard)
+    Array.from(document.getElementById('f-parent').options).forEach(opt => {
+        opt.style.display = 'block';
+        opt.disabled = false;
+    });
+
+    document.getElementById('url-inputs').innerHTML = `
+        <div class="gallery-url-item">
+            <div class="gallery-url-row">
+                <input type="text" class="gallery-url-input" placeholder="https://example.com/image.webp" oninput="previewGalleryUrl(this)">
+                <button class="btn-action-del" onclick="this.closest('.gallery-url-item').remove()" type="button">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+            <div class="gallery-url-preview">
+                <img src="" alt="Preview">
+            </div>
+        </div>
+    `;
+
+    document.getElementById('tab-gallery-btn').style.display = isEditing ? 'block' : 'none';
+
     if (isEditing && data) {
         document.getElementById('f-id').value       = data ? data.id : '';
         document.getElementById('f-name').value     = data ? data.name : '';
-        document.getElementById('f-parent').value   = data ? (data.parent_id || '') : '';
+        
+        // Populate multiple parents and hide self to prevent circularity
+        const parentSelect = document.getElementById('f-parent');
+        const parentIds = data.parents ? data.parents.map(p => p.id) : [];
+        Array.from(parentSelect.options).forEach(option => {
+            if (parseInt(option.value) === data.id) {
+                option.style.display = 'none';
+                option.disabled = true;
+                option.selected = false;
+            } else {
+                option.style.display = 'block';
+                option.disabled = false;
+                option.selected = parentIds.includes(parseInt(option.value));
+            }
+        });
+
         document.getElementById('f-desc').value     = data ? (data.description || '') : '';
         document.getElementById('f-active').checked = data ? !!data.is_active : true;
         document.getElementById('f-image').value    = '';
-        document.getElementById('f-image-url').value = (data && data.image && data.image.startsWith('http')) ? data.image : '';
         
+        const imgUrl = (data && data.image && data.image.startsWith('http')) ? data.image : '';
+        document.getElementById('f-image-url').value = imgUrl;
+
+        // Populate Primary Preview
+        if (data && data.image) {
+            const preview = document.getElementById('primary-image-preview');
+            const imgTag = document.getElementById('p-img-tag');
+            
+            let fullUrl = data.image;
+            if (!data.image.startsWith('http')) {
+                const cloudName = '{{ env("CLOUDINARY_CLOUD_NAME", "dnrblpkal") }}';
+                const version = '{{ config("cloudinary.asset_version", "v1773906173") }}';
+                fullUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${version}/${data.image}`;
+            }
+            
+            imgTag.src = fullUrl;
+            preview.style.display = 'block';
+        }
+        
+        // Populate Gallery
+        if (data.images && data.images.length > 0) {
+            data.images.forEach(img => {
+                const div = document.createElement('div');
+                div.style.position = 'relative';
+                div.innerHTML = `
+                    <div style="width:100px; height:100px; border-radius:10px; overflow:hidden; border:1px solid var(--border);">
+                        <img src="${img.image_url}" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <button onclick="removeCategoryImage(this, ${img.id})" 
+                            style="position:absolute; top:-8px; right:-8px; background:var(--red); color:#fff; border:none; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                            type="button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px;"><path d="M6 18L18 6M6 6l12 12" stroke-width="3" stroke-linecap="round"/></svg>
+                    </button>
+                `;
+                document.getElementById('gallery-previews').appendChild(div);
+            });
+        }
+
         // Update slug preview
         document.getElementById('slug-preview').textContent = data.slug || slugify(data.name);
     }
@@ -898,6 +1088,86 @@ function openModal(mode, data = null) {
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('f-name').focus(), 230);
+}
+
+function addUrlInput() {
+    const div = document.createElement('div');
+    div.className = 'gallery-url-item';
+    div.innerHTML = `
+        <div class="gallery-url-row">
+            <input type="text" class="gallery-url-input" placeholder="https://example.com/image.webp" oninput="previewGalleryUrl(this)">
+            <button class="btn-action-del" onclick="this.closest('.gallery-url-item').remove()" type="button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+        <div class="gallery-url-preview">
+            <img src="" alt="Preview">
+        </div>
+    `;
+    document.getElementById('url-inputs').appendChild(div);
+}
+
+function previewGalleryUrl(input) {
+    const val = input.value.trim();
+    const previewDiv = input.closest('.gallery-url-item').querySelector('.gallery-url-preview');
+    const imgTag = previewDiv.querySelector('img');
+    
+    if (val && val.startsWith('http')) {
+        imgTag.src = val;
+        previewDiv.style.display = 'block';
+    } else {
+        previewDiv.style.display = 'none';
+        imgTag.src = '';
+    }
+}
+
+async function removeCategoryImage(btn, imageId) {
+    if (!confirm('{{ __("admin.confirm_delete_image") }}')) return;
+    try {
+        const res = await fetch(`/admin/categories/image/${imageId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        btn.parentElement.remove();
+        showToast(data.message, 'success');
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
+}
+
+function previewPrimaryImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('p-img-tag').src = e.target.result;
+            document.getElementById('primary-image-preview').style.display = 'block';
+            document.getElementById('f-image-url').value = ''; // Clear URL if file is chosen
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function previewPrimaryUrl(input) {
+    const val = input.value.trim();
+    if (val && val.startsWith('http')) {
+        document.getElementById('p-img-tag').src = val;
+        document.getElementById('primary-image-preview').style.display = 'block';
+        document.getElementById('f-image').value = ''; // Clear file if URL is entered
+    } else if (!val) {
+        document.getElementById('primary-image-preview').style.display = 'none';
+    }
+}
+
+function clearPrimaryPreview() {
+    document.getElementById('primary-image-preview').style.display = 'none';
+    document.getElementById('p-img-tag').src = '';
+    document.getElementById('f-image').value = '';
+    document.getElementById('f-image-url').value = '';
 }
 
 function switchTab(btn, tabId) {
@@ -958,7 +1228,13 @@ async function saveCategory() {
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('parent_id', document.getElementById('f-parent').value || '');
+    
+    // Collect multiple parents
+    const parentSelect = document.getElementById('f-parent');
+    Array.from(parentSelect.selectedOptions).forEach(option => {
+        formData.append('parent_id[]', option.value);
+    });
+
     formData.append('description', document.getElementById('f-desc').value);
     formData.append('is_active', document.getElementById('f-active').checked ? '1' : '0');
 
@@ -970,6 +1246,20 @@ async function saveCategory() {
     } else if (imageUrl) {
         formData.append('image', imageUrl);
     }
+
+    // Handle Gallery Images
+    const galleryFiles = document.getElementById('f-gallery-images').files;
+    for (let i = 0; i < galleryFiles.length; i++) {
+        formData.append('images[]', galleryFiles[i]);
+    }
+
+    // Handle Gallery URLs
+    const galleryUrls = document.querySelectorAll('.gallery-url-input');
+    galleryUrls.forEach(input => {
+        if (input.value.trim()) {
+            formData.append('image_urls[]', input.value.trim());
+        }
+    });
 
     if (isEditing) {
         formData.append('_method', 'PUT');
@@ -1004,6 +1294,14 @@ async function saveCategory() {
 }
 
 function promptDelete(id, name) {
+    const btn = document.querySelector(`.delete-cat-btn[data-id="${id}"]`);
+    const childrenCount = parseInt(btn.dataset.children || '0');
+
+    if (childrenCount > 0) {
+        showToast('{{ __("admin.cannot_delete_has_children") }}', 'error');
+        return;
+    }
+
     deleteTarget = id;
     document.getElementById('del-msg').textContent =
         `{{ __("admin.delete_confirm_prefix") }} "${name}" {{ __("admin.delete_confirm_suffix") }}`;

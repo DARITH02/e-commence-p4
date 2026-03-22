@@ -25,7 +25,7 @@ class OrderController extends Controller
     {
         $order = $request->user()->orders()
             ->where('order_number', $order_number)
-            ->with(['items.product.images', 'shippingAddress'])
+            ->with(['items.product.images', 'shippingAddress', 'user'])
             ->firstOrFail();
             
         return response()->json($order);
@@ -33,6 +33,15 @@ class OrderController extends Controller
 
     public function checkout(Request $request)
     {
+        $request->validate([
+            'total_amount' => 'required|numeric',
+            'payment_method' => 'required|string',
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric'
+        ]);
+
         try {
             DB::beginTransaction();
             $user = $request->user();
@@ -54,6 +63,7 @@ class OrderController extends Controller
                           'product_id' => $item['id'],
                           'quantity' => $item['quantity'],
                           'price' => $item['price'],
+                          'total_price' => $item['quantity'] * $item['price'],
                      ]);
                 }
             }

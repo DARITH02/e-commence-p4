@@ -512,7 +512,7 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
             <h1>@lang('admin.products')</h1>
             <p>
                 <span class="live-dot"></span>
-                {{ $products->total() }} @lang('admin.total_products')
+                @km($products->total()) @lang('admin.total_products')
             </p>
         </div>
         <div class="page-header-right">
@@ -537,25 +537,25 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
             <div class="stat-ico blue">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.total')</div><div class="stat-val">{{ number_format($totalCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.total')</div><div class="stat-val">@km(number_format($totalCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico green">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.active')</div><div class="stat-val">{{ number_format($activeCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.active')</div><div class="stat-val">@km(number_format($activeCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico amber">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.out_of_stock')</div><div class="stat-val">{{ number_format($lowStockCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.out_of_stock')</div><div class="stat-val">@km(number_format($lowStockCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico red">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.inactive')</div><div class="stat-val">{{ number_format($inactiveCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.inactive')</div><div class="stat-val">@km(number_format($inactiveCount))</div></div>
         </div>
     </div>
 
@@ -648,10 +648,10 @@ tbody td { padding: 14px 20px; vertical-align: middle; }
 
                         <td>
                             @if($product->sale_price && $product->sale_price < $product->price)
-                                <div class="price-was">${{ number_format($product->price, 2) }}</div>
-                                <div class="price-sale">${{ number_format($product->sale_price, 2) }}</div>
+                                <div class="price-was">$@km(number_format($product->price, 2))</div>
+                                <div class="price-sale">$@km(number_format($product->sale_price, 2))</div>
                             @else
-                                <div class="price-main">${{ number_format($product->price, 2) }}</div>
+                                <div class="price-main">$@km(number_format($product->price, 2))</div>
                             @endif
                         </td>
 

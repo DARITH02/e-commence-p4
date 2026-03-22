@@ -14,7 +14,6 @@ class Category extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'parent_id',
         'name',
         'slug',
         'description',
@@ -26,7 +25,42 @@ class Category extends Model
         'is_active' => 'boolean',
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'full_path', 'depth'];
+
+    public function getDepthAttribute()
+    {
+        $depth = 0;
+        $curr = $this;
+        $visited = [$this->id];
+        
+        // Take the first parent as the primary path for depth
+        $parent = $curr->parents()->first();
+        while ($parent && $depth < 10) {
+            if (in_array($parent->id, $visited)) break;
+            $visited[] = $parent->id;
+            $depth++;
+            $parent = $parent->parents()->first();
+        }
+        return $depth;
+    }
+
+    public function getFullPathAttribute()
+    {
+        $path = $this->name;
+        $parent = $this->parents()->first();
+        $depth = 0;
+        $visited = [$this->id];
+        
+        while ($parent && $depth < 5) {
+            if (in_array($parent->id, $visited)) break;
+            $visited[] = $parent->id;
+            $path = $parent->name . ' > ' . $path;
+            $parent = $parent->parents()->first();
+            $depth++;
+        }
+        
+        return $path;
+    }
 
     public function getImageUrlAttribute()
     {
@@ -49,18 +83,32 @@ class Category extends Model
         return "{$url}/{$this->image}";
     }
 
-    public function parent(): BelongsTo
+    public function children(): BelongsToMany
     {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->children_many();
     }
 
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(CategoryImage::class)->orderBy('sort_order');
+    }
+
+    public function parents(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'parent_category', 'category_id', 'parent_id')->withTimestamps();
+    }
+
+    public function children_many(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'parent_category', 'parent_id', 'category_id')->withTimestamps();
+    }
+    public function toArray()
+    {
+        return parent::toArray();
     }
 }

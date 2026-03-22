@@ -478,7 +478,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
             <h1>@lang('admin.order')</h1>
             <p>
                 <span class="live-dot"></span>
-                {{ $orders->total() }} @lang('admin.total')
+                @km($orders->total()) @lang('admin.total')
                 &nbsp;·&nbsp; @lang('admin.updated_just_now')
             </p>
         </div>
@@ -495,7 +495,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.total')</div>
-            <div class="kpi-val">{{ number_format($orders->total()) }}</div>
+            <div class="kpi-val">@km(number_format($orders->total()))</div>
             <div class="kpi-sub">@lang('admin.all_time')</div>
         </div>
 
@@ -508,7 +508,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.completed')</div>
-            <div class="kpi-val">{{ number_format($stats['completed'] ?? 0) }}</div>
+            <div class="kpi-val">@km(number_format($stats['completed'] ?? 0))</div>
             <div class="kpi-sub">@lang('admin.fulfilled')</div>
         </div>
 
@@ -521,7 +521,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.pending')</div>
-            <div class="kpi-val">{{ number_format($stats['pending'] ?? 0) }}</div>
+            <div class="kpi-val">@km(number_format($stats['pending'] ?? 0))</div>
             <div class="kpi-sub">@lang('admin.awaiting_action')</div>
         </div>
 
@@ -534,7 +534,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.total_revenue')</div>
-            <div class="kpi-val">${{ number_format($stats['revenue'] ?? 0, 0) }}</div>
+            <div class="kpi-val">$@km(number_format($stats['revenue'] ?? 0, 0))</div>
             <div class="kpi-sub">@lang('admin.gross')</div>
         </div>
     </div>
@@ -634,11 +634,11 @@ tbody td { padding:13px 20px; vertical-align:middle; }
                             </span>
                         </td>
                         <td>
-                            <div class="order-date">{{ $order->created_at->format('d M Y') }}</div>
-                            <div class="order-time">{{ $order->created_at->format('H:i') }}</div>
+                            <div class="order-date">@km($order->created_at->translatedFormat('d M Y'))</div>
+                            <div class="order-time">@km($order->created_at->format('H:i'))</div>
                         </td>
                         <td style="text-align:right">
-                            <span class="order-amt">${{ number_format($order->total_amount, 2) }}</span>
+                            <span class="order-amt">$@km(number_format($order->total_amount, 2))</span>
                         </td>
                         <td onclick="event.stopPropagation()">
                             <div class="action-group">
@@ -673,7 +673,7 @@ tbody td { padding:13px 20px; vertical-align:middle; }
         @if($orders->hasPages())
         <div class="pagination-wrap">
             <div class="pagination-info">
-                @lang('admin.showing') <b>{{ $orders->firstItem() }}</b> @lang('admin.to') <b>{{ $orders->lastItem() }}</b> @lang('admin.of') <b>{{ $orders->total() }}</b> @lang('admin.results')
+                @lang('admin.showing') <b>{{ $orders->firstItem() }}</b> @lang('admin.to') <b>{{ $orders->lastItem() }}</b> @lang('admin.of') <b>@km($orders->total())</b> @lang('admin.results')
             </div>
             {{ $orders->links() }}
         </div>
@@ -922,8 +922,77 @@ function renderDrawer(order) {
                     ${selectOpts}
                 </select>
             </div>
+            ${(order.user?.telegram_chat_id || order.telegram_chat_id) ? `
+            <div style="margin-top:12px">
+                <div style="font-size:11px;color:var(--text-2);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+                    <span style="color:var(--green);display:flex;align-items:center;gap:4px">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        @lang('admin.linked')
+                    </span>
+                    • @lang('admin.type_custom_message')
+                </div>
+                <textarea id="drawer-telegram-msg" placeholder="@lang('admin.type_custom_message')" 
+                          style="width:100%;background:var(--bg-2);border:1px solid var(--border);color:var(--text-1);border-radius:10px;padding:10px;font-size:12px;min-height:70px;resize:none;outline:none;transition:border-color 0.2s"
+                          onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            </div>
+            ` : `
+            <div style="margin-top:10px;font-size:11px;color:var(--text-3)">
+                @lang('admin.not_linked') • @lang('admin.telegram_link_hint')
+            </div>
+            `}
+        </div>
+
+        <div class="drawer-section">
+            <div class="drawer-section-title">@lang('admin.telegram_notification')</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+               ${(order.user?.telegram_chat_id || order.telegram_chat_id) 
+                 ? `<span style="display:flex;align-items:center;gap:4px;color:var(--green);font-size:12px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> @lang('admin.linked')</span>` 
+                 : `<span style="color:var(--text-3);font-size:12px">@lang('admin.not_linked')</span>`}
+            </div>
+            ${(order.user?.telegram_chat_id || order.telegram_chat_id) ? `
+            <div style="background:var(--bg-2);padding:10px;border-radius:8px;border:1px solid var(--border)">
+                <textarea id="telegram-msg" placeholder="@lang('admin.type_custom_message')" 
+                          style="width:100%;background:transparent;border:none;color:var(--text-1);font-size:12px;min-height:50px;resize:none;outline:none"></textarea>
+                <div style="display:flex;justify-content:flex-end;margin-top:5px">
+                    <button class="btn-primary" style="padding:4px 12px;font-size:11px" id="telegram-send-btn" onclick="sendCustomTelegram()">@lang('admin.send')</button>
+                </div>
+            </div>` : `
+            <div style="font-size:11px;color:var(--text-3)">@lang('admin.telegram_link_hint')</div>
+            `}
         </div>
     `;
+}
+
+async function sendCustomTelegram() {
+    const msg = document.getElementById('telegram-msg').value;
+    if (!msg) return;
+    const btn = document.getElementById('telegram-send-btn');
+    btn.disabled = true;
+    btn.innerHTML = '...';
+
+    try {
+        const res = await fetch(`/admin/orders/${activeOrderId}/telegram`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert(data.message);
+            document.getElementById('telegram-msg').value = '';
+        } else {
+            alert(data.message || 'Error');
+        }
+    } catch (e) {
+        alert('Network Error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Send';
+    }
 }
 
 /* ═══════════════════════════════════════
@@ -948,7 +1017,10 @@ async function saveOrderStatus() {
                 'X-CSRF-TOKEN':     document.querySelector('meta[name="csrf-token"]').content,
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({ status: newStatus })
+            body: JSON.stringify({ 
+                status: newStatus,
+                message: document.getElementById('drawer-telegram-msg')?.value || ''
+            })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Error');

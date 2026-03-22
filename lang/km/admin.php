@@ -280,6 +280,8 @@ return [
    'slug'                  => 'កូដតំណ (Slug)',
    'parent_category'       => 'ស្ថិតក្នុងប្រភេទ',
    'root_category'         => 'ប្រភេទមេ',
+   'cat_subs'              => 'ប្រភេទរង',
+   'cat_items'             => 'មុខទំនិញ',
    'settings'              => 'ការកំណត់',
    'active_description'    => 'បង្ហាញប្រភេទនេះនៅក្នុងហាង',
    'view_only'             => 'មើលតែប៉ុណ្ណោះ',
@@ -423,5 +425,10 @@ return [
    'required_fields_hint' => 'បញ្ជាក់ថាជាវាលដែលត្រូវការ',
    'inactive_status' => 'អសកម្ម',
    'remove'=> 'លុប',
-   
+   'telegram_notification' => 'ការជូនដំណឹងតាម Telegram',
+   'linked' => 'បានភ្ជាប់',
+   'not_linked' => 'មិនទាន់ភ្ជាប់',
+   'type_custom_message' => 'វាយបញ្ចូលសារផ្ទាល់ខ្លួនទៅកាន់អតិថិជន...',
+   'send' => 'ផ្ញើ',
+   'telegram_link_hint' => 'អតិថិជនត្រូវតែភ្ជាប់គណនី Telegram របស់ពួកគេដើម្បីទទួលបានសារផ្ទាល់ខ្លួន។',
 ];

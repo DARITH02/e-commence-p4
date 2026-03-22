@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
@@ -41,6 +40,14 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
         });
 
+        Schema::create('parent_category', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('parent_id')->constrained('categories')->onDelete('cascade');
+            $table->unique(['category_id', 'parent_id']);
+            $table->timestamps();
+        });
+
         Schema::create('product_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
@@ -53,6 +60,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('product_images');
+        Schema::dropIfExists('parent_category');
         Schema::dropIfExists('category_product');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');

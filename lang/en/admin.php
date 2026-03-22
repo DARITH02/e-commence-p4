@@ -128,7 +128,6 @@ return [
   'transaction_history'  => 'Transaction History',
   'history'              => 'History',
   'realtime_commerce'    => 'Real-time commerce verification',
-  'total_throughput'     => 'Total Throughput',
   'success_rate'         => 'Success Rate',
   'pending_sync'         => 'Pending Sync',
   'failed_logic'         => 'Failed Logic',
@@ -277,7 +276,16 @@ return [
   'category_name_placeholder' => 'Enter category name',
   'slug'                  => 'Slug',
   'parent_category'       => 'Parent Category',
+  'multiple_allowed'      => 'Multiple Allowed',
   'root_category'         => 'Root Category',
+  'stats'                 => 'Stats',
+  'gallery'               => 'Gallery',
+  'image_gallery'         => 'Image Gallery',
+  'add_gallery_images'    => 'Add Gallery Images',
+  'add_image_urls'        => 'Add Image URLs',
+  'add_url'               => 'Add URL',
+  'cat_subs'              => 'Subs',
+  'cat_items'             => 'Items',
   'settings'              => 'Settings',
   'active_description'    => 'Make this category visible in the store',
   'view_only'             => 'View Only',
@@ -412,10 +420,13 @@ return [
   'edit_brand_subtitle'  => 'Modify existing brand details',
  
   'general_info'         => 'General Info',
-  'description_placeholder' => 'Brief brand overview...',
   'remove' => 'Remove',
  
   'force_delete' => 'Force Delete',
-
-
+  'telegram_notification' => 'Telegram Notification',
+  'linked' => 'Linked',
+  'not_linked' => 'Not Linked',
+  'type_custom_message' => 'Type custom message to customer...',
+  'send' => 'Send',
+  'telegram_link_hint' => 'Customer needs to link their Telegram account to receive custom messages.',
 ];

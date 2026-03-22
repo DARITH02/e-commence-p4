@@ -316,7 +316,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             <h1>{{ __('admin.brands') }}</h1>
             <p>
                 <span class="live-dot"></span>
-                <span>{{ $totalCount }} {{ __('admin.total_brands') }}</span>
+                <span>@km($totalCount) {{ __('admin.total_brands') }}</span>
             </p>
         </div>
         <button onclick="openBrandModal('create')" class="btn-add">
@@ -333,19 +333,19 @@ tbody td { padding:14px 20px; vertical-align:middle; }
             <div class="stat-ico blue">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.total')</div><div class="stat-val">{{ number_format($totalCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.total')</div><div class="stat-val">@km(number_format($totalCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico green">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.active_status')</div><div class="stat-val">{{ number_format($activeCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.active_status')</div><div class="stat-val">@km(number_format($activeCount))</div></div>
         </div>
         <div class="stat-card">
             <div class="stat-ico red">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
             </div>
-            <div><div class="stat-label">@lang('admin.inactive_status')</div><div class="stat-val">{{ number_format($inactiveCount) }}</div></div>
+            <div><div class="stat-label">@lang('admin.inactive_status')</div><div class="stat-val">@km(number_format($inactiveCount))</div></div>
         </div>
     </div>
 
@@ -465,7 +465,7 @@ tbody td { padding:14px 20px; vertical-align:middle; }
                 {{ __('admin.showing') }}
                 <strong>{{ $brands->firstItem() }}–{{ $brands->lastItem() }}</strong>
                 {{ __('admin.of') }}
-                <strong>{{ $brands->total() }}</strong>
+                <strong>@km($brands->total())</strong>
                 {{ __('admin.results') }}
             </div>
             <div class="pagination-nav">

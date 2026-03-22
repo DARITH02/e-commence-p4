@@ -14,7 +14,7 @@ class CategoryController extends Controller
             ->with(['children' => function($q) {
                 $q->where('is_active', true);
             }])
-            ->whereNull('parent_id')
+            ->doesntHave('parents')
             ->get();
 
         return response()->json($categories);

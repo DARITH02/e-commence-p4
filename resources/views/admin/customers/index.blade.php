@@ -446,7 +446,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
             <h1>@lang('admin.customers')</h1>
             <p>
                 <span class="live-dot"></span>
-                {{ $customers->total() }} @lang('admin.registered_accounts')
+                @km($customers->total()) @lang('admin.registered_accounts')
                 &nbsp;·&nbsp; @lang('admin.updated_just_now')
             </p>
         </div>
@@ -463,7 +463,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.total_customers')</div>
-            <div class="kpi-val">{{ number_format($customers->total()) }}</div>
+            <div class="kpi-val">@km(number_format($customers->total()))</div>
             <div class="kpi-sub">@lang('admin.registered_accounts')</div>
         </div>
 
@@ -476,7 +476,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.with_orders')</div>
-            <div class="kpi-val">{{ number_format($stats['with_orders'] ?? 0) }}</div>
+            <div class="kpi-val">@km(number_format($stats['with_orders'] ?? 0))</div>
             <div class="kpi-sub">@lang('admin.have_purchased')</div>
         </div>
 
@@ -489,7 +489,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.new_this_month')</div>
-            <div class="kpi-val">{{ number_format($stats['new_this_month'] ?? 0) }}</div>
+            <div class="kpi-val">@km(number_format($stats['new_this_month'] ?? 0))</div>
             <div class="kpi-sub">@lang('admin.joined_recently')</div>
         </div>
 
@@ -502,7 +502,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                 </div>
             </div>
             <div class="kpi-label">@lang('admin.total_revenue')</div>
-            <div class="kpi-val">${{ number_format($stats['total_revenue'] ?? 0, 0) }}</div>
+            <div class="kpi-val">$@km(number_format($stats['total_revenue'] ?? 0, 0))</div>
             <div class="kpi-sub">@lang('admin.from_all_customers')</div>
         </div>
     </div>
@@ -532,7 +532,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
             @endphp
             <div class="stat-pill total">
                 <span class="stat-dot"></span>
-                {{ $customers->total() }} @lang('admin.total')
+                @km($customers->total()) @lang('admin.total')
             </div>
             <div class="stat-pill active">
                 <span class="stat-dot"></span>
@@ -540,7 +540,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
             </div>
             <div class="stat-pill new">
                 <span class="stat-dot"></span>
-                {{ $newCount }} @lang('admin.new')
+                @km($newCount) @lang('admin.new')
             </div>
         </div>
 
@@ -586,7 +586,7 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                     @endphp
                     <tr id="cust-row-{{ $customer->id }}"
                         data-joined="{{ $customer->created_at->format('Y-m-d') }}"
-                        data-orders="{{ $orderCount }}"
+                        data-orders="@km($orderCount)"
                         data-spent="{{ $totalSpent }}"
                         onclick="openDrawer({{ $customer->id }})">
                         <td>
@@ -601,19 +601,19 @@ tbody td { padding: 13px 20px; vertical-align: middle; }
                             </div>
                         </td>
                         <td>
-                            <div class="joined-date">{{ $customer->created_at->format('d M Y') }}</div>
-                            <div class="joined-rel">{{ $customer->created_at->diffForHumans() }}</div>
+                            <div class="joined-date">@km($customer->created_at->translatedFormat('d M Y'))</div>
+                            <div class="joined-rel">@km($customer->created_at->diffForHumans())</div>
                         </td>
                         <td>
                             <div class="orders-badge">
-                                {{ $orderCount }}
+                                @km($orderCount)
                                 <span>@lang('admin.orders')</span>
                             </div>
                         </td>
                         <td>
-                            <div class="spend-val">${{ number_format($totalSpent, 2) }}</div>
+                            <div class="spend-val">$@km(number_format($totalSpent, 2))</div>
                             @if($orderCount > 0)
-                                <div class="spend-avg">~${{ number_format($avgOrder, 0) }} @lang('admin.avg')</div>
+                                <div class="spend-avg">~$@km(number_format($avgOrder, 0)) @lang('admin.avg')</div>
                             @endif
                         </td>
                         <td>
