@@ -69,14 +69,22 @@ class OrderController extends Controller
             }
             DB::commit();
 
-            // Notify Super Admins safely
+            // Notify stakeholders safely
+            $telegramNotified = false;
             try {
+                // 1. Notify Super Admins
                 $superAdmins = User::whereHas('roles', function($q) {
                     $q->where('slug', 'super_admin');
                 })->get();
 
                 if ($superAdmins->isNotEmpty()) {
                     Notification::send($superAdmins, new NewOrderPlaced($order));
+                }
+
+                // 2. Notify the customer if they have Telegram linked
+                if ($user && $user->telegram_chat_id) {
+                    $user->notify(new NewOrderPlaced($order));
+                    $telegramNotified = true;
                 }
             } catch (\Exception $ne) {
                 Log::error("API Notification failure: " . $ne->getMessage());
@@ -85,7 +93,9 @@ class OrderController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order processed successfully',
-                'order_number' => $order->order_number
+                'order_number' => $order->order_number,
+                'telegram_linked' => (bool)$user?->telegram_chat_id,
+                'telegram_notified' => $telegramNotified
             ], 201);
 
         } catch (\Exception $e) {

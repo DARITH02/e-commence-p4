@@ -34,19 +34,23 @@ class TelegramWebhookController extends Controller
             $phoneNumber = $this->normalizePhone($contact['phone_number']);
             $linked = false;
 
-            // Link to User
-            $user = User::where('phone', 'LIKE', "%$phoneNumber%")->first();
-            if ($user) {
+            // Link to Users (All active users with this phone number)
+            $users = User::where('phone', 'LIKE', "%$phoneNumber%")->get();
+            foreach ($users as $user) {
                 $user->update(['telegram_chat_id' => $chatId]);
                 $linked = true;
+
+                // Sync all orders for this user
+                Order::where('user_id', $user->id)->update(['telegram_chat_id' => $chatId]);
             }
 
-            // Link to Orders (specifically guest orders)
-            $orders = Order::whereHas('shippingAddress', function($q) use ($phoneNumber) {
-                $q->where('phone', 'LIKE', "%$phoneNumber%");
-            })->get();
+            // Link to Guest Orders (via shipping address phone)
+            $guestOrders = Order::whereNull('telegram_chat_id')
+                ->whereHas('shippingAddress', function($q) use ($phoneNumber) {
+                    $q->where('phone', 'LIKE', "%$phoneNumber%");
+                })->get();
             
-            foreach ($orders as $order) {
+            foreach ($guestOrders as $order) {
                 $order->update(['telegram_chat_id' => $chatId]);
                 $linked = true;
             }
