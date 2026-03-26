@@ -144,5 +144,28 @@ Route::get('/telegram-webhook', function() {
     }
 });
 
+// Checkout & Payment Routes
+Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/process', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+
+// Redirect backend order view to Frontend Account page
+Route::get('/orders/{order}', function ($order) {
+    return redirect('http://localhost:3000/en/account?order=' . $order);
+})->name('order.show.frontend');
+
+Route::prefix('payment')->group(function () {
+    Route::get('/payway/mock/{order:order_number}', [\App\Http\Controllers\PaymentController::class, 'mockPayWay'])->name('payment.payway.mock');
+    Route::match(['GET', 'POST'], '/payway/simulate/{order:order_number}', [\App\Http\Controllers\PaymentController::class, 'simulatePayWay'])->name('payment.payway.simulate');
+
+    Route::get('/payway/initiate/{order:order_number}', [\App\Http\Controllers\PaymentController::class, 'initiatePayWay'])->name('payment.payway.initiate');
+    Route::post('/payway/callback', [\App\Http\Controllers\PaymentController::class, 'paywayCallback'])->name('payment.payway.callback');
+    
+    Route::get('/khqr/scan/{order:order_number}', [\App\Http\Controllers\PaymentController::class, 'showKHQR'])->name('payment.khqr.show');
+    Route::post('/khqr/verify/{order:order_number}', [\App\Http\Controllers\PaymentController::class, 'verifyKHQR'])->name('payment.khqr.verify');
+    
+    Route::get('/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/failure', [\App\Http\Controllers\PaymentController::class, 'failure'])->name('payment.failure');
+});
+
 // API login fallback
 Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');

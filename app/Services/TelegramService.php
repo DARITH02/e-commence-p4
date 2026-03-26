@@ -75,4 +75,34 @@ class TelegramService
             return false;
         }
     }
+
+    public function sendOrderNotification($order, $status = 'Paid')
+    {
+        $order->load(['user', 'items.product', 'shippingAddress']);
+        $name = $order->user?->name ?? 'Guest';
+        
+        $emoji = $status === 'Paid' ? '✅' : '🔴';
+        $title = "<b>{$emoji} Order {$status}</b>\n\n";
+        
+        $customer = "👤 <b>Customer:</b> {$name}\n";
+        if ($order->shippingAddress) {
+            $customer .= "📞 <b>Phone:</b> <code>{$order->shippingAddress->phone}</code>\n";
+            $customer .= "📍 <b>City:</b> {$order->shippingAddress->city}\n\n";
+        }
+        
+        $details = "🔢 <b>Order #:</b> <code>{$order->order_number}</code>\n";
+        $details .= "🗓 <b>Date:</b> " . $order->created_at->timezone('Asia/Phnom_Penh')->format('d-M-Y H:i A') . "\n";
+        $details .= "💰 <b>Amount:</b> $ " . number_format($order->total_amount, 2) . "\n";
+        $details .= "💳 <b>Method:</b> " . strtoupper($order->payment_method) . "\n\n";
+        
+        $items = "<b>📦 Order Items:</b>\n";
+        foreach ($order->items as $item) {
+            $productName = $item->product->name ?? 'Product';
+            $items .= "- {$productName} (x{$item->quantity})\n";
+        }
+        
+        $message = $title . $customer . $details . $items;
+        
+        return $this->sendMessage($message);
+    }
 }

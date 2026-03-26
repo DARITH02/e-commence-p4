@@ -40,4 +40,17 @@ return [
         ],
     ],
 
+    'payway' => [
+        'merchant_id' => env('PAYWAY_MERCHANT_ID'),
+        'api_key' => env('PAYWAY_API_KEY'),
+        'base_url' => env('PAYWAY_BASE_URL', 'https://checkout.ababank.com/api/payment-gateway/v1/payments/purchase'),
+    ],
+
+    'khqr' => [
+        'bakong_id' => env('KHQR_BAKONG_ID'),
+        'api_key' => env('KHQR_API_KEY'),
+        'merchant_name' => env('KHQR_MERCHANT_NAME', 'E-commerce Store'),
+        'merchant_city' => env('KHQR_MERCHANT_CITY', 'Phnom Penh'),
+    ],
+
 ];

@@ -11,16 +11,21 @@ class Payment extends Model
 
     protected $fillable = [
         'order_id',
+        'method',
+        'provider',
         'transaction_id',
-        'payment_method',
         'amount',
         'status',
-        'payload',
+        'response_json',
+        'payment_method',
     ];
 
     protected $casts = [
-        'payload' => 'array',
+        'response_json' => 'array',
     ];
 
-    public function order() { return $this->belongsTo(Order::class); }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
